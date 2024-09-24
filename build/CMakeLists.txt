@@ -33,9 +33,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
 set(BOOT_DIR     ${CMAKE_SOURCE_DIR}/../boot)
 set(KERNEL_DIR   ${CMAKE_SOURCE_DIR}/../kernel)
 set(DRIVERS_DIR  ${CMAKE_SOURCE_DIR}/../drivers)
+set(GFX_DIR      ${CMAKE_SOURCE_DIR}/../gfx)
 set(INCLUDE_DIR  ${CMAKE_SOURCE_DIR}/../include)
 
 set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
+
+# List of kernel drivers source files
+set(GFX_SOURCES "${GFX_DIR}/font.cpp")
 
 # List of kernel drivers source files
 set(DRIVERS_SOURCES "${DRIVERS_DIR}/vesa.cpp")
@@ -50,6 +54,7 @@ set(ASM_SOURCES "${BOOT_DIR}/boot.asm")
 set(SOURCES 
     ${KERNEL_SOURCES}
     ${DRIVERS_SOURCES}
+    ${GFX_SOURCES}
 )
 
 set(CXXFLAGS
