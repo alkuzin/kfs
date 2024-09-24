@@ -72,6 +72,18 @@ struct vesa_t
      * @param [in] color - given RGB color.
      */
     void fill_screen(const rgb_t& color) noexcept;
+
+    /**
+     * @brief Draw font character on the screen.
+     * 
+     * @param [in] c - given character to print.
+     * @param [in] x - given x pixel position.
+     * @param [in] y - given y pixel position.
+     * @param [in] fg - given foreground color.
+     * @param [in] bg - given background color.
+     * @param [in] is_bg_on - given param determine whether to display the @a bg.
+     */
+    void draw_char(uint8_t c, int32_t x, int32_t y, const rgb_t& fg, const rgb_t& bg, bool is_bg_on) noexcept;
 };
 
 extern vesa_t vesa;

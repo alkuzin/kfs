@@ -17,6 +17,7 @@
  */
 
 #include <kernel/drivers/vesa.hpp>
+#include <kernel/gfx/font.hpp>
 
 
 namespace kernel {
@@ -43,6 +44,23 @@ void vesa_t::fill_screen(const rgb_t& color) noexcept
     for (uint32_t y = 0; y < m_height; y++) {
         for (uint32_t x = 0; x < m_width; x++)
             draw_pixel(x, y, color);
+    }
+}
+
+void vesa_t::draw_char(uint8_t c, int32_t x, int32_t y, const rgb_t& fg, const rgb_t& bg, bool is_bg_on) noexcept
+{
+    static int32_t mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
+    int32_t cx, cy;
+
+    uint8_t *glyph = static_cast<uint8_t*>(gfx::font) + static_cast<int32_t>(c) * 16;
+
+    for (cy = 0; cy < gfx::FONT_CHAR_HEIGHT; cy++) {
+        for (cx = 0; cx < gfx::FONT_CHAR_WIDTH; cx++) {
+            if (glyph[cy] & mask[cx])
+                draw_pixel(x + cx, y + cy, fg);
+            else if (is_bg_on)
+                draw_pixel(x + cx, y + cy, bg);
+        }
     }
 }
 
