@@ -1,0 +1,12 @@
+build/cmake_install.cmake
+build/CMakeCache.txt
+build/CMakeFiles/
+build/Makefile
+build/kernel
+build/iso/
+.vscode/
+test_*
+*.swp
+*.o
+*.a
+*.iso

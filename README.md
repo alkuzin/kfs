@@ -1,2 +1,2 @@
 # kfs
-Monolith Unix-like kernel from scratch
+Monolithic Unix-like kernel from scratch
