@@ -30,11 +30,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # Enforce the standard
 set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
 
 # Set paths
-set(BOOT_DIR    ${CMAKE_SOURCE_DIR}/../boot)
-set(KERNEL_DIR  ${CMAKE_SOURCE_DIR}/../kernel)
-set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../include)
+set(BOOT_DIR     ${CMAKE_SOURCE_DIR}/../boot)
+set(KERNEL_DIR   ${CMAKE_SOURCE_DIR}/../kernel)
+set(DRIVERS_DIR  ${CMAKE_SOURCE_DIR}/../drivers)
+set(INCLUDE_DIR  ${CMAKE_SOURCE_DIR}/../include)
 
 set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
+
+# List of kernel drivers source files
+set(DRIVERS_SOURCES "${DRIVERS_DIR}/vesa.cpp")
 
 # List of kernel core source files
 set(KERNEL_SOURCES "${KERNEL_DIR}/kernel.cpp")
@@ -43,7 +47,10 @@ set(KERNEL_SOURCES "${KERNEL_DIR}/kernel.cpp")
 set(ASM_SOURCES "${BOOT_DIR}/boot.asm")
 
 # List of all source files
-set(SOURCES ${KERNEL_SOURCES})
+set(SOURCES 
+    ${KERNEL_SOURCES}
+    ${DRIVERS_SOURCES}
+)
 
 set(CXXFLAGS
     "-Wall"                 # Enable all compiler's warning messages

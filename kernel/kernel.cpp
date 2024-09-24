@@ -16,13 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/multiboot.hpp>
+#include <kernel/drivers/vesa.hpp>
 
 
-extern "C" void kmain(unsigned int magic, const multiboot_t& mboot) noexcept
+extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
 {
     (void)magic;
-    (void)mboot;
+    kernel::driver::vesa.set(mboot);
     
     for(;;);
 }
