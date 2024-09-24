@@ -16,7 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-extern "C" void kmain(void) noexcept
+#include <kernel/multiboot.hpp>
+
+
+extern "C" void kmain(unsigned int magic, const multiboot_t& mboot) noexcept
 {
+    (void)magic;
+    (void)mboot;
+    
     for(;;);
 }

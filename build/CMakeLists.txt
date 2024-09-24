@@ -30,8 +30,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # Enforce the standard
 set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
 
 # Set paths
-set(BOOT_DIR   ${CMAKE_SOURCE_DIR}/../boot)
-set(KERNEL_DIR ${CMAKE_SOURCE_DIR}/../kernel)
+set(BOOT_DIR    ${CMAKE_SOURCE_DIR}/../boot)
+set(KERNEL_DIR  ${CMAKE_SOURCE_DIR}/../kernel)
+set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../include)
 
 set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
 
