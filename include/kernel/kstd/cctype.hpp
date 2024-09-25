@@ -43,6 +43,18 @@ constexpr inline bool isprint(T c) noexcept
     return ((c == ' ') || ((c > 32) && (c < 127)));
 }
 
+/**
+ * @brief Checks for an uppercase character.
+ * 
+ * @param [in] c - given character.
+ * @return whether c is an uppercase character or not.
+ */
+template <typename T>
+constexpr inline bool isupper(T c) noexcept
+{
+    return ((c >= 'A') && (c <= 'Z'));
+}
+
 } // namespace kstd
 } // namespace kernel
 
