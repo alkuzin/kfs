@@ -46,12 +46,16 @@ set(GFX_SOURCES "${GFX_DIR}/font.cpp")
 set(DRIVERS_SOURCES "${DRIVERS_DIR}/vesa.cpp")
 
 # List of kernel standard library source files
-set(KSTD_SOURCES "${KSTD_DIR}/cstring.cpp")
+set(KSTD_SOURCES
+    "${KSTD_DIR}/cstring.cpp"
+    "${KSTD_DIR}/vsnprintk.cpp"
+)
 
 # List of kernel core source files
 set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
     "${KERNEL_DIR}/terminal.cpp"
+    "${KERNEL_DIR}/printk.cpp"
 )
 
 # List of kernel assembly source files
