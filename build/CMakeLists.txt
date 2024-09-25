@@ -34,6 +34,7 @@ set(BOOT_DIR     ${CMAKE_SOURCE_DIR}/../boot)
 set(KERNEL_DIR   ${CMAKE_SOURCE_DIR}/../kernel)
 set(DRIVERS_DIR  ${CMAKE_SOURCE_DIR}/../drivers)
 set(GFX_DIR      ${CMAKE_SOURCE_DIR}/../gfx)
+set(KSTD_DIR     ${CMAKE_SOURCE_DIR}/../kstd)
 set(INCLUDE_DIR  ${CMAKE_SOURCE_DIR}/../include)
 
 set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
@@ -44,8 +45,14 @@ set(GFX_SOURCES "${GFX_DIR}/font.cpp")
 # List of kernel drivers source files
 set(DRIVERS_SOURCES "${DRIVERS_DIR}/vesa.cpp")
 
+# List of kernel standard library source files
+set(KSTD_SOURCES "${KSTD_DIR}/cstring.cpp")
+
 # List of kernel core source files
-set(KERNEL_SOURCES "${KERNEL_DIR}/kernel.cpp")
+set(KERNEL_SOURCES
+    "${KERNEL_DIR}/kernel.cpp"
+    "${KERNEL_DIR}/terminal.cpp"
+)
 
 # List of kernel assembly source files
 set(ASM_SOURCES "${BOOT_DIR}/boot.asm")
@@ -55,6 +62,7 @@ set(SOURCES
     ${KERNEL_SOURCES}
     ${DRIVERS_SOURCES}
     ${GFX_SOURCES}
+    ${KSTD_SOURCES}
 )
 
 set(CXXFLAGS
