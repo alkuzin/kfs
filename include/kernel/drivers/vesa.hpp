@@ -27,20 +27,12 @@
 #ifndef _KERNEL_DRIVER_VESA_HPP_
 #define _KERNEL_DRIVER_VESA_HPP_
 
-#include <kernel/kstd/ctypes.hpp>
+#include <kernel/gfx/color.hpp>
 #include <kernel/multiboot.hpp>
 
 
 namespace kernel {
 namespace driver {
-
-// TODO: move to gfx directory
-struct rgb_t
-{
-    uint8_t m_red;
-    uint8_t m_green;
-    uint8_t m_blue;
-};
 
 struct vesa_t
 {
@@ -64,14 +56,14 @@ struct vesa_t
      * @param [in] y - given pixel y-position.
      * @param [in] color - given pixel RGB color.
      */
-    inline void draw_pixel(uint32_t x, uint32_t y, const rgb_t& color) noexcept;
+    inline void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept;
 
     /**
      * @brief Fill screen with specific color.
      * 
      * @param [in] color - given RGB color.
      */
-    void fill_screen(const rgb_t& color) noexcept;
+    void fill_screen(gfx::rgb_t color) noexcept;
 
     /**
      * @brief Draw font character on the screen.
@@ -83,7 +75,7 @@ struct vesa_t
      * @param [in] bg - given background color.
      * @param [in] is_bg_on - given param determine whether to display the @a bg.
      */
-    void draw_char(uint8_t c, int32_t x, int32_t y, const rgb_t& fg, const rgb_t& bg, bool is_bg_on) noexcept;
+    void draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept;
 };
 
 extern vesa_t vesa;

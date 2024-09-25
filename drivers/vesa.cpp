@@ -33,13 +33,13 @@ void vesa_t::set(const multiboot_t& mboot) noexcept
     m_bpp    = mboot.framebuffer_bpp;
 }
 
-inline void vesa_t::draw_pixel(uint32_t x, uint32_t y, const rgb_t& color) noexcept
+inline void vesa_t::draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept
 {
     if (x < m_width && y < m_height)
-        m_addr[y * m_width + x] = (color.m_red << 0x10) | (color.m_green << 0x8) | color.m_blue;
+        m_addr[y * m_width + x] = color;
 }
 
-void vesa_t::fill_screen(const rgb_t& color) noexcept
+void vesa_t::fill_screen(gfx::rgb_t color) noexcept
 {
     for (uint32_t y = 0; y < m_height; y++) {
         for (uint32_t x = 0; x < m_width; x++)
@@ -47,7 +47,7 @@ void vesa_t::fill_screen(const rgb_t& color) noexcept
     }
 }
 
-void vesa_t::draw_char(uint8_t c, int32_t x, int32_t y, const rgb_t& fg, const rgb_t& bg, bool is_bg_on) noexcept
+void vesa_t::draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept
 {
     static int32_t mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
     int32_t cx, cy;
