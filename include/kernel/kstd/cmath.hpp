@@ -1,6 +1,6 @@
 /**
- * The Null Operating System (NOS).
- * Copyright (C) 2024  Alexander (@alkuzin).
+ * Monolithic Unix-like kernel from scratch.
+ * Copyright (C) 2024 Alexander (@alkuzin).
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,13 +20,8 @@
  * @file  cmath.hpp
  * @brief Standard mathematical functions and constants.
  *
- * @details 
- * This file contains declarations for standard mathematical functions and constants.
- * It includes functions for common mathematical operations such as logarithmic functions,
- * exponential functions, and more. 
- * 
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   15.05.2024 
+ * @date   25.09.2024
  */
 
 #ifndef _KERNEL_KSTD_CMATH_HPP_
