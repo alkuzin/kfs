@@ -146,17 +146,6 @@ static void print_ptr(uint64_t p) noexcept
 {
 	int32_t count, i;
 		
-	if(p == 0) {
-		i = 0;
-		
-		while(__NIL__[i]) {
-			buf_append(__NIL__[i]);
-			i++;
-		}
-		
-		return;
-	}
-	
 	buf_append('0');
 	buf_append('x');
 	
@@ -316,7 +305,9 @@ static void print_hex(uint64_t n, int32_t is_upper) noexcept
 static void print_args(char type, va_list *args) noexcept
 {
 	char *str = nullptr;
-	int32_t i 	  = 0;
+	void *ptr = nullptr;
+	int32_t i = 0;
+	char c    = '?';
 
 	switch(type) {
 		case '%':
@@ -324,12 +315,13 @@ static void print_args(char type, va_list *args) noexcept
 			break;
 
 		case 'c':
-			buf_append(va_arg(*args, int));
+			c = static_cast<char>(va_arg(*args, int));
+            buf_append(c);
 			break;
 
 		case 's':
 			str = va_arg(*args, char *);
-			
+			i 	= 0;
 			while(str[i]) {
 				buf_append(str[i]);
 				i++;
@@ -337,7 +329,20 @@ static void print_args(char type, va_list *args) noexcept
 			break;
 
 		case 'p':
-			print_ptr(reinterpret_cast<uint64_t>(va_arg(*args, void *)));
+			ptr = va_arg(*args, void *);
+
+			if(!ptr) {
+				int32_t j = 0;
+				
+				while(__NIL__[j]) {
+					buf_append(__NIL__[j]);
+					j++;
+				}
+				
+				return;
+			}
+
+			print_ptr(reinterpret_cast<uint64_t>(ptr));
 			break;
 
 		case 'd': case 'i':
@@ -350,6 +355,10 @@ static void print_args(char type, va_list *args) noexcept
 
 		case 'x': case 'X':
 			print_hex(va_arg(*args, uint64_t), isupper(type));
+			break;
+		
+		default:
+			buf_append('?');
 			break;
 	};
 }
@@ -389,8 +398,8 @@ void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept
     pinfo_init(buf, size);
 
     va_copy(args_copy, args);
-    parse(fmt, &args);
-    va_end(args_copy);
+    parse(fmt, &args_copy);
+    va_end(args);
 }
 
 } // namespace kstd
