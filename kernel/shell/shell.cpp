@@ -22,6 +22,7 @@
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/shell/shell.hpp>
 #include <kernel/printk.hpp>
+#include <kernel/debug.hpp>
 
 
 namespace kernel {
@@ -86,8 +87,9 @@ void shell_t::process(void) noexcept
 
 void shell_t::exec(const char *cmd) const noexcept
 {
-    if (kstd::strncmp(cmd, "test", 4) == 0) {
-        printk("%s\n", "it works!");
+    if (kstd::strncmp(cmd, "debug", 5) == 0) {
+        printk("esp: <%p>\n", reinterpret_cast<uint32_t*>(debug::esp()));
+        printk("ebp: <%p>\n", reinterpret_cast<uint32_t*>(debug::ebp()));
     }
     else
         printk("sh: %s: command not found \n", cmd);
