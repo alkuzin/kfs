@@ -21,6 +21,7 @@
 #include <kernel/shell/shell.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/printk.hpp>
+#include <kernel/core.hpp>
 
 
 namespace kernel {
@@ -57,7 +58,7 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
 {
     kboot(magic, mboot);
-    for(;;);
+    core::khalt();
 }
 
 } // namespace core
