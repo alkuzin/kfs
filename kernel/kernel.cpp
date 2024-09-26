@@ -22,15 +22,39 @@
 #include <kernel/printk.hpp>
 
 
-extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
+namespace kernel {
+namespace core {
+
+/**
+ * @brief Setup kernel.
+ * 
+ * Initializes kernel components such as TTY, GDT, 
+ * IDT, timer and etc.
+ * 
+ * @param [in] magic - given magic number.
+ * @param [in] mboot - given multiboot information structure.
+ */
+static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 {
-    (void)magic;
+    // set kernel subsystems
     kernel::driver::vesa.set(mboot);
     kernel::tty::terminal.set();
     kernel::driver::keyboard.set();
+
+    if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
+        printk("invalid magic number: %#X\n", magic);
+        return;
+    }
     
     kernel::arch::x86::gdt::init();
     kernel::printk("%s\n", "initialized GDT");
+}
 
+extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
+{
+    kboot(magic, mboot);
     for(;;);
 }
+
+} // namespace core
+} // namespace kernel
