@@ -16,7 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <kernel/arch/x86/gdt.hpp>
 #include <kernel/terminal.hpp>
+#include <kernel/printk.hpp>
 
 
 extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
@@ -25,6 +27,8 @@ extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
     kernel::driver::vesa.set(mboot);
     kernel::tty::terminal.set();
     
+    kernel::arch::x86::gdt::init();
+    kernel::printk("%s\n", "initialized GDT");
 
     for(;;);
 }

@@ -30,12 +30,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # Enforce the standard
 set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
 
 # Set paths
-set(BOOT_DIR     ${CMAKE_SOURCE_DIR}/../boot)
-set(KERNEL_DIR   ${CMAKE_SOURCE_DIR}/../kernel)
-set(DRIVERS_DIR  ${CMAKE_SOURCE_DIR}/../drivers)
-set(GFX_DIR      ${CMAKE_SOURCE_DIR}/../gfx)
-set(KSTD_DIR     ${CMAKE_SOURCE_DIR}/../kstd)
-set(INCLUDE_DIR  ${CMAKE_SOURCE_DIR}/../include)
+set(BOOT_DIR                ${CMAKE_SOURCE_DIR}/../boot)
+set(KERNEL_DIR              ${CMAKE_SOURCE_DIR}/../kernel)
+set(KERNEL_ARCH_X86_DIR     ${KERNEL_DIR}/arch/x86)
+set(DRIVERS_DIR             ${CMAKE_SOURCE_DIR}/../drivers)
+set(GFX_DIR                 ${CMAKE_SOURCE_DIR}/../gfx)
+set(KSTD_DIR                ${CMAKE_SOURCE_DIR}/../kstd)
+set(INCLUDE_DIR             ${CMAKE_SOURCE_DIR}/../include)
 
 set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
 
@@ -56,10 +57,16 @@ set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
     "${KERNEL_DIR}/terminal.cpp"
     "${KERNEL_DIR}/printk.cpp"
+
+    # Kernel arch/x86 directory:
+    "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
 )
 
 # List of kernel assembly source files
-set(ASM_SOURCES "${BOOT_DIR}/boot.asm")
+set(ASM_SOURCES
+    "${BOOT_DIR}/boot.asm"
+    "${KERNEL_ARCH_X86_DIR}/gdt_flush.asm"
+)
 
 # List of all source files
 set(SOURCES 
