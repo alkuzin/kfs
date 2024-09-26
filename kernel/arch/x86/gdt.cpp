@@ -38,7 +38,7 @@ constexpr uint8_t USER_ACCESS_STACK     {0xF7};
 
 constexpr uint32_t ENTRIES {7};
 entry_t GDT[ENTRIES];
-ptr_t   gdt_ptr;
+ptr_t   *gdt_ptr = reinterpret_cast<ptr_t*>(GDT_BASE);
 
 /**
  * @brief Set the GDT entry.
@@ -83,11 +83,11 @@ void init(void) noexcept
     set_entry(6, ENTRY_BASE, ENTRY_LIMIT, USER_ACCESS_STACK, ENTRY_FLAGS);
 
     // set GDT pointer:
-    gdt_ptr.m_size   = sizeof(GDT) - 1;
-    gdt_ptr.m_offset = reinterpret_cast<uint32_t>(&GDT);
+    gdt_ptr->m_size   = sizeof(GDT) - 1;
+    gdt_ptr->m_offset = reinterpret_cast<uint32_t>(&GDT);
 
     // update GDT:
-    gdt_flush(reinterpret_cast<uint32_t>(&gdt_ptr));
+    gdt_flush(reinterpret_cast<uint32_t>(gdt_ptr));
 }
     
 } // namespace gdt    
