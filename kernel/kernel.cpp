@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <kernel/drivers/keyboard.hpp>
 #include <kernel/arch/x86/gdt.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/printk.hpp>
@@ -26,6 +27,7 @@ extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
     (void)magic;
     kernel::driver::vesa.set(mboot);
     kernel::tty::terminal.set();
+    kernel::driver::keyboard.set();
     
     kernel::arch::x86::gdt::init();
     kernel::printk("%s\n", "initialized GDT");

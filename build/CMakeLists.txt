@@ -44,7 +44,10 @@ set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
 set(GFX_SOURCES "${GFX_DIR}/font.cpp")
 
 # List of kernel drivers source files
-set(DRIVERS_SOURCES "${DRIVERS_DIR}/vesa.cpp")
+set(DRIVERS_SOURCES
+    "${DRIVERS_DIR}/vesa.cpp"
+    "${DRIVERS_DIR}/keyboard.cpp"
+)
 
 # List of kernel standard library source files
 set(KSTD_SOURCES
