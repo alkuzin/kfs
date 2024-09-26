@@ -18,6 +18,7 @@
 
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/arch/x86/gdt.hpp>
+#include <kernel/shell/shell.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/printk.hpp>
 
@@ -37,9 +38,10 @@ namespace core {
 static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 {
     // set kernel subsystems
-    kernel::driver::vesa.set(mboot);
-    kernel::tty::terminal.set();
-    kernel::driver::keyboard.set();
+    driver::vesa.set(mboot);
+    tty::terminal.set();
+    driver::keyboard.set();
+    shell.set();
 
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
         printk("invalid magic number: %#X\n", magic);
@@ -48,6 +50,8 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     
     kernel::arch::x86::gdt::init();
     kernel::printk("%s\n", "initialized GDT");
+
+    shell.process();
 }
 
 extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept

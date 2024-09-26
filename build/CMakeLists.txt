@@ -33,6 +33,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
 set(BOOT_DIR                ${CMAKE_SOURCE_DIR}/../boot)
 set(KERNEL_DIR              ${CMAKE_SOURCE_DIR}/../kernel)
 set(KERNEL_ARCH_X86_DIR     ${KERNEL_DIR}/arch/x86)
+set(KERNEL_SHELL_DIR        ${KERNEL_DIR}/shell)
 set(DRIVERS_DIR             ${CMAKE_SOURCE_DIR}/../drivers)
 set(GFX_DIR                 ${CMAKE_SOURCE_DIR}/../gfx)
 set(KSTD_DIR                ${CMAKE_SOURCE_DIR}/../kstd)
@@ -63,6 +64,9 @@ set(KERNEL_SOURCES
 
     # Kernel arch/x86 directory:
     "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
+    
+    # Kernel shell directory:
+    "${KERNEL_SHELL_DIR}/shell.cpp"
 )
 
 # List of kernel assembly source files
