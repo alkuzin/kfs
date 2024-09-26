@@ -47,6 +47,19 @@ namespace kstd {
  */
 void *memset(void *s, int32_t c, size_t n) noexcept;
 
+
+/**
+ * @brief Compares the two strings s1 and s2.
+ * 
+ * @param [in] s1 - first given null terminated string.
+ * @param [in] s2 - second given null terminated string.
+ * @param [in] n - given number of symbols for comparison.
+ * @return 0, if s1 and s2 are equal;
+ * @return a negative value if s1 is less than s2;
+ * @return a positive value if s1 is greater than s2.
+ */
+int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept;
+
 } // namespace kstd
 } // namespace kernel
 
