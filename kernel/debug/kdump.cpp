@@ -21,6 +21,7 @@
 #include <kernel/printk.hpp>
 #include <kernel/debug.hpp>
 
+
 namespace kernel {
 namespace debug {
 
@@ -36,6 +37,11 @@ static inline char to_print(uint8_t ch)
 }
 
 const auto BYTES_PER_LINE {16};
+
+const uint32_t fg_color     {0x919191};
+const uint32_t ptr_color    {0x6AF957};
+const uint32_t bg_color     {tty::terminal.m_bg};
+
 
 void kdump(uint32_t addr, size_t size) noexcept
 {
@@ -58,21 +64,39 @@ void kdump(uint32_t addr, size_t size) noexcept
             byte_pos++;
         }
 
-        printk("%08x  ", rows);
-        printk("<%08p>  ", stack_ptr + k * 0x10);
+        cprintk(fg_color, bg_color, "%08x  ", rows);
+        kstd::putchar('<');
+        cprintk(ptr_color, bg_color, "%08p", stack_ptr + k * 0x10);
+        printk("%s", ">  ");
 
         // print first half of 8 bytes in hexadecimal format
-        for (size_t i = 0; i < BYTES_PER_LINE >> 1; i++)
-            printk("%02x ", bytes[i]);
+        for (size_t i = 0; i < BYTES_PER_LINE >> 1; i++) {
+            if (bytes[i] == 0x00)
+                cprintk(fg_color, bg_color, "%02x ", bytes[i]);
+            else
+                printk("%02x ", bytes[i]);
+        }
 
         kstd::putchar(' ');
 
         // print second half of 8 bytes in hexadecimal format
-        for (size_t i = BYTES_PER_LINE >> 1; i < BYTES_PER_LINE; i++)
-            printk("%02x ", bytes[i]);
+        for (size_t i = BYTES_PER_LINE >> 1; i < BYTES_PER_LINE; i++) {
+            if (bytes[i] == 0x00)
+                cprintk(fg_color, bg_color, "%02x ", bytes[i]);
+            else
+                printk("%02x ", bytes[i]);
+        }
 
         // print string representation of bytes
-        printk("  |%s|\n", line);
+        printk("%s", "  |");
+        for (const auto& ch : line) {
+            if (ch == '.')
+                tty::terminal.putc('.', fg_color, bg_color);
+            else
+                kstd::putchar(ch);
+        }
+        kstd::putchar('|');
+        kstd::putchar('\n');
 
         rows += 0x10;
     }
