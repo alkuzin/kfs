@@ -34,6 +34,7 @@ set(BOOT_DIR                ${CMAKE_SOURCE_DIR}/../boot)
 set(KERNEL_DIR              ${CMAKE_SOURCE_DIR}/../kernel)
 set(KERNEL_ARCH_X86_DIR     ${KERNEL_DIR}/arch/x86)
 set(KERNEL_SHELL_DIR        ${KERNEL_DIR}/shell)
+set(KERNEL_DEBUG_DIR        ${KERNEL_DIR}/debug)
 set(DRIVERS_DIR             ${CMAKE_SOURCE_DIR}/../drivers)
 set(GFX_DIR                 ${CMAKE_SOURCE_DIR}/../gfx)
 set(KSTD_DIR                ${CMAKE_SOURCE_DIR}/../kstd)
@@ -64,9 +65,12 @@ set(KERNEL_SOURCES
 
     # Kernel arch/x86 directory:
     "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
-    
+
     # Kernel shell directory:
     "${KERNEL_SHELL_DIR}/shell.cpp"
+
+    # Kernel debug directory:
+    "${KERNEL_DEBUG_DIR}/kdump.cpp"
 )
 
 # List of kernel assembly source files

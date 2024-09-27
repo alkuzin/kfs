@@ -57,6 +57,14 @@ inline uint32_t ebp(void) noexcept
     return ret;
 }
 
+/**
+ * @brief Get dump of kernel stack.
+ * 
+ * @param [in] addr - given stack pointer.
+ * @param [in] size - given number of bytes to dump.
+ */
+void kdump(uint32_t addr, size_t size) noexcept;
+
 } // namespace debug
 } // namespace kernel
 
