@@ -99,7 +99,6 @@ void shell_t::exec(const char *cmd) const noexcept
         #pragma GCC diagnostic push
         #pragma GCC diagnostic ignored "-Warray-bounds"
 
-        printk("mode: %u\n", arch::x86::mode());
         gdt::ptr_t *gdt_ptr = reinterpret_cast<gdt::ptr_t*>(gdt::GDT_BASE);
 
         printk("\nGDT descriptor: <%08p>\n", gdt_ptr);
@@ -114,6 +113,8 @@ void shell_t::exec(const char *cmd) const noexcept
 
         #pragma GCC diagnostic pop
     }
+    else if (kstd::strncmp(cmd, "clear", 5) == 0)
+        tty::terminal.clear();
     else
         printk("sh: %s: command not found \n", cmd);
 }
