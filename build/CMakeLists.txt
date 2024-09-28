@@ -62,6 +62,7 @@ set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
     "${KERNEL_DIR}/terminal.cpp"
     "${KERNEL_DIR}/printk.cpp"
+    "${KERNEL_DIR}/config.cpp"
 
     # Kernel arch/x86 directory:
     "${KERNEL_ARCH_X86_DIR}/gdt.cpp"

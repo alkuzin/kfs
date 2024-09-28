@@ -20,10 +20,9 @@
 #include <kernel/arch/x86/system.hpp>
 #include <kernel/arch/x86/gdt.hpp>
 #include <kernel/kstd/cstring.hpp>
-#include <kernel/kstd/cstdio.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/shell/shell.hpp>
-#include <kernel/printk.hpp>
+#include <kernel/config.hpp>
 #include <kernel/debug.hpp>
 
 
@@ -115,6 +114,11 @@ void shell_t::exec(const char *cmd) const noexcept
     }
     else if (kstd::strncmp(cmd, "clear", 5) == 0)
         tty::terminal.clear();
+    else if (kstd::strncmp(cmd, "uname", 5) == 0) {
+        info::display_general();
+        kstd::putchar('\n');
+        info::display_build();
+    }
     else
         printk("sh: %s: command not found \n", cmd);
 }
