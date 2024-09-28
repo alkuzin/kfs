@@ -422,15 +422,17 @@ void handler_t::parse(const char *fmt) noexcept
 			ch = fmt[i + 1];
 
 			while (ch) {
-				// skip space characters & '%'
-				if (kstd::isspace(ch) || ch == '%') {
+
+				handle_flag(ch);
+
+				i++;
+				ch = fmt[i + 1];
+
+				// skip space characters
+				if (!kstd::isalnum(ch)) {
 					i++;
 					break;
 				}
-
-				handle_flag(ch);
-				i++;
-				ch = fmt[i + 1];
 			}
 
 			m_flags = 0x0;

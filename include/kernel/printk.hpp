@@ -28,7 +28,7 @@
 #define _KERNEL_PRINTK_HPP_
 
 #include <kernel/kstd/cstdarg.hpp>
-#include <kernel/kstd/ctypes.hpp>
+#include <kernel/kstd/cstdio.hpp>
 
 
 namespace kernel {
