@@ -74,6 +74,30 @@ constexpr inline bool isspace(T ch)
             ch == '\v' || ch == '\f' || ch == '\r');
 }
 
+/**
+ * @brief Checks for an alphabetic character.
+ *
+ * @param [in] c - given character.
+ * @return whether c is an alphabetic character or not.
+ */
+template <typename T>
+constexpr inline bool isalpha(T c) noexcept
+{
+    return (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')));
+}
+
+/**
+ * @brief Checks for an alphanumeric character.
+ *
+ * @param [in] c - given character.
+ * @return whether c is an alphanumeric character or not.
+ */
+template <typename T>
+constexpr inline bool isalnum(T c) noexcept
+{
+    return (isalpha(c) || isdigit(c));
+}
+
 } // namespace kstd
 } // namespace kernel
 
