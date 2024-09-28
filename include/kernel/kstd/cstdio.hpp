@@ -1,17 +1,17 @@
 /**
  * Monolithic Unix-like kernel from scratch.
  * Copyright (C) 2024 Alexander (@alkuzin).
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -19,7 +19,7 @@
 /**
  * @file  cstdio.hpp
  * @brief Defines general input/output functions.
- * 
+ *
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
  * @date   25.09.2024
  */
@@ -36,7 +36,7 @@ namespace kstd {
 
 /**
  * @brief Formats and prints data to buffer.
- * 
+ *
  * @param [out] buf - given buffer for containing formated result.
  * @param [in] size - given buffer size.
  * @param [in] fmt - given format string.
@@ -46,12 +46,29 @@ void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept;
 
 /**
  * @brief Print character to screen.
- * 
+ *
  * @param [in] c - given character to print.
  */
 inline void putchar(const int32_t c) noexcept
 {
 	tty::terminal.putc(c, tty::terminal.m_fg, tty::terminal.m_bg);
+}
+
+/**
+ * @brief Print colored string and a trailing newline.
+ *
+ * @param [in] str - given null terminated string
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color.
+ */
+inline void putk(const char *str, gfx::rgb_t fg = tty::terminal.m_fg, gfx::rgb_t bg = tty::terminal.m_bg) noexcept
+{
+    uint32_t i = 0;
+
+    while (str[i]) {
+        tty::terminal.putc(str[i], fg, bg);
+        i++;
+    }
 }
 
 } // namespace kstd
