@@ -1,17 +1,17 @@
 /**
  * Monolithic Unix-like kernel from scratch.
  * Copyright (C) 2024 Alexander (@alkuzin).
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -36,7 +36,7 @@ void terminal_t::set(void) noexcept
     m_height = driver::vesa.m_height;
     m_width  = driver::vesa.m_width;
 }
-        
+
 void terminal_t::scroll(void) noexcept
 {
 	uint32_t size		  = m_height * driver::vesa.m_pitch;
@@ -69,25 +69,25 @@ void terminal_t::putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept
 			m_y_pos += gfx::FONT_CHAR_HEIGHT;
 			m_x_pos = 0;
 			break;
-		
+
 		case '\t':
 			for (int32_t i = 0; i < TAB_WIDTH; i++) {
             	driver::vesa.draw_char(' ', m_x_pos, m_y_pos, fg, bg, true);
 				m_x_pos += gfx::FONT_CHAR_WIDTH;
 			}
 			break;
-		
+
 		case '\b':
             m_x_pos -= gfx::FONT_CHAR_WIDTH;
-            
+
             if(!m_x_pos && m_y_pos) {
 			    m_y_pos -= gfx::FONT_CHAR_HEIGHT;
                 m_x_pos = m_width;
             }
-			
+
             driver::vesa.draw_char(' ', m_x_pos, m_y_pos, fg, bg, true);
 			break;
-		
+
 		default:
             if(kstd::isprint(c)) {
                 driver::vesa.draw_char(c, m_x_pos, m_y_pos, fg, bg, true);

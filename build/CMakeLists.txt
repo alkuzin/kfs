@@ -35,6 +35,7 @@ set(KERNEL_DIR              ${CMAKE_SOURCE_DIR}/../kernel)
 set(KERNEL_ARCH_X86_DIR     ${KERNEL_DIR}/arch/x86)
 set(KERNEL_SHELL_DIR        ${KERNEL_DIR}/shell)
 set(KERNEL_DEBUG_DIR        ${KERNEL_DIR}/debug)
+set(KERNEL_COMMON_DIR       ${KERNEL_DIR}/common)
 set(DRIVERS_DIR             ${CMAKE_SOURCE_DIR}/../drivers)
 set(GFX_DIR                 ${CMAKE_SOURCE_DIR}/../gfx)
 set(KSTD_DIR                ${CMAKE_SOURCE_DIR}/../kstd)
@@ -60,9 +61,11 @@ set(KSTD_SOURCES
 # List of kernel core source files
 set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
-    "${KERNEL_DIR}/terminal.cpp"
-    "${KERNEL_DIR}/printk.cpp"
     "${KERNEL_DIR}/config.cpp"
+
+    # Kernel commond directory:
+    "${KERNEL_COMMON_DIR}/terminal.cpp"
+    "${KERNEL_COMMON_DIR}/printk.cpp"
 
     # Kernel arch/x86 directory:
     "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
@@ -81,7 +84,7 @@ set(ASM_SOURCES
 )
 
 # List of all source files
-set(SOURCES 
+set(SOURCES
     ${KERNEL_SOURCES}
     ${DRIVERS_SOURCES}
     ${GFX_SOURCES}
@@ -106,7 +109,7 @@ set(CXXFLAGS
     "-ffreestanding"        # Indicate that the code does not rely on any standard library features
 )
 
-set(LDFLAGS 
+set(LDFLAGS
     "-z" "noexecstack"      # Preventing execution of code on the stack (security feature)
     "-m" "elf_i386"         # Specify the output format as ELF for 32-bit x86 architecture
 )
