@@ -17,29 +17,79 @@
  */
 
 #include <kernel/kstd/cstdio.hpp>
+#include <kernel/kstd/cctype.hpp>
 #include <kernel/printk.hpp>
 
 
 namespace kernel {
 
+// inner buffer to store printk string
 static constexpr uint32_t BUF_SIZE {1024};
 static char buffer[BUF_SIZE];
 
+// kernel log types:
+const auto LOG_OK           {0};
+const auto LOG_ERR          {1};
+const auto LOG_DEBUG        {2};
+const auto LOG_DEFAULT      {9};
+
+// kernel log types messages:
+const char *LOG_OK_MSG      {"  OK  "};
+const char *LOG_ERR_MSG     {"ERROR"};
+const char *LOG_DEBUG_MSG   {"DEBUG"};
+
+/**
+ * @brief Print log info.
+ *
+ * @param [in] fmt - given format string.
+ * @return buffer shift.
+ */
+static int32_t print_log(const char *fmt) noexcept
+{
+    auto type = LOG_DEFAULT;
+
+    // checking that there is an explicit log type '<N>', where N - log type
+    if (fmt[0] == '<' && kstd::isdigit(fmt[1]) && fmt[2] == '>')
+        type = fmt[1] - '0';
+
+    if (type == LOG_DEFAULT)
+        return 0;
+
+    // print log type
+    kstd::putchar('[');
+    switch (type) {
+    case LOG_OK:
+        kstd::putk(LOG_OK_MSG, gfx::color::green);
+        break;
+
+    case LOG_ERR:
+        kstd::putk(LOG_ERR_MSG, gfx::color::red);
+        break;
+
+    case LOG_DEBUG:
+        kstd::putk(LOG_DEBUG_MSG, gfx::color::gray);
+        break;
+
+    default:
+        break;
+    }
+
+    kstd::putchar(']');
+    kstd::putchar(' ');
+
+    return 3;
+}
 
 void printk(const char *fmt, ...) noexcept
 {
     va_list args;
 
     va_start(args, fmt);
-    kstd::vsnprintk(buffer, BUF_SIZE, fmt, args);
+    auto shift = print_log(fmt);
+    kstd::vsnprintk(buffer, BUF_SIZE, fmt + shift, args);
     va_end(args);
 
-    uint32_t i = 0;
-
-    while(buffer[i]) {
-        kstd::putchar(buffer[i]);
-        i++;
-	}
+	kstd::putk(buffer);
 }
 
 void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept
@@ -50,12 +100,7 @@ void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept
     kstd::vsnprintk(buffer, BUF_SIZE, fmt, args);
     va_end(args);
 
-    uint32_t i = 0;
-
-    while(buffer[i]) {
-        tty::terminal.putc(buffer[i], fg, bg);
-        i++;
-	}
+	kstd::putk(buffer, fg, bg);
 }
 
 } // namespace kernel
