@@ -38,8 +38,8 @@ static inline char to_print(uint8_t ch)
 
 const auto BYTES_PER_LINE {16};
 
-const uint32_t fg_color     {0x919191};
-const uint32_t ptr_color    {0x6AF957};
+const uint32_t fg_color     {gfx::color::gray};
+const uint32_t ptr_color    {gfx::color::green};
 const uint32_t bg_color     {tty::terminal.m_bg};
 
 
