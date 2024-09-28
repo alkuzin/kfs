@@ -27,7 +27,7 @@
 #ifndef _KERNEL_ARCH_X86_SYSTEM_HPP_
 #define _KERNEL_ARCH_X86_SYSTEM_HPP_
 
-#include <kernel/kstd/ctypes.hpp>
+#include <kernel/types.hpp>
 
 
 namespace kernel {

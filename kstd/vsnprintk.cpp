@@ -428,7 +428,7 @@ void handler_t::parse(const char *fmt) noexcept
 				i++;
 				ch = fmt[i + 1];
 
-				// skip space characters
+				// skip non-alphanumerical characters
 				if (!kstd::isalnum(ch)) {
 					i++;
 					break;

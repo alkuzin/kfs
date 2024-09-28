@@ -27,7 +27,7 @@
 #ifndef _KERNEL_GFX_COLOR_HPP_
 #define _KERNEL_GFX_COLOR_HPP_
 
-#include <kernel/kstd/ctypes.hpp>
+#include <kernel/types.hpp>
 
 
 namespace kernel {

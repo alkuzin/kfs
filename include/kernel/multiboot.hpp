@@ -1,17 +1,17 @@
 /**
  * Monolithic Unix-like kernel from scratch.
  * Copyright (C) 2024 Alexander (@alkuzin).
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -19,9 +19,9 @@
 /**
  * @file  multiboot.hpp
  * @brief Contains multiboot information structures decalarations.
- * 
+ *
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   24.09.2024 
+ * @date   24.09.2024
  */
 
 #ifndef _KERNEL_MULTIBOOT_HPP_
@@ -123,7 +123,7 @@ struct multiboot_info
     multiboot_uint32_t cmdline;     // Kernel command line.
     multiboot_uint32_t mods_count;  // Boot-Module list.
     multiboot_uint32_t mods_addr;
-    
+
     union
     {
         multiboot_aout_symbol_table_t        aout_sym;
@@ -132,7 +132,7 @@ struct multiboot_info
 
     multiboot_uint32_t mmap_length;         // Memory Mapping buffer.
     multiboot_uint32_t mmap_addr;
-    
+
     multiboot_uint32_t drives_length;       // Drive Info buffer.
     multiboot_uint32_t drives_addr;
 
@@ -164,7 +164,7 @@ struct multiboot_info
             multiboot_uint32_t framebuffer_palette_addr;
             multiboot_uint16_t framebuffer_palette_num_colors;
         };
-        
+
         struct
         {
             multiboot_uint8_t framebuffer_red_field_position;
@@ -204,7 +204,7 @@ using multiboot_memory_map_t = multiboot_mmap_entry;
 struct multiboot_mod_list
 {
     // the memory used goes from bytes ’mod_start’ to ’mod_end-1’ inclusive.
-    multiboot_uint32_t mod_start;   
+    multiboot_uint32_t mod_start;
     multiboot_uint32_t mod_end;
     multiboot_uint32_t cmdline;     // Module command line.
     multiboot_uint32_t pad;         // padding to take it to 16 bytes (must be zero).
