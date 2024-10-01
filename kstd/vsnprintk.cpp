@@ -174,7 +174,7 @@ inline char dtoh(int32_t v, bool is_upper = false) noexcept
 
 void handler_t::append_pointer(void) noexcept
 {
-	void *raw = static_cast<void*>(va_arg(*m_args, void *));
+	void *raw = reinterpret_cast<void*>(va_arg(*m_args, uint32_t));
 
 	if(!raw) {
 		auto i = 0;
@@ -453,7 +453,7 @@ void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept
     va_copy(args_copy, args);
     handler.init(buf, size, &args_copy);
     handler.parse(fmt);
-    va_end(args);
+    va_end(args_copy);
 }
 
 } // namespace kstd

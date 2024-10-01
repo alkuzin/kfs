@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/printk.hpp>
@@ -90,6 +91,7 @@ void printk(const char *fmt, ...) noexcept
     va_end(args);
 
 	kstd::putk(buffer);
+    kstd::memset(buffer, 0, BUF_SIZE);
 }
 
 void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept
@@ -101,6 +103,7 @@ void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept
     va_end(args);
 
 	kstd::putk(buffer, fg, bg);
+    kstd::memset(buffer, 0, BUF_SIZE);
 }
 
 } // namespace kernel
