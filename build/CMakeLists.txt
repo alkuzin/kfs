@@ -35,6 +35,7 @@ set(KERNEL_DIR              ${CMAKE_SOURCE_DIR}/../kernel)
 set(KERNEL_ARCH_X86_DIR     ${KERNEL_DIR}/arch/x86)
 set(KERNEL_SHELL_DIR        ${KERNEL_DIR}/shell)
 set(KERNEL_DEBUG_DIR        ${KERNEL_DIR}/debug)
+set(KERNEL_MM_DIR           ${KERNEL_DIR}/mm)
 set(KERNEL_COMMON_DIR       ${KERNEL_DIR}/common)
 set(DRIVERS_DIR             ${CMAKE_SOURCE_DIR}/../drivers)
 set(GFX_DIR                 ${CMAKE_SOURCE_DIR}/../gfx)
@@ -75,6 +76,9 @@ set(KERNEL_SOURCES
 
     # Kernel debug directory:
     "${KERNEL_DEBUG_DIR}/kdump.cpp"
+
+    # Kernel memory management directory:
+    "${KERNEL_MM_DIR}/pmm.cpp"
 )
 
 # List of kernel assembly source files
