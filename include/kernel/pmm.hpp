@@ -36,6 +36,8 @@ namespace core {
 namespace memory {
 
 const size_t PAGE_SIZE {4096}; // 4 KB
+const bool   PAGE_FREE {0};
+const bool   PAGE_USED {1};
 
 struct phys_mman_t
 {
@@ -86,6 +88,15 @@ private:
      */
     void mark_as_free(phys_addr_t addr, size_t size) noexcept;
 
+    /**
+     * @brief Get free pages.
+     *
+     * @param [in] n - given number of pages to find.
+     * @return page position in bitmap - in case of success.
+     * @return undefined - in case of error.
+     */
+    size_t get_free_pages(size_t n) noexcept;
+
 public:
     /**
      * @brief Initialize the physical memory manager.
@@ -96,6 +107,18 @@ public:
 
     /** @brief Print multiboot entries content.*/
     void print_entries(void) const noexcept;
+
+    /**
+     * @brief Allocate specific number of pages.
+     *
+     * @param [in] n - given number of pages to allocate.
+     * @return physical address of first page - in case of success.
+     * @return undefined - in case of error.
+     */
+    phys_addr_t alloc_pages(size_t n) noexcept;
+
+    /** @brief Test physical memory manager.*/
+    void test(void) noexcept;
 };
 
 extern phys_mman_t pmm;

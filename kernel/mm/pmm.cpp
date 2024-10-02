@@ -29,6 +29,7 @@ namespace core {
 namespace memory {
 
 const phys_addr_t start_addr {0x00000000}; // physical memory start address
+const size_t      undefined  {0x00000000}; // undefined position (for error handeling)
 
 
 void phys_mman_t::detect_memory(void) noexcept
@@ -85,9 +86,10 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
     // mark bitmap memory as used
     mark_as_used(reinterpret_cast<phys_addr_t>(m_bitmap.m_data), m_bitmap.m_size);
 
-    m_free_pages = m_max_pages - m_used_pages;
-    printk(KERN_DEBUG "free pages: %u\n", m_free_pages);
-    printk(KERN_DEBUG "used pages: %u\n", m_used_pages);
+    // for error handeling purpose setting first block as used
+    // in order to make possible to use null address as undefined
+    m_bitmap.set(0);
+    m_used_pages++;
 }
 
 inline phys_addr_t phys_mman_t::get_addr(size_t pos) const noexcept
@@ -126,6 +128,105 @@ void phys_mman_t::mark_as_used(phys_addr_t addr, size_t size) noexcept
     }
 }
 
+// -------------------------------------------------------------------------------------
+
+size_t phys_mman_t::get_free_pages(size_t n) noexcept
+{
+    size_t pos, k;
+
+    for (size_t i = 0; i < m_max_pages / m_bitmap.bits_per_element(); i++) {
+        // skip groups of used pages
+        if (m_bitmap.m_data[i] != 0xFFFFFFFF) {
+            // handle each group
+            for (size_t j = 0; j < m_bitmap.bits_per_element(); j++) {
+                pos = 32 * i + j + 1;
+
+                // skip until free page
+                while (m_bitmap.get(pos) != PAGE_FREE)
+                    pos++;
+
+                if (m_bitmap.get(pos) == PAGE_FREE) {
+                    // check that number of free pages equals to
+                    // number of needed pages (n)
+                    for (k = 0; k < n; k++) {
+                        if (m_bitmap.get(pos + k) != PAGE_FREE)
+                            break;
+                    }
+
+                    // if used page was found - start checking next group of pages
+                    if (k < n - 1)
+                        continue;
+                    else
+                        return pos;
+                }
+            }
+        }
+    }
+
+    return undefined;
+}
+
+phys_addr_t phys_mman_t::alloc_pages(size_t n) noexcept
+{
+    // not enough of free blocks
+    if((m_max_pages - m_used_pages) <= n)
+        return undefined;
+
+    // handle 0 pages to allocate
+    if (n == 0)
+        return undefined;
+
+    size_t start_pos = get_free_pages(n);
+
+    if (!start_pos)
+        return undefined;
+
+    // set n pages as used
+    for (size_t i = 0; i < n; i++)
+        m_bitmap.set(start_pos + i);
+
+    m_used_pages += n;
+
+    return get_addr(start_pos);
+}
+
+void phys_mman_t::test(void) noexcept
+{
+    m_free_pages = m_max_pages - m_used_pages;
+    printk(KERN_DEBUG "free pages: %u\n", m_free_pages);
+    printk(KERN_DEBUG "used pages: %u\n", m_used_pages);
+
+    // test 0 page allocation
+    void *null_page_alloc = reinterpret_cast<void*>(alloc_pages(0));
+
+    if (!null_page_alloc)
+        printk(KERN_OK "%s\n", "null page allocation test");
+    else
+        printk(KERN_ERR "%s\n", "null page allocation test");
+
+    // test writing string to allocated memory
+    char *text_addr = reinterpret_cast<char*>(alloc_pages(1));
+
+    if (!text_addr)
+        printk(KERN_ERR "%s\n", "max pages allocation test");
+    else {
+        printk("text_addr: <%08p>\n", text_addr);
+
+        const char *str = "Hello, World!";
+        for (size_t i = 0; i < 14; i++)
+            text_addr[i] = str[i];
+
+        debug::kdump(reinterpret_cast<phys_addr_t>(text_addr), 32);
+        printk(KERN_OK "%s\n", "max pages allocation test");
+    }
+
+    char *addr = reinterpret_cast<char*>(alloc_pages(10));
+    printk("addr: <%08p>\n", addr);
+
+    m_free_pages = m_max_pages - m_used_pages;
+    printk(KERN_DEBUG "free pages: %u\n", m_free_pages);
+    printk(KERN_DEBUG "used pages: %u\n", m_used_pages);
+}
 // -------------------------------------------------------------------------------------
 
 // TODO: implement getters for phys_mman_t members
