@@ -59,7 +59,7 @@ struct bitmap_t
      * @param [in] data - given data pointer to set.
      * @param [in] size - given size of data.
      */
-    void init(T *data = nullptr, size_t size = 0) noexcept;
+    inline void init(T *data = nullptr, size_t size = 0) noexcept;
 
     /**
      * @brief Get bit value.
@@ -68,7 +68,7 @@ struct bitmap_t
      * @return true if bit = 1.
      * @return false if bit = 0.
      */
-    bool get(size_t pos) const noexcept;
+    inline bool get(size_t pos) const noexcept;
 
     /**
      * @brief Set specific bit.
@@ -76,7 +76,7 @@ struct bitmap_t
      * @param [in] pos - given position of bit.
      * @param [in] value - given bit value to set.
      */
-    void set(size_t pos) noexcept;
+    inline void set(size_t pos) noexcept;
 
     /**
      * @brief Unset specific bit.
@@ -84,11 +84,18 @@ struct bitmap_t
      * @param [in] pos - given position of bit.
      * @param [in] value - given bit value to unset.
      */
-    void unset(size_t pos) noexcept;
+    inline void unset(size_t pos) noexcept;
+
+    /**
+     * @brief Get bits per element.
+     *
+     * @return bits per element.
+     */
+    inline size_t bits_per_element(void) const noexcept;
 };
 
 template <typename T>
-void bitmap_t<T>::init(T *data, size_t size) noexcept
+inline void bitmap_t<T>::init(T *data, size_t size) noexcept
 {
     m_data = data;
     m_size = size;
@@ -96,21 +103,27 @@ void bitmap_t<T>::init(T *data, size_t size) noexcept
 }
 
 template <typename T>
-bool bitmap_t<T>::get(size_t pos) const noexcept
+inline bool bitmap_t<T>::get(size_t pos) const noexcept
 {
     return m_data[pos / bits<T>] & (0x1 << (pos % bits<T>));
 }
 
 template <typename T>
-void bitmap_t<T>::set(size_t pos) noexcept
+inline void bitmap_t<T>::set(size_t pos) noexcept
 {
     m_data[pos / bits<T>] |= (0x1 << (pos % bits<T>));
 }
 
 template <typename T>
-void bitmap_t<T>::unset(size_t pos) noexcept
+inline void bitmap_t<T>::unset(size_t pos) noexcept
 {
     m_data[pos / bits<T>] &= ~(0x1 << (pos % bits<T>));
+}
+
+template <typename T>
+inline size_t bitmap_t<T>::bits_per_element(void) const noexcept
+{
+    return bits<T>;
 }
 
 } // namespace kstd
