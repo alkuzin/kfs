@@ -49,6 +49,8 @@ using float32_t = float;
 using size_t  = uint64_t;
 using ssize_t = int64_t;
 
+using phys_addr_t = uint32_t;
+
 } // namespace kernel
 
 #endif // _KERNEL_TYPES_HPP_
