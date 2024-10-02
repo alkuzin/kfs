@@ -19,6 +19,8 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/memlayout.hpp>
 #include <kernel/printk.hpp>
+#include <kernel/debug.hpp>
+#include <kernel/core.hpp>
 #include <kernel/pmm.hpp>
 
 
@@ -26,46 +28,108 @@ namespace kernel {
 namespace core {
 namespace memory {
 
+const phys_addr_t start_addr {0x00000000}; // physical memory start address
+
+
 void phys_mman_t::detect_memory(void) noexcept
 {
     multiboot_entry_t *mmmt;
-    size_t   max_index = 0;
-    uint32_t max_size  = 0;
 
     for (size_t i = 0; i < m_mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(m_mboot->mmap_addr + i);
 
-        if (mmmt->type == MULTIBOOT_MEMORY_AVAILABLE) {
-            // find entry with max available memory
-            if (max_size < mmmt->len) {
-                max_size  = mmmt->len;
-                max_index = i;
-            }
-        }
-    }
+        if (mmmt->type == MULTIBOOT_MEMORY_AVAILABLE)
+            m_mem_available += mmmt->len;
 
-    // handle entry with max available memory
-    mmmt         = reinterpret_cast<multiboot_entry_t*>(m_mboot->mmap_addr + max_index);
-    m_start_addr = reinterpret_cast<uint32_t*>(mmmt->addr);
-    m_mem_total  = mmmt->len;
+        m_mem_total += mmmt->len;
+    }
+}
+
+void phys_mman_t::free_available_memory(void) noexcept
+{
+    multiboot_entry_t *mmmt;
+
+    for (size_t i = 0; i < m_mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
+        mmmt = reinterpret_cast<multiboot_entry_t*>(m_mboot->mmap_addr + i);
+
+        if (mmmt->type == MULTIBOOT_MEMORY_AVAILABLE)
+            mark_as_free(mmmt->addr, mmmt->len);
+    }
 }
 
 void phys_mman_t::init(const multiboot_t& mboot) noexcept
 {
+    // check that multiboot memory map is set correctly
+    if ((mboot.flags & (1 << 6)) == 0) {
+        // TODO: replace with panic()
+        printk(KERN_ERR "%s\n", "multiboot memory map wasn't set correctly");
+        core::khalt();
+    }
+
     m_mboot = &mboot;
     detect_memory();
-
     m_max_pages = m_mem_total / PAGE_SIZE;
-    auto size   = m_max_pages / kstd::BITS_PER_BYTE; // size in bytes
 
-    // initialize bitmap right after the end of kernel
-    m_mmap.init(KERNEL_END_PADDR, size);
+    // physical memory bitmap starts right after the kernel end
+    m_bitmap.init(KERNEL_END_PADDR, m_max_pages / kstd::BITS_PER_BYTE);
 
-    // set all memory as used
-    kstd::memset(m_mmap.m_data, 0xFF, m_mmap.m_size);
+    // mark all memory as used
+    kstd::memset(m_bitmap.m_data, 0xFF, m_bitmap.m_size);
+    m_used_pages = m_max_pages;
+
+    free_available_memory();
+
+    // mark kernel memory as used
+    mark_as_used(reinterpret_cast<phys_addr_t>(KERNEL_START_PADDR), KERNEL_END_PADDR - KERNEL_START_PADDR);
+
+    // mark bitmap memory as used
+    mark_as_used(reinterpret_cast<phys_addr_t>(m_bitmap.m_data), m_bitmap.m_size);
+
+    m_free_pages = m_max_pages - m_used_pages;
+    printk(KERN_DEBUG "free pages: %u\n", m_free_pages);
+    printk(KERN_DEBUG "used pages: %u\n", m_used_pages);
+}
+
+inline phys_addr_t phys_mman_t::get_addr(size_t pos) const noexcept
+{
+    return start_addr + PAGE_SIZE * pos;
+}
+
+inline size_t phys_mman_t::get_pos(phys_addr_t addr) const noexcept
+{
+    return addr / PAGE_SIZE;
+}
+
+void phys_mman_t::mark_as_free(phys_addr_t addr, size_t size) noexcept
+{
+    size_t pos = get_pos(addr);
+    size_t n   = size / PAGE_SIZE;
+
+    while (n > 0) {
+        m_bitmap.unset(pos);
+        pos++;
+        n--;
+        m_used_pages--;
+    }
+}
+
+void phys_mman_t::mark_as_used(phys_addr_t addr, size_t size) noexcept
+{
+    size_t pos = get_pos(addr);
+    size_t n   = size / PAGE_SIZE;
+
+    while (n > 0) {
+        m_bitmap.set(pos);
+        pos++;
+        n--;
+        m_used_pages++;
+    }
 }
 
 // -------------------------------------------------------------------------------------
+
+// TODO: implement getters for phys_mman_t members
+// TODO: move functions below to shell builtins
 
 const char *mem_types[5] = {
     "available",        // available RAM to use
@@ -89,8 +153,8 @@ void phys_mman_t::print_entries(void) const noexcept
 
     printk(KERN_DEBUG "total memory: %u KB\n", m_mem_total >> 0xA);
     printk(KERN_DEBUG "total pages:  %u\n", m_max_pages);
-    printk(KERN_DEBUG "kernel start: <%08p>\n", KERNEL_START_PADDR);
-    printk(KERN_DEBUG "kernel end:   <%08p>\n", KERNEL_END_PADDR);
+    printk(KERN_DEBUG "start addr:   <%08p>\n", start_addr);
+    printk(KERN_DEBUG "bitmap addr:  <%08p>\n", m_bitmap.m_data);
 }
 
 phys_mman_t pmm;

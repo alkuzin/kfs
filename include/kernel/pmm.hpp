@@ -39,15 +39,52 @@ const size_t PAGE_SIZE {4096}; // 4 KB
 
 struct phys_mman_t
 {
-    kstd::bitmap_t<uint32_t> m_mmap;    // physical memory map
-    const multiboot_info_t *m_mboot;
-    size_t m_mem_total;
-    size_t m_max_pages;
-    uint32_t *m_start_addr;
+    kstd::bitmap_t<uint32_t> m_bitmap;  // physical memory map
+    const multiboot_info_t   *m_mboot;
+    size_t m_mem_total;                 // total physical memory
+    size_t m_mem_available;             // total available memory
+    size_t m_max_pages;                 // total number of pages
+    size_t m_used_pages;
+    size_t m_free_pages;
 
 private:
     /** @brief Get information about memory regions.*/
     void detect_memory(void) noexcept;
+
+    /** @brief Free all available memory regions.*/
+    void free_available_memory(void) noexcept;
+
+    /**
+     * @brief Get the physical address of specific page.
+     *
+     * @param [in] pos - given position of page.
+     * @return physical address.
+     */
+    inline phys_addr_t get_addr(size_t pos) const noexcept;
+
+    /**
+     * @brief Get the position of page.
+     *
+     * @param [in] addr - given page address.
+     * @return page position.
+     */
+    inline size_t get_pos(phys_addr_t addr) const noexcept;
+
+    /**
+     * @brief Mark memory region as free.
+     *
+     * @param [in] addr - given base address of the region.
+     * @param [in] size - given size of the region in bytes.
+     */
+    void mark_as_used(phys_addr_t addr, size_t size) noexcept;
+
+    /**
+     * @brief Mark memory region as used.
+     *
+     * @param [in] addr - given base address of the region.
+     * @param [in] size - given size of the region in bytes.
+     */
+    void mark_as_free(phys_addr_t addr, size_t size) noexcept;
 
 public:
     /**
