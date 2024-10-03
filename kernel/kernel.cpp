@@ -20,6 +20,7 @@
 #include <kernel/arch/x86/gdt.hpp>
 #include <kernel/shell/shell.hpp>
 #include <kernel/terminal.hpp>
+#include <kernel/linkage.hpp>
 #include <kernel/printk.hpp>
 #include <kernel/core.hpp>
 #include <kernel/pmm.hpp>
@@ -29,10 +30,7 @@ namespace kernel {
 namespace core {
 
 /**
- * @brief Setup kernel.
- *
- * Initializes kernel components such as TTY, GDT,
- * IDT, timer and etc.
+ * @brief Initializes kernel components.
  *
  * @param [in] magic - given magic number.
  * @param [in] mboot - given multiboot information structure.
@@ -65,7 +63,7 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     shell.process();
 }
 
-extern "C" void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
+asmlinkage void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
 {
     kboot(magic, mboot);
     core::khalt();

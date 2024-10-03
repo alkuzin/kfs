@@ -17,6 +17,7 @@
  */
 
 #include <kernel/arch/x86/gdt.hpp>
+#include <kernel/linkage.hpp>
 
 
 namespace kernel {
@@ -24,19 +25,20 @@ namespace arch {
 namespace x86 {
 namespace gdt {
 
-constexpr uint32_t ENTRY_BASE           {0x00000000};
-constexpr uint32_t ENTRY_LIMIT          {0xFFFFFFFF};   // 4 KB
-constexpr uint8_t  ENTRY_FLAGS          {0xCF};         // 32-bit protected mode segment
+inline const uint32_t ENTRY_BASE           {0x00000000};
+inline const uint32_t ENTRY_LIMIT          {0xFFFFFFFF};
+inline const uint8_t  ENTRY_FLAGS          {0xCF}; // 32-bit protected mode segment
 
 // Access byte:
-constexpr uint8_t KERNEL_ACCESS_CODE    {0x9A};
-constexpr uint8_t KERNEL_ACCESS_DATA    {0x92};
-constexpr uint8_t KERNEL_ACCESS_STACK   {0x97};
-constexpr uint8_t USER_ACCESS_CODE      {0xFA};
-constexpr uint8_t USER_ACCESS_DATA      {0xF2};
-constexpr uint8_t USER_ACCESS_STACK     {0xF7};
+inline const uint8_t KERNEL_ACCESS_CODE    {0x9A};
+inline const uint8_t KERNEL_ACCESS_DATA    {0x92};
+inline const uint8_t KERNEL_ACCESS_STACK   {0x97};
+inline const uint8_t USER_ACCESS_CODE      {0xFA};
+inline const uint8_t USER_ACCESS_DATA      {0xF2};
+inline const uint8_t USER_ACCESS_STACK     {0xF7};
 
-constexpr uint32_t ENTRIES {7};
+inline const auto ENTRIES {7};
+
 entry_t GDT[ENTRIES];
 ptr_t   *gdt_ptr = reinterpret_cast<ptr_t*>(GDT_BASE);
 
@@ -66,7 +68,7 @@ constexpr void set_entry(uint32_t eno, uint32_t base, uint32_t limit, uint8_t ac
  * @param [in] ptr - new GDT pointer to update.
  *
  */
-extern "C" void gdt_flush(uint32_t ptr);
+asmlinkage void gdt_flush(uint32_t ptr);
 
 void init(void) noexcept
 {
