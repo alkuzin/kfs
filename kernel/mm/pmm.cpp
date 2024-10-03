@@ -67,7 +67,7 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
     m_max_pages = m_mem_total / PAGE_SIZE;
 
     // physical memory bitmap starts right after the kernel end
-    m_bitmap.init(KERNEL_END_PADDR, m_max_pages / kstd::BITS_PER_BYTE);
+    m_bitmap.init(KERNEL_END_PADDR, m_max_pages / BITS_PER_BYTE);
 
     // mark all memory as used
     kstd::memset(m_bitmap.m_data, 0xFF, m_bitmap.m_size);
@@ -129,7 +129,7 @@ size_t phys_mman_t::get_free_pages(size_t n) noexcept
 {
     size_t pos, k;
 
-    for (size_t i = 0; i < m_max_pages / m_bitmap.bits_per_element(); i++) {
+    for (size_t i = 0; i < m_bitmap.capacity(); i++) {
         // skip groups of used pages
         if (m_bitmap.m_data[i] != 0xFFFFFFFF) {
             // handle each group
