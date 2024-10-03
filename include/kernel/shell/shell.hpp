@@ -32,7 +32,7 @@
 
 namespace kernel {
 
-const uint32_t SHELL_BUFFER_SIZE {128};
+inline const auto SHELL_BUFFER_SIZE {128};
 
 struct shell_t
 {
@@ -40,7 +40,7 @@ struct shell_t
 
 private:
     /** @brief Display kernel shell prompt.*/
-    void display_prompt(void) const noexcept;
+    inline void display_prompt(void) const noexcept;
 
     /** @brief Get the line from user.*/
     void get_line(void) noexcept;

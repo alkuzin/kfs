@@ -27,23 +27,11 @@
 #ifndef _KERNEL_KSTD_BITMAP_HPP_
 #define _KERNEL_KSTD_BITMAP_HPP_
 
-#include <kernel/types.hpp>
+#include <kernel/bitops.hpp>
 
 
 namespace kernel {
 namespace kstd {
-
-// TODO: move to separate file
-const size_t BITS_PER_BYTE {8};
-
-/**
- * @brief Get number of bits in value.
- *
- * @param [in] value - given value to count.
- * @return number of bits in value.
- */
-template <typename T>
-constexpr size_t bits = sizeof(T) * BITS_PER_BYTE;
 
 
 template <typename T>
@@ -92,6 +80,13 @@ struct bitmap_t
      * @return bits per element.
      */
     inline size_t bits_per_element(void) const noexcept;
+
+    /**
+     * @brief Get number of elements.
+     *
+     * @return number of elements.
+     */
+    inline size_t capacity(void) const noexcept;
 };
 
 template <typename T>
@@ -99,31 +94,37 @@ inline void bitmap_t<T>::init(T *data, size_t size) noexcept
 {
     m_data = data;
     m_size = size;
-    m_bits = m_size * BITS_PER_BYTE;
+    m_bits = BYTES_TO_BITS(m_size);
 }
 
 template <typename T>
 inline bool bitmap_t<T>::get(size_t pos) const noexcept
 {
-    return m_data[pos / bits<T>] & (0x1 << (pos % bits<T>));
+    return m_data[pos / BITS_PER_TYPE<T>] & (0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
 inline void bitmap_t<T>::set(size_t pos) noexcept
 {
-    m_data[pos / bits<T>] |= (0x1 << (pos % bits<T>));
+    m_data[pos / BITS_PER_TYPE<T>] |= (0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
 inline void bitmap_t<T>::unset(size_t pos) noexcept
 {
-    m_data[pos / bits<T>] &= ~(0x1 << (pos % bits<T>));
+    m_data[pos / BITS_PER_TYPE<T>] &= ~(0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
 inline size_t bitmap_t<T>::bits_per_element(void) const noexcept
 {
-    return bits<T>;
+    return BITS_PER_TYPE<T>;
+}
+
+template <typename T>
+inline size_t bitmap_t<T>::capacity(void) const noexcept
+{
+    return (m_bits + BITS_PER_TYPE<T> - 1) / BITS_PER_TYPE<T>;
 }
 
 } // namespace kstd

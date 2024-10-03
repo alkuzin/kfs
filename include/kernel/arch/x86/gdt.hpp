@@ -35,7 +35,7 @@ namespace arch {
 namespace x86 {
 namespace gdt {
 
-constexpr uint32_t GDT_BASE {0x00000800}; // GDT pointer address
+inline const uint32_t GDT_BASE {0x00000800}; // GDT pointer address
 
 /** @brief GDT segment structure in 32-bit mode.*/
 struct entry_t

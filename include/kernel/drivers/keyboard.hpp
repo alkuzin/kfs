@@ -58,7 +58,7 @@ private:
     mutable bool m_is_caps_lock;
 
     /** @brief Keyboard wait for user to press a key.*/
-    void wait(void) const noexcept;
+    inline void wait(void) const noexcept;
 
 public:
     /** @brief Initialize keyboard.*/

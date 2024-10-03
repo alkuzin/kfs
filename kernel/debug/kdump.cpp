@@ -36,14 +36,13 @@ static inline char to_print(uint8_t ch)
     return (ch > 31 && ch < 127)? ch : '.';
 }
 
-const auto BYTES_PER_LINE {16};
+inline const auto BYTES_PER_LINE    {16};
+inline const auto FG_COLOR          {gfx::color::gray};
+inline const auto PTR_COLOR         {gfx::color::green};
+inline const auto BG_COLOR          {tty::terminal.m_bg};
 
-const uint32_t fg_color     {gfx::color::gray};
-const uint32_t ptr_color    {gfx::color::green};
-const uint32_t bg_color     {tty::terminal.m_bg};
 
-
-void kdump(uint32_t addr, size_t size) noexcept
+void kdump(phys_addr_t addr, size_t size) noexcept
 {
     char    line[BYTES_PER_LINE + 1];
     uint8_t bytes[BYTES_PER_LINE];
@@ -64,15 +63,15 @@ void kdump(uint32_t addr, size_t size) noexcept
             byte_pos++;
         }
 
-        cprintk(fg_color, bg_color, "%08x  ", rows);
+        cprintk(FG_COLOR, BG_COLOR, "%08x  ", rows);
         kstd::putchar('<');
-        cprintk(ptr_color, bg_color, "%08p", stack_ptr + k * 0x10);
+        cprintk(PTR_COLOR, BG_COLOR, "%08p", stack_ptr + k * 0x10);
         printk("%s", ">  ");
 
         // print first half of 8 bytes in hexadecimal format
         for (size_t i = 0; i < BYTES_PER_LINE >> 1; i++) {
             if (bytes[i] == 0x00)
-                cprintk(fg_color, bg_color, "%02x ", bytes[i]);
+                cprintk(FG_COLOR, BG_COLOR, "%02x ", bytes[i]);
             else
                 printk("%02x ", bytes[i]);
         }
@@ -82,7 +81,7 @@ void kdump(uint32_t addr, size_t size) noexcept
         // print second half of 8 bytes in hexadecimal format
         for (size_t i = BYTES_PER_LINE >> 1; i < BYTES_PER_LINE; i++) {
             if (bytes[i] == 0x00)
-                cprintk(fg_color, bg_color, "%02x ", bytes[i]);
+                cprintk(FG_COLOR, BG_COLOR, "%02x ", bytes[i]);
             else
                 printk("%02x ", bytes[i]);
         }
@@ -91,7 +90,7 @@ void kdump(uint32_t addr, size_t size) noexcept
         printk("%s", "  |");
         for (const auto& ch : line) {
             if (ch == '.')
-                tty::terminal.putc('.', fg_color, bg_color);
+                tty::terminal.putc('.', FG_COLOR, BG_COLOR);
             else
                 kstd::putchar(ch);
         }

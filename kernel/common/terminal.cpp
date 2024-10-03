@@ -25,7 +25,7 @@
 namespace kernel {
 namespace tty {
 
-constexpr int32_t TAB_WIDTH {4};
+inline const auto TAB_WIDTH {4};
 
 void terminal_t::set(void) noexcept
 {

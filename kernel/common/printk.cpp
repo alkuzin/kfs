@@ -25,19 +25,19 @@
 namespace kernel {
 
 // inner buffer to store printk string
-static constexpr uint32_t BUF_SIZE {1024};
+inline const auto BUF_SIZE {1024};
 static char buffer[BUF_SIZE];
 
 // kernel log types:
-const auto LOG_OK           {0};
-const auto LOG_ERR          {1};
-const auto LOG_DEBUG        {2};
-const auto LOG_DEFAULT      {9};
+inline const auto LOG_OK           {0};
+inline const auto LOG_ERR          {1};
+inline const auto LOG_DEBUG        {2};
+inline const auto LOG_DEFAULT      {9};
 
 // kernel log types messages:
-const char *LOG_OK_MSG      {"  OK  "};
-const char *LOG_ERR_MSG     {"ERROR"};
-const char *LOG_DEBUG_MSG   {"DEBUG"};
+inline const auto LOG_OK_MSG      {"  OK  "};
+inline const auto LOG_ERR_MSG     {"ERROR"};
+inline const auto LOG_DEBUG_MSG   {"DEBUG"};
 
 /**
  * @brief Print log info.

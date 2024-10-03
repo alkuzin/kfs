@@ -34,15 +34,15 @@
 namespace kernel {
 namespace info {
 
-extern const char      *__kernel_name__;
-extern const char      *__kernel_arch__;
-extern const char      *__kernel_author__;
-extern const char      *__kernel_build_date__;
-extern const char      *__kernel_build_time__;
-extern const char      *__kernel_compiler_version__;
-extern const uint32_t   __kernel_version_major__;
-extern const uint32_t   __kernel_version_minor__;
-extern const uint32_t   __kernel_version_lower__;
+inline const auto __kernel_name__                {"unknown"};
+inline const auto __kernel_arch__                {"x86"};
+inline const auto __kernel_author__              {"Alexander (@alkuzin)"};
+inline const auto __kernel_build_date__          {__DATE__};
+inline const auto __kernel_build_time__          {__TIME__};
+inline const auto __kernel_compiler_version__    {__VERSION__};
+inline const auto __kernel_version_major__       {0};
+inline const auto __kernel_version_minor__       {2};
+inline const auto __kernel_version_lower__       {0};
 
 /**
  * @brief Print current space.

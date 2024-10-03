@@ -28,11 +28,11 @@ namespace kstd {
 // vsnprintk handler --------------------------------------------------------------
 
 // For null pointer in vsnprintk.
-const char *NIL {"(nil)"};
+inline const char *NIL {"(nil)"};
 
 // Flags bit position:
-const auto FLAG_PREFIX  {1};
-const auto FLAG_PADDING {2};
+inline const auto FLAG_PREFIX  {1};
+inline const auto FLAG_PADDING {2};
 
 struct handler_t
 {

@@ -36,8 +36,8 @@ namespace kernel {
 namespace core {
 namespace memory {
 
-const auto KERNEL_START_PADDR {reinterpret_cast<uint32_t*>(&kernel_phys_start)};
-const auto KERNEL_END_PADDR   {reinterpret_cast<uint32_t*>(&kernel_phys_end)};
+inline const auto KERNEL_START_PADDR {reinterpret_cast<uint32_t*>(&kernel_phys_start)};
+inline const auto KERNEL_END_PADDR   {reinterpret_cast<uint32_t*>(&kernel_phys_end)};
 
 } // namespace memory
 } // namespace core

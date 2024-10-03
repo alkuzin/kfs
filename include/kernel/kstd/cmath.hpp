@@ -36,7 +36,7 @@ namespace kstd {
 // Math Constants ---------------------------------------------------------
 
 /** @brief The mathematical constant e (Euler's number).*/
-constexpr float64_t M_E {2.7182818284590452354};
+constexpr inline float64_t M_E {2.7182818284590452354};
 
 /** @brief Represents a NaN (Not-a-Number) value.*/
 const auto NAN {(0.0f / 0.0f)};

@@ -1,17 +1,17 @@
 /**
  * Monolithic Unix-like kernel from scratch.
  * Copyright (C) 2024 Alexander (@alkuzin).
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -23,39 +23,39 @@
 namespace kernel {
 namespace driver {
 
-const uint32_t UNKNOWN = 0xFFFFFFFF;
-const uint32_t ESC     = 0xFFFFFFFF - 1;
-const uint32_t CTRL    = 0xFFFFFFFF - 2;
-const uint32_t LSHFT   = 0xFFFFFFFF - 3;
-const uint32_t RSHFT   = 0xFFFFFFFF - 4;
-const uint32_t ALT     = 0xFFFFFFFF - 5;
-const uint32_t F1      = 0xFFFFFFFF - 6;
-const uint32_t F2      = 0xFFFFFFFF - 7;
-const uint32_t F3      = 0xFFFFFFFF - 8;
-const uint32_t F4      = 0xFFFFFFFF - 9;
-const uint32_t F5      = 0xFFFFFFFF - 10;
-const uint32_t F6      = 0xFFFFFFFF - 11;
-const uint32_t F7      = 0xFFFFFFFF - 12;
-const uint32_t F8      = 0xFFFFFFFF - 13;
-const uint32_t F9      = 0xFFFFFFFF - 14;
-const uint32_t F10     = 0xFFFFFFFF - 15;
-const uint32_t F11     = 0xFFFFFFFF - 16;
-const uint32_t F12     = 0xFFFFFFFF - 17;
-const uint32_t SCRLCK  = 0xFFFFFFFF - 18;
-const uint32_t HOME    = 0xFFFFFFFF - 19;
-const uint32_t UP      = 0xFFFFFFFF - 20;
-const uint32_t LEFT    = 0xFFFFFFFF - 21;
-const uint32_t RIGHT   = 0xFFFFFFFF - 22;
-const uint32_t DOWN    = 0xFFFFFFFF - 23;
-const uint32_t PGUP    = 0xFFFFFFFF - 24;
-const uint32_t PGDOWN  = 0xFFFFFFFF - 25;
-const uint32_t END     = 0xFFFFFFFF - 26;
-const uint32_t INS     = 0xFFFFFFFF - 27;
-const uint32_t DEL     = 0xFFFFFFFF - 28;
-const uint32_t CAPS    = 0xFFFFFFFF - 29;
-const uint32_t NONE    = 0xFFFFFFFF - 30;
-const uint32_t ALTGR   = 0xFFFFFFFF - 31;
-const uint32_t NUMLCK  = 0xFFFFFFFF - 32;
+inline const uint32_t UNKNOWN = 0xFFFFFFFF;
+inline const uint32_t ESC     = 0xFFFFFFFF - 1;
+inline const uint32_t CTRL    = 0xFFFFFFFF - 2;
+inline const uint32_t LSHFT   = 0xFFFFFFFF - 3;
+inline const uint32_t RSHFT   = 0xFFFFFFFF - 4;
+inline const uint32_t ALT     = 0xFFFFFFFF - 5;
+inline const uint32_t F1      = 0xFFFFFFFF - 6;
+inline const uint32_t F2      = 0xFFFFFFFF - 7;
+inline const uint32_t F3      = 0xFFFFFFFF - 8;
+inline const uint32_t F4      = 0xFFFFFFFF - 9;
+inline const uint32_t F5      = 0xFFFFFFFF - 10;
+inline const uint32_t F6      = 0xFFFFFFFF - 11;
+inline const uint32_t F7      = 0xFFFFFFFF - 12;
+inline const uint32_t F8      = 0xFFFFFFFF - 13;
+inline const uint32_t F9      = 0xFFFFFFFF - 14;
+inline const uint32_t F10     = 0xFFFFFFFF - 15;
+inline const uint32_t F11     = 0xFFFFFFFF - 16;
+inline const uint32_t F12     = 0xFFFFFFFF - 17;
+inline const uint32_t SCRLCK  = 0xFFFFFFFF - 18;
+inline const uint32_t HOME    = 0xFFFFFFFF - 19;
+inline const uint32_t UP      = 0xFFFFFFFF - 20;
+inline const uint32_t LEFT    = 0xFFFFFFFF - 21;
+inline const uint32_t RIGHT   = 0xFFFFFFFF - 22;
+inline const uint32_t DOWN    = 0xFFFFFFFF - 23;
+inline const uint32_t PGUP    = 0xFFFFFFFF - 24;
+inline const uint32_t PGDOWN  = 0xFFFFFFFF - 25;
+inline const uint32_t END     = 0xFFFFFFFF - 26;
+inline const uint32_t INS     = 0xFFFFFFFF - 27;
+inline const uint32_t DEL     = 0xFFFFFFFF - 28;
+inline const uint32_t CAPS    = 0xFFFFFFFF - 29;
+inline const uint32_t NONE    = 0xFFFFFFFF - 30;
+inline const uint32_t ALTGR   = 0xFFFFFFFF - 31;
+inline const uint32_t NUMLCK  = 0xFFFFFFFF - 32;
 
 const uint32_t lowercase[128] = {
 UNKNOWN,ESC,'1','2','3','4','5','6','7','8', '9','0','-','=','\b','\t','q','w','e','r',
@@ -86,7 +86,7 @@ void keyboard_t::set(void) noexcept
     m_is_caps_lock = false;
 }
 
-void keyboard_t::wait(void) const noexcept
+inline void keyboard_t::wait(void) const noexcept
 {
     while((arch::x86::inb(0x64) & 0x01) == 0)
         continue;
@@ -98,8 +98,8 @@ uint8_t keyboard_t::getchar(void) const noexcept
 
     uint8_t scan_code = arch::x86::inb(0x60) & 0x7F; // get code of key that is pressed
     uint8_t press     = arch::x86::inb(0x60) & 0x80; // is key is pressed down or released
-    
-    switch(static_cast<key>(scan_code)) {    
+
+    switch(static_cast<key>(scan_code)) {
         case key::up_arrow:
         case key::down_arrow:
         case key::left_arrow:

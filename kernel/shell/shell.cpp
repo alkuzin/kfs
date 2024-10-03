@@ -34,7 +34,7 @@ void shell_t::set(void) noexcept
     kstd::memset(m_buffer, 0, SHELL_BUFFER_SIZE);
 }
 
-void shell_t::display_prompt(void) const noexcept
+inline void shell_t::display_prompt(void) const noexcept
 {
     kstd::putchar('$');
     kstd::putchar(' ');
