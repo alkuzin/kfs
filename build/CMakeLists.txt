@@ -62,7 +62,6 @@ set(KSTD_SOURCES
 # List of kernel core source files
 set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
-    "${KERNEL_DIR}/config.cpp"
 
     # Kernel commond directory:
     "${KERNEL_COMMON_DIR}/terminal.cpp"
