@@ -24,11 +24,10 @@
 #include <kernel/shell/shell.hpp>
 #include <kernel/config.hpp>
 #include <kernel/debug.hpp>
+#include <kernel/pmm.hpp>
 
 
 namespace kernel {
-
-using namespace arch::x86;
 
 void shell_t::set(void) noexcept
 {
@@ -88,6 +87,15 @@ void shell_t::process(void) noexcept
     }
 }
 
+// TODO: move to shell builtins
+const char *mem_types[5] = {
+    "available",        // available RAM to use
+    "reserved",         // reserved memory for kernel
+    "ACPI reclaimable", // memory that managed by Advanced Configuration and Power Interface (ACPI)
+    "NVS",              // Non-Volatile Storage memory (store data that must persist across system reboots)
+    "bad RAM"           // should not be used by the OS
+};
+
 void shell_t::exec(const char *cmd) const noexcept
 {
     if (kstd::strncmp(cmd, "gdt", 3) == 0) {
@@ -97,6 +105,8 @@ void shell_t::exec(const char *cmd) const noexcept
         // I disabled it in this case:
         #pragma GCC diagnostic push
         #pragma GCC diagnostic ignored "-Warray-bounds"
+
+        using namespace arch::x86;
 
         gdt::ptr_t *gdt_ptr = reinterpret_cast<gdt::ptr_t*>(gdt::GDT_BASE);
 
@@ -118,6 +128,23 @@ void shell_t::exec(const char *cmd) const noexcept
         info::display_general();
         kstd::putchar('\n');
         info::display_build();
+    }
+    else if (kstd::strncmp(cmd, "lsmem", 5) == 0) {
+        using namespace core::memory;
+        multiboot_entry_t *mmmt;
+
+        for (size_t i = 0; i < pmm.m_mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
+            mmmt = reinterpret_cast<multiboot_entry_t*>(pmm.m_mboot->mmap_addr + i);
+
+            printk("%#08X-", mmmt->addr);
+            printk("%#08X  ", mmmt->addr + mmmt->len - 1);
+            printk("%u KB  ", mmmt->len >> 0xA);
+            printk("<%s>\n", mem_types[mmmt->type - 1]);
+        }
+
+        printk("\nMemory page size:   %u KB\n", PAGE_SIZE);
+        printk("Total memory:       %u KB\n", pmm.m_mem_total >> 0xA);
+        printk("Used memory:        %u KB\n", (pmm.m_used_pages * PAGE_SIZE) >> 0xA);
     }
     else
         printk("sh: %s: command not found \n", cmd);

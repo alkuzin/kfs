@@ -35,6 +35,9 @@ namespace kernel {
 namespace core {
 namespace memory {
 
+const phys_addr_t start_addr {0x00000000}; // physical memory start address
+const size_t      undefined  {0x00000000}; // undefined position (for error handeling)
+
 const size_t PAGE_SIZE {4096}; // 4 KB
 const bool   PAGE_FREE {0};
 const bool   PAGE_USED {1};
@@ -104,9 +107,6 @@ public:
      * @param [in] mboot - given multiboot information structure.
      */
     void init(const multiboot_t& mboot) noexcept;
-
-    /** @brief Print multiboot entries content.*/
-    void print_entries(void) const noexcept;
 
     /**
      * @brief Allocate specific number of pages.

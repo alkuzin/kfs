@@ -19,7 +19,6 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/memlayout.hpp>
 #include <kernel/printk.hpp>
-#include <kernel/debug.hpp>
 #include <kernel/core.hpp>
 #include <kernel/pmm.hpp>
 
@@ -27,10 +26,6 @@
 namespace kernel {
 namespace core {
 namespace memory {
-
-const phys_addr_t start_addr {0x00000000}; // physical memory start address
-const size_t      undefined  {0x00000000}; // undefined position (for error handeling)
-
 
 void phys_mman_t::detect_memory(void) noexcept
 {
@@ -109,9 +104,9 @@ void phys_mman_t::mark_as_free(phys_addr_t addr, size_t size) noexcept
 
     while (n > 0) {
         m_bitmap.unset(pos);
+        m_used_pages--;
         pos++;
         n--;
-        m_used_pages--;
     }
 }
 
@@ -122,9 +117,9 @@ void phys_mman_t::mark_as_used(phys_addr_t addr, size_t size) noexcept
 
     while (n > 0) {
         m_bitmap.set(pos);
+        m_used_pages++;
         pos++;
         n--;
-        m_used_pages++;
     }
 }
 
@@ -201,40 +196,11 @@ void phys_mman_t::free_pages(phys_addr_t addr, size_t n) noexcept
         core::khalt();
     }
 
+    // set n pages as free
     for (size_t i = 0; i < n; i++)
         m_bitmap.unset(pos + i);
 
     m_used_pages -= n;
-}
-
-// -------------------------------------------------------------------------------------
-
-// TODO: move functions below to shell builtins
-
-const char *mem_types[5] = {
-    "available",        // available RAM to use
-    "reserved",         // reserved memory for kernel
-    "ACPI reclaimable", // memory that managed by Advanced Configuration and Power Interface (ACPI)
-    "NVS",              // Non-Volatile Storage memory (store data that must persist across system reboots)
-    "bad RAM"           // should not be used by the OS
-};
-
-void phys_mman_t::print_entries(void) const noexcept
-{
-    multiboot_entry_t *mmmt;
-
-    for (size_t i = 0; i < m_mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
-        mmmt = reinterpret_cast<multiboot_entry_t*>(m_mboot->mmap_addr + i);
-
-        printk("%#08X-", mmmt->addr);
-        printk("%#08X  ", mmmt->addr + mmmt->len - 1);
-        printk("%u KB  ", mmmt->len >> 0xA);
-        printk("<%s>\n", mem_types[mmmt->type - 1]);
-    }
-
-    printk("\nMemory page size:   %u KB\n", PAGE_SIZE);
-    printk("Total memory:       %u KB\n", m_mem_total >> 0xA);
-    printk("Used memory:        %u KB\n", (m_used_pages * PAGE_SIZE) >> 0xA);
 }
 
 phys_mman_t pmm;
