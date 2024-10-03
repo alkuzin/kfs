@@ -117,8 +117,13 @@ public:
      */
     phys_addr_t alloc_pages(size_t n) noexcept;
 
-    /** @brief Test physical memory manager.*/
-    void test(void) noexcept;
+    /**
+     * @brief Free allocated pages.
+     *
+     * @param [in] addr - given first page address.
+     * @param [in] n - given number of pages to free.
+     */
+    void free_pages(phys_addr_t addr, size_t n) noexcept;
 };
 
 extern phys_mman_t pmm;

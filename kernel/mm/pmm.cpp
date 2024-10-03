@@ -190,46 +190,25 @@ phys_addr_t phys_mman_t::alloc_pages(size_t n) noexcept
     return get_addr(start_pos);
 }
 
-void phys_mman_t::test(void) noexcept
+void phys_mman_t::free_pages(phys_addr_t addr, size_t n) noexcept
 {
-    m_free_pages = m_max_pages - m_used_pages;
-    printk(KERN_DEBUG "free pages: %u\n", m_free_pages);
-    printk(KERN_DEBUG "used pages: %u\n", m_used_pages);
+    size_t pos = get_pos(addr);
 
-    // test 0 page allocation
-    void *null_page_alloc = reinterpret_cast<void*>(alloc_pages(0));
-
-    if (!null_page_alloc)
-        printk(KERN_OK "%s\n", "null page allocation test");
-    else
-        printk(KERN_ERR "%s\n", "null page allocation test");
-
-    // test writing string to allocated memory
-    char *text_addr = reinterpret_cast<char*>(alloc_pages(1));
-
-    if (!text_addr)
-        printk(KERN_ERR "%s\n", "max pages allocation test");
-    else {
-        printk("text_addr: <%08p>\n", text_addr);
-
-        const char *str = "Hello, World!";
-        for (size_t i = 0; i < 14; i++)
-            text_addr[i] = str[i];
-
-        debug::kdump(reinterpret_cast<phys_addr_t>(text_addr), 32);
-        printk(KERN_OK "%s\n", "max pages allocation test");
+    // handle freeing first page
+    if (!pos) {
+        // TODO: replace with panic():
+        printk(KERN_ERR "%s\n", "it is forbidden to free the first page");
+        core::khalt();
     }
 
-    char *addr = reinterpret_cast<char*>(alloc_pages(10));
-    printk("addr: <%08p>\n", addr);
+    for (size_t i = 0; i < n; i++)
+        m_bitmap.unset(pos + i);
 
-    m_free_pages = m_max_pages - m_used_pages;
-    printk(KERN_DEBUG "free pages: %u\n", m_free_pages);
-    printk(KERN_DEBUG "used pages: %u\n", m_used_pages);
+    m_used_pages -= n;
 }
+
 // -------------------------------------------------------------------------------------
 
-// TODO: implement getters for phys_mman_t members
 // TODO: move functions below to shell builtins
 
 const char *mem_types[5] = {
@@ -247,15 +226,15 @@ void phys_mman_t::print_entries(void) const noexcept
     for (size_t i = 0; i < m_mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(m_mboot->mmap_addr + i);
 
-        printk(KERN_DEBUG "addr: <%08p> ", mmmt->addr);
-        printk("len: %u ", mmmt->len);
-        printk("type: %s\n", mem_types[mmmt->type - 1]);
+        printk("%#08X-", mmmt->addr);
+        printk("%#08X  ", mmmt->addr + mmmt->len - 1);
+        printk("%u KB  ", mmmt->len >> 0xA);
+        printk("<%s>\n", mem_types[mmmt->type - 1]);
     }
 
-    printk(KERN_DEBUG "total memory: %u KB\n", m_mem_total >> 0xA);
-    printk(KERN_DEBUG "total pages:  %u\n", m_max_pages);
-    printk(KERN_DEBUG "start addr:   <%08p>\n", start_addr);
-    printk(KERN_DEBUG "bitmap addr:  <%08p>\n", m_bitmap.m_data);
+    printk("\nMemory page size:   %u KB\n", PAGE_SIZE);
+    printk("Total memory:       %u KB\n", m_mem_total >> 0xA);
+    printk("Used memory:        %u KB\n", (m_used_pages * PAGE_SIZE) >> 0xA);
 }
 
 phys_mman_t pmm;
