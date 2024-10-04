@@ -64,10 +64,18 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
 
     m_mboot = &mboot;
     detect_memory();
-    m_max_pages = m_mem_total / PAGE_SIZE;
+    m_max_pages = m_mem_total >> PAGE_SHIFT;
 
     // physical memory bitmap starts right after the kernel end
-    m_bitmap.init(KERNEL_END_PADDR, m_max_pages / BITS_PER_BYTE);
+    m_bitmap.init(const_cast<uint32_t*>(KERNEL_END_PADDR), BITS_TO_BYTES(m_max_pages));
+
+    // setting memory map
+    m_mem_map      = reinterpret_cast<page_t*>(m_bitmap.m_data + m_bitmap.m_size);
+    m_mem_map_size = m_max_pages;
+    kstd::memset(m_mem_map, 0, m_mem_map_size);
+
+    for (size_t i = 0; i < m_mem_map_size; i++)
+        m_mem_map[i].m_pfn = i;   // setting page frame numbers
 
     // mark all memory as used
     kstd::memset(m_bitmap.m_data, 0xFF, m_bitmap.m_size);
@@ -81,26 +89,20 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
     // mark bitmap memory as used
     mark_as_used(reinterpret_cast<phys_addr_t>(m_bitmap.m_data), m_bitmap.m_size);
 
-    // for error handeling purpose setting first block as used
-    // in order to make possible to use null address as undefined
+    // mark pages memory map as used
+    mark_as_used(reinterpret_cast<phys_addr_t>(m_mem_map), m_mem_map_size);
+
+    // first page containing reserved data (e.g. GDT), that should not be accessed
+    // so it was set as used
     m_bitmap.set(0);
+    m_mem_map[0].m_pfn = PG::RESERVED;
     m_used_pages++;
-}
-
-inline phys_addr_t phys_mman_t::get_addr(size_t pos) const noexcept
-{
-    return start_addr + PAGE_SIZE * pos;
-}
-
-inline size_t phys_mman_t::get_pos(phys_addr_t addr) const noexcept
-{
-    return addr / PAGE_SIZE;
 }
 
 void phys_mman_t::mark_as_free(phys_addr_t addr, size_t size) noexcept
 {
-    size_t pos = get_pos(addr);
-    size_t n   = size / PAGE_SIZE;
+    size_t pos = PHYS_PFN(addr);
+    size_t n   = size >> PAGE_SHIFT;
 
     while (n > 0) {
         m_bitmap.unset(pos);
@@ -112,8 +114,8 @@ void phys_mman_t::mark_as_free(phys_addr_t addr, size_t size) noexcept
 
 void phys_mman_t::mark_as_used(phys_addr_t addr, size_t size) noexcept
 {
-    size_t pos = get_pos(addr);
-    size_t n   = size / PAGE_SIZE;
+    size_t pos = PHYS_PFN(addr);
+    size_t n   = size >> PAGE_SHIFT;
 
     while (n > 0) {
         m_bitmap.set(pos);
@@ -125,9 +127,14 @@ void phys_mman_t::mark_as_used(phys_addr_t addr, size_t size) noexcept
 
 // -------------------------------------------------------------------------------------
 
-size_t phys_mman_t::get_free_pages(size_t n) noexcept
+size_t phys_mman_t::get_free_pages(gfp_t mask, uint32_t order) noexcept
 {
     size_t pos, k;
+
+    if (!(mask & GFP::KERNEL))
+        return 0;
+
+    uint32_t n = 1 << order; // find 2^order free pages
 
     for (size_t i = 0; i < m_bitmap.capacity(); i++) {
         // skip groups of used pages
@@ -158,23 +165,29 @@ size_t phys_mman_t::get_free_pages(size_t n) noexcept
         }
     }
 
-    return undefined;
+    return 0;
 }
 
-phys_addr_t phys_mman_t::alloc_pages(size_t n) noexcept
+page_t *phys_mman_t::alloc_pages(gfp_t mask, uint32_t order) noexcept
 {
+    uint32_t n = 1 << order; // allocate 2^order pages
+
     // not enough of free blocks
     if((m_max_pages - m_used_pages) <= n)
-        return undefined;
+        return nullptr;
 
     // handle 0 pages to allocate
     if (n == 0)
-        return undefined;
+        return nullptr;
 
-    size_t start_pos = get_free_pages(n);
+    size_t start_pos = get_free_pages(mask, order);
 
     if (!start_pos)
-        return undefined;
+        return nullptr;
+
+    // set page to zero
+    if (mask & GFP::ZERO)
+        kstd::memset(reinterpret_cast<void*>(PFN_PHYS(start_pos)), 0, n << PAGE_SHIFT);
 
     // set n pages as used
     for (size_t i = 0; i < n; i++)
@@ -182,12 +195,22 @@ phys_addr_t phys_mman_t::alloc_pages(size_t n) noexcept
 
     m_used_pages += n;
 
-    return get_addr(start_pos);
+    return &m_mem_map[start_pos];
 }
 
-void phys_mman_t::free_pages(phys_addr_t addr, size_t n) noexcept
+page_t *phys_mman_t::get_zeroed_page(gfp_t mask) noexcept
 {
-    size_t pos = get_pos(addr);
+    // handle incorrect flags
+    if (!(mask & GFP::ZERO))
+        return nullptr;
+
+    page_t *page = alloc_pages(mask, 0);
+    return page;
+}
+
+void phys_mman_t::free_pages(phys_addr_t addr, uint32_t order) noexcept
+{
+    size_t pos = PFN_PHYS(addr);
 
     // handle freeing first page
     if (!pos) {
@@ -195,6 +218,8 @@ void phys_mman_t::free_pages(phys_addr_t addr, size_t n) noexcept
         printk(KERN_ERR "%s\n", "it is forbidden to free the first page");
         core::khalt();
     }
+
+    uint32_t n = 1 << order; // free 2^order pages
 
     // set n pages as free
     for (size_t i = 0; i < n; i++)

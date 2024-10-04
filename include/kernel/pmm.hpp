@@ -29,22 +29,20 @@
 
 #include <kernel/kstd/bitmap.hpp>
 #include <kernel/multiboot.hpp>
+#include <kernel/mm_types.hpp>
+#include <kernel/gfp.hpp>
 
 
 namespace kernel {
 namespace core {
 namespace memory {
 
-inline const phys_addr_t start_addr {0x00000000}; // physical memory start address
-inline const size_t      undefined  {0x00000000}; // undefined position (for error handeling)
-inline const size_t      PAGE_SIZE  {4096}; // 4 KB
-inline const bool        PAGE_FREE  {0};
-inline const bool        PAGE_USED  {1};
-
 struct phys_mman_t
 {
+    const multiboot_info_t  *m_mboot;
     kstd::bitmap_t<uint32_t> m_bitmap;  // physical memory map
-    const multiboot_info_t   *m_mboot;
+    page_t *m_mem_map;
+    size_t m_mem_map_size;
     size_t m_mem_total;                 // total physical memory
     size_t m_mem_available;             // total available memory
     size_t m_max_pages;                 // total number of pages
@@ -57,22 +55,6 @@ private:
 
     /** @brief Free all available memory regions.*/
     void free_available_memory(void) noexcept;
-
-    /**
-     * @brief Get the physical address of specific page.
-     *
-     * @param [in] pos - given position of page.
-     * @return physical address.
-     */
-    inline phys_addr_t get_addr(size_t pos) const noexcept;
-
-    /**
-     * @brief Get the position of page.
-     *
-     * @param [in] addr - given page address.
-     * @return page position.
-     */
-    inline size_t get_pos(phys_addr_t addr) const noexcept;
 
     /**
      * @brief Mark memory region as free.
@@ -91,13 +73,14 @@ private:
     void mark_as_free(phys_addr_t addr, size_t size) noexcept;
 
     /**
-     * @brief Get free pages.
+     * @brief  Get free pages.
      *
-     * @param [in] n - given number of pages to find.
+     * @param [in] mask - given allocation flags.
+     * @param [in] order - given power of two (finding 2^order pages).
      * @return page position in bitmap - in case of success.
-     * @return undefined - in case of error.
+     * @return 0 - in case of error.
      */
-    size_t get_free_pages(size_t n) noexcept;
+    size_t get_free_pages(gfp_t mask, uint32_t order) noexcept;
 
 public:
     /**
@@ -108,21 +91,31 @@ public:
     void init(const multiboot_t& mboot) noexcept;
 
     /**
-     * @brief Allocate specific number of pages.
+     * @brief Allocate memory pages.
      *
-     * @param [in] n - given number of pages to allocate.
-     * @return physical address of first page - in case of success.
-     * @return undefined - in case of error.
+     * @param [in] mask - given allocation flags.
+     * @param [in] order - given power of two (allocating 2^order pages).
+     * @return allocated page pointer - in case of success.
+     * @return nullptr - in case of errors.
      */
-    phys_addr_t alloc_pages(size_t n) noexcept;
+    page_t *alloc_pages(gfp_t mask, uint32_t order) noexcept;
+
+    /**
+     * @brief Get the zeroed page.
+     *
+     * @param [in] mask - given allocation flags.
+     * @return allocated zeroed page pointer - in case of success.
+     * @return nullptr - in case of errors.
+     */
+    page_t *get_zeroed_page(gfp_t mask) noexcept;
 
     /**
      * @brief Free allocated pages.
      *
      * @param [in] addr - given first page address.
-     * @param [in] n - given number of pages to free.
+     * @param [in] order - given power of two (freeing 2^order pages).
      */
-    void free_pages(phys_addr_t addr, size_t n) noexcept;
+    void free_pages(phys_addr_t addr, uint32_t order) noexcept;
 };
 
 extern phys_mman_t pmm;
