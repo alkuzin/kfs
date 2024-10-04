@@ -71,7 +71,7 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
 
     // setting memory map
     m_mem_map      = reinterpret_cast<page_t*>(m_bitmap.m_data + m_bitmap.m_size);
-    m_mem_map_size = m_max_pages;
+    m_mem_map_size = sizeof(page_t) * m_max_pages;
     kstd::memset(m_mem_map, 0, m_mem_map_size);
 
     for (size_t i = 0; i < m_mem_map_size; i++)
