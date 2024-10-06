@@ -30,26 +30,31 @@ namespace memory {
 void phys_mman_t::detect_memory(void) noexcept
 {
     multiboot_entry_t *mmmt;
+    size_t i = 0;
 
-    for (size_t i = 0; i < m_mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
+    while (i < m_mboot->mmap_length) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(m_mboot->mmap_addr + i);
 
         if (mmmt->type == MULTIBOOT_MEMORY_AVAILABLE)
             m_mem_available += mmmt->len;
 
         m_mem_total += mmmt->len;
+        i += sizeof(multiboot_entry_t);
     }
 }
 
 void phys_mman_t::free_available_memory(void) noexcept
 {
     multiboot_entry_t *mmmt;
+    size_t i = 0;
 
-    for (size_t i = 0; i < m_mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
+    while (i < m_mboot->mmap_length) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(m_mboot->mmap_addr + i);
 
         if (mmmt->type == MULTIBOOT_MEMORY_AVAILABLE)
             mark_as_free(mmmt->addr, mmmt->len);
+
+        i += sizeof(multiboot_entry_t);
     }
 }
 
@@ -66,34 +71,42 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
     detect_memory();
     m_max_pages = m_mem_total >> PAGE_SHIFT;
 
+    /** @warning There is an issue with overwriting global variables
+     * with bitmap data, so I added additional offset to prevent that.*/
+    auto bitmap_addr = const_cast<phys_addr_t*>(KERNEL_END_PTR) + STACK_SIZE;
+    auto bitmap_size = BITS_TO_BYTES(m_max_pages);
+
     // physical memory bitmap starts right after the kernel end
-    m_bitmap.init(const_cast<uint32_t*>(KERNEL_END_PADDR), BITS_TO_BYTES(m_max_pages));
+    m_bitmap.init(bitmap_addr, bitmap_size);
 
     // setting memory map
-    m_mem_map      = reinterpret_cast<page_t*>(m_bitmap.m_data + m_bitmap.m_size);
+    m_mem_map      = reinterpret_cast<page_t*>(m_bitmap.m_data + bitmap_size);
     m_mem_map_size = sizeof(page_t) * m_max_pages;
+
+    // physical memory map starts right after the bitmap end
     kstd::memset(m_mem_map, 0, m_mem_map_size);
 
+    // setting page frame numbers
     for (size_t i = 0; i < m_mem_map_size; i++)
-        m_mem_map[i].m_pfn = i;   // setting page frame numbers
+        m_mem_map[i].m_pfn = i;
 
     // mark all memory as used
-    kstd::memset(m_bitmap.m_data, 0xFF, m_bitmap.m_size);
+    kstd::memset(bitmap_addr, 0xFF, bitmap_size);
     m_used_pages = m_max_pages;
 
     free_available_memory();
 
     // mark kernel memory as used
-    mark_as_used(reinterpret_cast<phys_addr_t>(KERNEL_START_PADDR), KERNEL_END_PADDR - KERNEL_START_PADDR);
+    mark_as_used(phys_addr_t(KERNEL_START_PADDR), KERNEL_SIZE + PAGE_SIZE);
 
     // mark bitmap memory as used
-    mark_as_used(reinterpret_cast<phys_addr_t>(m_bitmap.m_data), m_bitmap.m_size);
+    mark_as_used(phys_addr_t(m_bitmap.m_data), m_bitmap.m_size);
 
     // mark pages memory map as used
-    mark_as_used(reinterpret_cast<phys_addr_t>(m_mem_map), m_mem_map_size);
+    mark_as_used(phys_addr_t(m_mem_map), m_mem_map_size);
 
-    // first page containing reserved data (e.g. GDT), that should not be accessed
-    // so it was set as used
+    // first page containing reserved data (e.g. GDT), that should not
+    // be accessed, so it was set as used:
     m_bitmap.set(0);
     m_mem_map[0].m_pfn = PG::RESERVED;
     m_used_pages++;
@@ -125,8 +138,6 @@ void phys_mman_t::mark_as_used(phys_addr_t addr, size_t size) noexcept
     }
 }
 
-// -------------------------------------------------------------------------------------
-
 size_t phys_mman_t::get_free_pages(gfp_t mask, uint32_t order) noexcept
 {
     size_t pos, k;
@@ -141,7 +152,7 @@ size_t phys_mman_t::get_free_pages(gfp_t mask, uint32_t order) noexcept
         if (m_bitmap.m_data[i] != 0xFFFFFFFF) {
             // handle each group
             for (size_t j = 0; j < m_bitmap.bits_per_element(); j++) {
-                pos = 32 * i + j + 1;
+                pos = 32 * i + j;
 
                 // skip until free page
                 while (m_bitmap.get(pos) != PAGE_FREE)
@@ -155,7 +166,7 @@ size_t phys_mman_t::get_free_pages(gfp_t mask, uint32_t order) noexcept
                             break;
                     }
 
-                    // if used page was found - start checking next group of pages
+                    // if used page was found check next group of pages
                     if (k < n - 1)
                         continue;
                     else
@@ -176,18 +187,16 @@ page_t *phys_mman_t::alloc_pages(gfp_t mask, uint32_t order) noexcept
     if((m_max_pages - m_used_pages) <= n)
         return nullptr;
 
-    // handle 0 pages to allocate
-    if (n == 0)
-        return nullptr;
-
     size_t start_pos = get_free_pages(mask, order);
 
     if (!start_pos)
         return nullptr;
 
     // set page to zero
-    if (mask & GFP::ZERO)
-        kstd::memset(reinterpret_cast<void*>(PFN_PHYS(start_pos)), 0, n << PAGE_SHIFT);
+    if (mask & GFP::ZERO) {
+        auto addr = reinterpret_cast<void*>(PFN_PHYS(start_pos));
+        kstd::memset(addr, 0, n << PAGE_SHIFT);
+    }
 
     // set n pages as used
     for (size_t i = 0; i < n; i++)
