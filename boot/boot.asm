@@ -48,7 +48,7 @@ align 4                 ; aligns next data element/instruction that is multiple 
 section .bss            ; stores uninitialized global and static variables
 align 16                ; reserving space for the stack
 stack_bottom:
-    RESB 16384 * 8
+    RESB 65536          ; 64 KB
 stack_top:
 
 section .text           ; contains executable instructions of a program
@@ -66,7 +66,6 @@ boot:
 halt:
     hlt	                ; this instruction halts the CPU
     jmp halt            ; infinite loop
-
 
 section .data           ; stores initialized global and static variables
 align 4096

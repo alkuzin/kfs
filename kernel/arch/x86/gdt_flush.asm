@@ -27,6 +27,7 @@ gdt_flush:
     mov es, ax          ; allow the CPU to access to kernel extra segment
     mov fs, ax          ; allow the CPU to access to kernel additional segment
     mov gs, ax          ; allow the CPU to access to kernel global segment
+    mov ax, 0x18        ; offset in the GDT to kernel stack
     mov ss, ax          ; allow the CPU to access to kernel stack segment
 
     jmp 0x08: flush     ; return to kernel code segment

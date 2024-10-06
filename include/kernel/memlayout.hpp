@@ -36,9 +36,15 @@ namespace kernel {
 namespace core {
 namespace memory {
 
-inline const phys_addr_t MEM_START_PADDR    {0x00000000}; // physical memory start address
-inline const uint32_t   *KERNEL_START_PADDR {reinterpret_cast<uint32_t*>(&kernel_phys_start)};
-inline const uint32_t   *KERNEL_END_PADDR   {reinterpret_cast<uint32_t*>(&kernel_phys_end)};
+inline const auto      KERNEL_START_PADDR {phys_addr_t(&kernel_phys_start)};
+inline const auto      KERNEL_END_PADDR   {phys_addr_t(&kernel_phys_end)};
+inline const uint32_t *KERNEL_START_PTR   {reinterpret_cast<uint32_t*>(KERNEL_START_PADDR)};
+inline const uint32_t *KERNEL_END_PTR     {reinterpret_cast<uint32_t*>(KERNEL_END_PADDR)};
+
+inline const phys_addr_t MEM_START_PADDR    {0x00000};
+inline const uint32_t    STACK_SIZE         {0x10000}; // 64 KB
+
+#define KERNEL_SIZE ((KERNEL_END_PADDR) - (KERNEL_START_PADDR))
 
 } // namespace memory
 } // namespace core
