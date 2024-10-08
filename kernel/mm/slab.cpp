@@ -158,8 +158,7 @@ void cache_t::alloc_slab(void) noexcept
                     m_list.m_next_free = slab;
                 }
 
-                size_t pfn    = PHYS_PFN(phys_addr_t(slab->m_s_mem));
-                page_t *page  = reinterpret_cast<page_t*>(PFN_PHYS(pfn));
+                page_t *page  = pmm.get_page(phys_addr_t(slab->m_s_mem));
                 page->m_cache = this;
                 page->m_slab  = slab;
 
@@ -284,8 +283,8 @@ void kfree(const void *objp) noexcept
     if (!objp)
         return;
 
-    kmem::cache_t *cache = GET_PAGE_CACHE(objp);
-    cache->free_slab(GET_PAGE_SLAB(objp));
+    page_t *page = pmm.get_page(phys_addr_t(objp));
+    page->m_cache->free_slab(page->m_slab);
 }
 
 size_t ksize(const void *objp) noexcept
@@ -294,8 +293,8 @@ size_t ksize(const void *objp) noexcept
     if (!objp)
         return 0;
 
-    kmem::cache_t *cache = GET_PAGE_CACHE(objp);
-    return cache->m_objsize;
+    page_t *page = pmm.get_page(phys_addr_t(objp));
+    return page->m_cache->m_objsize;
 }
 
 } // namespace kernel

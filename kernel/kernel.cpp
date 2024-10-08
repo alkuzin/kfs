@@ -24,8 +24,8 @@
 #include <kernel/printk.hpp>
 #include <kernel/panic.hpp>
 #include <kernel/core.hpp>
-#include <kernel/pmm.hpp>
 #include <kernel/slab.hpp>
+#include <kernel/pmm.hpp>
 
 
 namespace kernel {
@@ -52,7 +52,7 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     printk(KERN_OK "%s\n", "initialized kernel shell");
 
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
-        panic("%s", "invalid magic number: %#X\n", magic);
+        panic("invalid magic number: %#X\n", magic);
 
     arch::x86::gdt::init();
     printk(KERN_OK "%s\n", "initialized GDT");

@@ -83,8 +83,12 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
     kstd::memset(m_mem_map, 0, m_mem_map_size);
 
     // setting page frame numbers
-    for (size_t i = 0; i < m_mem_map_size; i++)
-        m_mem_map[i].m_pfn = i;
+    for (size_t i = 0; i < m_mem_map_size; i++) {
+        m_mem_map[i].m_cache = nullptr;
+        m_mem_map[i].m_slab  = nullptr;
+        m_mem_map[i].m_flags = 0;
+        m_mem_map[i].m_pfn   = i;
+    }
 
     // mark all memory as used
     kstd::memset(bitmap_addr, 0xFF, bitmap_size);
@@ -228,6 +232,12 @@ void phys_mman_t::free_pages(phys_addr_t addr, uint32_t order) noexcept
         m_bitmap.unset(pos + i);
 
     m_used_pages -= n;
+}
+
+page_t *phys_mman_t::get_page(phys_addr_t addr) const noexcept
+{
+    size_t pfn = PHYS_PFN(addr);
+    return &m_mem_map[pfn];
 }
 
 phys_mman_t pmm;

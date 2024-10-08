@@ -116,6 +116,14 @@ public:
      * @param [in] order - given power of two (freeing 2^order pages).
      */
     void free_pages(phys_addr_t addr, uint32_t order) noexcept;
+
+    /**
+     * @brief Get the page struct.
+     *
+     * @param [in] addr - given memory address.
+     * @return page struct.
+     */
+    page_t *get_page(phys_addr_t addr) const noexcept;
 };
 
 extern phys_mman_t pmm;

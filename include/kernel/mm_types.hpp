@@ -87,30 +87,6 @@ inline void *page_t::addr(void) const noexcept
     return reinterpret_cast<void*>(PFN_PHYS(m_pfn));
 }
 
-/**
- * @brief Get page from memory address.
- *
- * @param [in] addr - given page physical address.
- * @return page pointer.
- */
-constexpr inline page_t *PHYS_PAGE(phys_addr_t addr) noexcept
-{
-    page_t *page = reinterpret_cast<page_t*>(PFN_PHYS(PHYS_PFN(addr)));
-    return page;
-}
-
-inline kmem::cache_t *GET_PAGE_CACHE(const void *ptr) noexcept
-{
-    page_t *page = PHYS_PAGE(phys_addr_t(ptr));
-    return page->m_cache;
-}
-
-inline kmem::slab_t *GET_PAGE_SLAB(const void *ptr) noexcept
-{
-    page_t *page = PHYS_PAGE(phys_addr_t(ptr));
-    return page->m_slab;
-}
-
 } // namespace memory
 } // namespace core
 } // namespace kernel
