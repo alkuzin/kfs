@@ -1,4 +1,9 @@
 # Kernel From Scratch changes
+
+## release v0.2.5
+
+<img src="res/kfs_v0_2_5.png">
+
 ## release v0.2.0
 
 <img src="res/kfs_v0_2_0.png">
