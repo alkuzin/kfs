@@ -51,10 +51,8 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     shell.set();
     printk(KERN_OK "%s\n", "initialized kernel shell");
 
-    if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
-        printk(KERN_ERR "%s", "invalid magic number: %#X\n", magic);
-        return;
-    }
+    if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
+        panic("%s", "invalid magic number: %#X\n", magic);
 
     arch::x86::gdt::init();
     printk(KERN_OK "%s\n", "initialized GDT");

@@ -19,10 +19,8 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cmath.hpp>
 #include <kernel/mm_types.hpp>
-#include <kernel/printk.hpp>
 #include <kernel/kernel.hpp>
-#include <kernel/debug.hpp>
-#include <kernel/core.hpp>
+#include <kernel/panic.hpp>
 #include <kernel/slab.hpp>
 #include <kernel/pmm.hpp>
 
@@ -44,11 +42,8 @@ void init(void) noexcept
 {
     void *pages = pmm.alloc_pages(GFP::KERNEL, SLAB_PAGES_ORDER)->addr();
 
-    // TODO: replace with panic():
-    if (!pages) {
-        printk(KERN_ERR "%s\n", "error to allocate pages for slabs structs");
-        core::khalt();
-    }
+    if (!pages)
+        panic("%s\n", "error to allocate pages for slabs structs");
 
     slabs.m_head = reinterpret_cast<slab_t*>(pages);
     slabs.m_size = ((1 << SLAB_PAGES_ORDER) << PAGE_SHIFT) / sizeof(slab_t);
@@ -61,11 +56,8 @@ void init(void) noexcept
         page     = pmm.get_zeroed_page(GFP::KERNEL | GFP::ZERO);
         page_ptr = page->addr();
 
-        // TODO: replace with panic():
-        if (!page_ptr) {
-            printk(KERN_ERR "%s\n", "error to allocate pages for objects");
-            core::khalt();
-        }
+        if (!page_ptr)
+            panic("%s\n", "error to allocate pages for objects");
 
         // set page as used in slab
         page->m_flags |= PG::SLAB;
@@ -180,11 +172,8 @@ void cache_t::alloc_slab(void) noexcept
         }
     }
 
-    // TODO: replace with panic():
-    if (!is_allocated) {
-        printk(KERN_ERR "%s\n", "error to allocate new slab for cache");
-        core::khalt();
-    }
+    if (!is_allocated)
+        panic("%s\n", "error to allocate new slab for cache");
 }
 
 void cache_t::free_slab(slab_t *slab) noexcept
@@ -242,11 +231,8 @@ void cache_t::free(void *objp) noexcept
         slab = slab->m_prev;
     }
 
-    // TODO: replace with panic():
-    if (!is_free) {
-        printk(KERN_ERR "%s\n", "error to free slab object");
-        core::khalt();
-    }
+    if (!is_free)
+        panic("%s\n", "error to free slab object");
 }
 
 } // namespace kmem
@@ -273,8 +259,7 @@ void *kmalloc(size_t size, gfp_t flags) noexcept
 {
     // handle incorrect size
     if (size > 2_KB) {
-        // TODO: replace with panic():
-        printk(KERN_ERR "kmalloc: %s\n", "large size for allocation");
+        panic(PANIC_ERR "kmalloc: %s\n", "large size for allocation");
         return nullptr;
     }
 
@@ -286,8 +271,7 @@ void *kmalloc(size_t size, gfp_t flags) noexcept
 
     // handle incorrect index
     if (index >= kmem::CACHES_SIZE) {
-        // TODO: replace with panic():
-        printk(KERN_ERR "kmalloc: %s\n", "large size for allocation");
+        panic(PANIC_ERR "kmalloc: %s\n", "large size for allocation");
         return nullptr;
     }
 

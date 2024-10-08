@@ -42,7 +42,7 @@ inline const uint32_t *KERNEL_START_PTR   {reinterpret_cast<uint32_t*>(KERNEL_ST
 inline const uint32_t *KERNEL_END_PTR     {reinterpret_cast<uint32_t*>(KERNEL_END_PADDR)};
 
 inline const phys_addr_t MEM_START_PADDR    {0x00000};
-inline const uint32_t    STACK_SIZE         {0x10000}; // 64 KB
+inline const uint32_t    STACK_SIZE         {64_KB};
 
 #define KERNEL_SIZE ((KERNEL_END_PADDR) - (KERNEL_START_PADDR))
 

@@ -34,7 +34,7 @@ namespace kernel {
 namespace core {
 namespace memory {
 
-inline const size_t     PAGE_SIZE   {4096}; // 4 KB
+inline const size_t     PAGE_SIZE   {4_KB};
 inline const bool       PAGE_FREE   {0};
 inline const bool       PAGE_USED   {1};
 inline const uint8_t    PAGE_SHIFT  {0xC};

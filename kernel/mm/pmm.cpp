@@ -18,8 +18,7 @@
 
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/memlayout.hpp>
-#include <kernel/printk.hpp>
-#include <kernel/core.hpp>
+#include <kernel/panic.hpp>
 #include <kernel/pmm.hpp>
 
 
@@ -61,11 +60,8 @@ void phys_mman_t::free_available_memory(void) noexcept
 void phys_mman_t::init(const multiboot_t& mboot) noexcept
 {
     // check that multiboot memory map is set correctly
-    if ((mboot.flags & (1 << 6)) == 0) {
-        // TODO: replace with panic()
-        printk(KERN_ERR "%s\n", "multiboot memory map wasn't set correctly");
-        core::khalt();
-    }
+    if ((mboot.flags & (1 << 6)) == 0)
+        panic("%s\n", "multiboot memory map wasn't set correctly");
 
     m_mboot = &mboot;
     detect_memory();
@@ -222,11 +218,8 @@ void phys_mman_t::free_pages(phys_addr_t addr, uint32_t order) noexcept
     size_t pos = PFN_PHYS(addr);
 
     // handle freeing first page
-    if (!pos) {
-        // TODO: replace with panic():
-        printk(KERN_ERR "%s\n", "it is forbidden to free the first page");
-        core::khalt();
-    }
+    if (!pos)
+        panic("%s\n", "it is forbidden to free the first page");
 
     uint32_t n = 1 << order; // free 2^order pages
 
