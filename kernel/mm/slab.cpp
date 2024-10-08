@@ -294,14 +294,24 @@ void *kmalloc(size_t size, gfp_t flags) noexcept
     return kmem::caches[index].alloc(flags);
 }
 
-void kfree(const void *ptr) noexcept
+void kfree(const void *objp) noexcept
 {
     // handle nullptr
-    if (!ptr)
+    if (!objp)
         return;
 
-    kmem::cache_t *cache = GET_PAGE_CACHE(ptr);
-    cache->free_slab(GET_PAGE_SLAB(ptr));
+    kmem::cache_t *cache = GET_PAGE_CACHE(objp);
+    cache->free_slab(GET_PAGE_SLAB(objp));
+}
+
+size_t ksize(const void *objp) noexcept
+{
+    // handle nullptr
+    if (!objp)
+        return 0;
+
+    kmem::cache_t *cache = GET_PAGE_CACHE(objp);
+    return cache->m_objsize;
 }
 
 } // namespace kernel

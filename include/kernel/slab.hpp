@@ -118,9 +118,17 @@ void *kmalloc(size_t size, gfp_t flags) noexcept;
 /**
  * @brief Free pointer allocated by kmalloc().
  *
- * @param [in] ptr - given object to free.
+ * @param [in] objp - given object to free.
  */
-void kfree(const void *ptr) noexcept;
+void kfree(const void *objp) noexcept;
+
+/**
+ * @brief Get actual allocation size of associated object.
+ *
+ * @param [in] objp - given object pointer.
+ * @return size in bytes.
+ */
+size_t ksize(const void *objp) noexcept;
 
 } // namespace kernel
 
