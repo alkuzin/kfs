@@ -18,6 +18,7 @@
 
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cmath.hpp>
+#include <kernel/mm_types.hpp>
 #include <kernel/printk.hpp>
 #include <kernel/kernel.hpp>
 #include <kernel/debug.hpp>
@@ -54,15 +55,20 @@ void init(void) noexcept
 
     // allocating pages for each slab objects
     void *page_ptr = nullptr;
+    page_t *page   = nullptr;
 
     for (size_t i = 0; i < slabs.m_size; i++) {
-        page_ptr = pmm.get_zeroed_page(GFP::KERNEL | GFP::ZERO)->addr();
+        page     = pmm.get_zeroed_page(GFP::KERNEL | GFP::ZERO);
+        page_ptr = page->addr();
 
         // TODO: replace with panic():
         if (!page_ptr) {
             printk(KERN_ERR "%s\n", "error to allocate pages for objects");
             core::khalt();
         }
+
+        // set page as used in slab
+        page->m_flags |= PG::SLAB;
 
         slabs.m_head[i].m_s_mem   = page_ptr;
         slabs.m_head[i].m_free    = page_ptr;
@@ -159,6 +165,11 @@ void cache_t::alloc_slab(void) noexcept
                     m_list.m_head      = slab;
                     m_list.m_next_free = slab;
                 }
+
+                size_t pfn    = PHYS_PFN(phys_addr_t(slab->m_s_mem));
+                page_t *page  = reinterpret_cast<page_t*>(PFN_PHYS(pfn));
+                page->m_cache = this;
+                page->m_slab  = slab;
 
                 m_list.m_size++;
                 is_allocated = true;
@@ -281,6 +292,16 @@ void *kmalloc(size_t size, gfp_t flags) noexcept
     }
 
     return kmem::caches[index].alloc(flags);
+}
+
+void kfree(const void *ptr) noexcept
+{
+    // handle nullptr
+    if (!ptr)
+        return;
+
+    kmem::cache_t *cache = GET_PAGE_CACHE(ptr);
+    cache->free_slab(GET_PAGE_SLAB(ptr));
 }
 
 } // namespace kernel

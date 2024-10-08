@@ -34,7 +34,6 @@
 namespace kernel {
 namespace kmem {
 
-// TODO: GET_PAGE_CACHE() and GET_PAGE_SLAB()
 inline const uint32_t CACHE_NAMELEN {16};
 
 struct slab_t
@@ -68,13 +67,6 @@ private:
     /** @brief Allocate a single slab.*/
     void alloc_slab(void) noexcept;
 
-    /**
-     * @brief Free a single slab.
-     *
-     * @param [in] slab - given slab to free.
-     */
-    void free_slab(slab_t *slab) noexcept;
-
 public:
     /**
      * @brief Create a cache.
@@ -92,6 +84,13 @@ public:
      * @return allocated object pointer.
      */
     void *alloc(uint8_t flags) noexcept;
+
+    /**
+     * @brief Free a single slab.
+     *
+     * @param [in] slab - given slab to free.
+     */
+    void free_slab(slab_t *slab) noexcept;
 
     /**
      * @brief Free cache object.
@@ -115,6 +114,13 @@ void init(void) noexcept;
  * @return nullptr in case of failure.
  */
 void *kmalloc(size_t size, gfp_t flags) noexcept;
+
+/**
+ * @brief Free pointer allocated by kmalloc().
+ *
+ * @param [in] ptr - given object to free.
+ */
+void kfree(const void *ptr) noexcept;
 
 } // namespace kernel
 
