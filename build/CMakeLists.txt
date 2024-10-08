@@ -78,6 +78,7 @@ set(KERNEL_SOURCES
 
     # Kernel memory management directory:
     "${KERNEL_MM_DIR}/pmm.cpp"
+    "${KERNEL_MM_DIR}/slab.cpp"
 )
 
 # List of kernel assembly source files

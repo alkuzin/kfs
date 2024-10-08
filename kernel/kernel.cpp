@@ -24,6 +24,7 @@
 #include <kernel/printk.hpp>
 #include <kernel/core.hpp>
 #include <kernel/pmm.hpp>
+#include <kernel/slab.hpp>
 
 
 namespace kernel {
@@ -59,6 +60,9 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 
     core::memory::pmm.init(mboot);
     printk(KERN_OK "%s\n", "initialized physical memory manager");
+
+    kmem::init();
+    printk(KERN_OK "%s\n", "initialized kernel heap");
 
     shell.process();
 }
