@@ -27,7 +27,7 @@
 #ifndef _KERNEL_MM_TYPES_HPP_
 #define _KERNEL_MM_TYPES_HPP_
 
-#include <kernel/types.hpp>
+#include <kernel/slab.hpp>
 
 
 namespace kernel {
@@ -41,7 +41,8 @@ inline const uint8_t    PAGE_SHIFT  {0xC};
 
 // page flags enumeration
 enum PG : uint8_t {
-    RESERVED = 0b10000000   // flag empty pages or pages that do not even exist
+    RESERVED = 0b10000000,   // empty pages or pages that do not even exist
+    SLAB     = 0b01000000    // page frame is included in a slab
 };
 
 /**
@@ -61,15 +62,17 @@ constexpr inline phys_addr_t PFN_PHYS(size_t pfn) noexcept
  * @param [in] addr - given page physical address.
  * @return page frame number.
  */
-constexpr inline phys_addr_t PHYS_PFN(phys_addr_t addr) noexcept
+constexpr inline size_t PHYS_PFN(phys_addr_t addr) noexcept
 {
     return addr >> PAGE_SHIFT;
 }
 
 struct page_t
 {
-    size_t  m_pfn;     // page frame number - position in bitmap & memory map
-    uint8_t m_flags;   // describes page status
+    kmem::cache_t *m_cache; // memory allocator cache (only if PG::SLAB is set)
+    kmem::slab_t  *m_slab;  // memory allocator slab (only if PG::SLAB is set)
+    size_t         m_pfn;   // page frame number - position in bitmap & memory map
+    uint8_t        m_flags; // describes page status
 
     /**
      * @brief Get page memory address.
@@ -82,6 +85,30 @@ struct page_t
 inline void *page_t::addr(void) const noexcept
 {
     return reinterpret_cast<void*>(PFN_PHYS(m_pfn));
+}
+
+/**
+ * @brief Get page from memory address.
+ *
+ * @param [in] addr - given page physical address.
+ * @return page pointer.
+ */
+constexpr inline page_t *PHYS_PAGE(phys_addr_t addr) noexcept
+{
+    page_t *page = reinterpret_cast<page_t*>(PFN_PHYS(PHYS_PFN(addr)));
+    return page;
+}
+
+inline kmem::cache_t *GET_PAGE_CACHE(const void *ptr) noexcept
+{
+    page_t *page = PHYS_PAGE(phys_addr_t(ptr));
+    return page->m_cache;
+}
+
+inline kmem::slab_t *GET_PAGE_SLAB(const void *ptr) noexcept
+{
+    page_t *page = PHYS_PAGE(phys_addr_t(ptr));
+    return page->m_slab;
 }
 
 } // namespace memory
