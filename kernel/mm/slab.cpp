@@ -19,8 +19,8 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cmath.hpp>
 #include <kernel/printk.hpp>
+#include <kernel/kernel.hpp>
 #include <kernel/debug.hpp>
-#include <kernel/memlayout.hpp>
 #include <kernel/core.hpp>
 #include <kernel/slab.hpp>
 #include <kernel/pmm.hpp>
@@ -38,27 +38,6 @@ static cache_t     caches[CACHES_SIZE]; // array of predefined caches
 inline size_t      slab_pos = 0;        // current free slab position
 inline slab_list_t slabs;               // allocated slabs list
 
-// TODO: move to kernel/kernel.h
-/**
- * @brief Get the closest power of 2.
- *
- * @param [in] n - given number.
- * @return closest power of 2.
- */
-constexpr inline size_t roundup_pow_of_two(size_t n) noexcept
-{
-    if (n == 0)
-        return 1;
-
-    n--;              // handle the case where x is already a power of 2
-    n |= n >> 0x1;    // set bits 1 and 2
-    n |= n >> 0x2;    // set bits 1-4
-    n |= n >> 0x4;    // set bits 1-8
-    n |= n >> 0x8;    // set bits 1-16
-    n |= n >> 0x10;   // set bits 1-32 (for 32-bit integers)
-
-    return n + 1;
-}
 
 void init(void) noexcept
 {
