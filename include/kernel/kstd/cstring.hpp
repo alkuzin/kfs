@@ -59,6 +59,16 @@ void *memset(void *s, int32_t c, size_t n) noexcept;
  */
 int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept;
 
+/**
+ * @brief Copy a string with truncation.
+ *
+ * @param [out] dest - given buffer for copied string.
+ * @param [in] src - given source null terminated string.
+ * @param [in] size - given size to copy.
+ * @return number of copied string characters.
+ */
+size_t strncpy(char *dest, const char *src, size_t size) noexcept;
+
 } // namespace kstd
 } // namespace kernel
 

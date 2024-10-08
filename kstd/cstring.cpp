@@ -46,5 +46,18 @@ int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept
     return 0;
 }
 
+size_t strncpy(char *dest, const char *src, size_t size) noexcept
+{
+    size_t i = 0;
+
+    while(src[i] && i < size) {
+        dest[i] = src[i];
+        i++;
+    }
+
+    dest[i] = '\0';
+    return i;
+}
+
 } // namespace kstd
 } // namespace kernel
