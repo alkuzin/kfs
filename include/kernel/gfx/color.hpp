@@ -37,12 +37,13 @@ using rgb_t = uint32_t;
 
 namespace color {
 
-inline const rgb_t red    {0xfc3f42};
-inline const rgb_t green  {0x6AF957};
-inline const rgb_t blue   {0x578af9};
-inline const rgb_t black  {0x000000};
-inline const rgb_t white  {0xFFFFFF};
-inline const rgb_t gray   {0x919191};
+inline const rgb_t red      {0xfc3f42};
+inline const rgb_t green    {0x6AF957};
+inline const rgb_t blue     {0x578af9};
+inline const rgb_t black    {0x000000};
+inline const rgb_t white    {0xFFFFFF};
+inline const rgb_t gray     {0x919191};
+inline const rgb_t yellow   {0xFCCD23};
 
 } // namespace color
 

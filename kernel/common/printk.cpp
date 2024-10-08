@@ -17,7 +17,6 @@
  */
 
 #include <kernel/kstd/cstring.hpp>
-#include <kernel/kstd/cstdio.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/printk.hpp>
 
@@ -25,18 +24,20 @@
 namespace kernel {
 
 // inner buffer to store printk string
-inline const auto BUF_SIZE {1024};
+inline const auto BUF_SIZE {1_KB};
 static char buffer[BUF_SIZE];
 
 // kernel log types:
 inline const auto LOG_OK           {0};
 inline const auto LOG_ERR          {1};
 inline const auto LOG_DEBUG        {2};
+inline const auto LOG_EMERG        {3};
 inline const auto LOG_DEFAULT      {9};
 
 // kernel log types messages:
 inline const auto LOG_OK_MSG      {"  OK  "};
 inline const auto LOG_ERR_MSG     {"ERROR"};
+inline const auto LOG_EMERG_MSG   {"EMERG"};
 inline const auto LOG_DEBUG_MSG   {"DEBUG"};
 
 /**
@@ -71,6 +72,10 @@ static int32_t print_log(const char *fmt) noexcept
         kstd::putk(LOG_DEBUG_MSG, gfx::color::gray);
         break;
 
+    case LOG_EMERG:
+        kstd::putk(LOG_EMERG_MSG, gfx::color::yellow);
+        break;
+
     default:
         break;
     }
@@ -91,7 +96,10 @@ void printk(const char *fmt, ...) noexcept
     va_end(args);
 
 	kstd::putk(buffer);
-    kstd::memset(buffer, 0, BUF_SIZE);
+
+    // clean buffer
+    for (size_t i = 0; buffer[i] && i < BUF_SIZE; i++)
+        buffer[i] = 0;
 }
 
 void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept
@@ -103,7 +111,10 @@ void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept
     va_end(args);
 
 	kstd::putk(buffer, fg, bg);
-    kstd::memset(buffer, 0, BUF_SIZE);
+
+    // clean buffer
+    for (size_t i = 0; buffer[i] && i < BUF_SIZE; i++)
+        buffer[i] = 0;
 }
 
 } // namespace kernel

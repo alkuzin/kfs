@@ -37,6 +37,7 @@ namespace kernel {
 #define KERN_OK         "<0>"
 #define KERN_ERR        "<1>"
 #define KERN_DEBUG      "<2>"
+#define KERN_EMERG      "<3>"
 #define KERN_DEFAULT    "<9>"
 
 /**
