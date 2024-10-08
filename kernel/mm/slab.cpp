@@ -25,11 +25,11 @@
 #include <kernel/slab.hpp>
 #include <kernel/pmm.hpp>
 
+using namespace kernel::core::memory;
+
 
 namespace kernel {
 namespace kmem {
-
-using namespace core::memory;
 
 inline const uint8_t SLAB_PAGES_ORDER {0};  // 2^order pages to allocate
 inline const uint8_t CACHES_SIZE      {9};
@@ -148,7 +148,6 @@ void cache_t::alloc_slab(void) noexcept
 
             if (slab->m_is_free) {
                 slab->m_is_free = false;
-                printk(KERN_DEBUG "slab: <%08p>\n", slab);
 
                 if (m_list.m_head) {
                     slab->m_prev               = m_list.m_next_free;
@@ -240,4 +239,48 @@ void cache_t::free(void *objp) noexcept
 }
 
 } // namespace kmem
+
+/**
+ * @brief Get the specific cache index in cache array.
+ *
+ * @param [in] size - given size of memory block to allocate.
+ */
+constexpr inline int32_t get_cache_index(size_t size) noexcept
+{
+    auto rounded = roundup_pow_of_two(size);
+    auto index   = 0;
+
+    while (rounded > 8) {
+        rounded >>= 1;
+        index++;
+    }
+
+    return index;
+}
+
+void *kmalloc(size_t size, gfp_t flags) noexcept
+{
+    // handle incorrect size
+    if (size > 2_KB) {
+        // TODO: replace with panic():
+        printk(KERN_ERR "kmalloc: %s\n", "large size for allocation");
+        return nullptr;
+    }
+
+    // TODO: edit after switching to user space
+    if (!(flags & GFP::KERNEL))
+        return nullptr;
+
+    auto index = get_cache_index(size);
+
+    // handle incorrect index
+    if (index >= kmem::CACHES_SIZE) {
+        // TODO: replace with panic():
+        printk(KERN_ERR "kmalloc: %s\n", "large size for allocation");
+        return nullptr;
+    }
+
+    return kmem::caches[index].alloc(flags);
+}
+
 } // namespace kernel

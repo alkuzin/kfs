@@ -31,8 +31,6 @@
 
 
 namespace kernel {
-namespace core {
-namespace memory {
 
 // get free pages flags type for memory allocation functions
 using gfp_t = uint8_t;
@@ -42,8 +40,6 @@ enum GFP : gfp_t {
     ZERO   = 0b00000010     // set allocated pages payload with zeros
 };
 
-} // namespace memory
-} // namespace core
 } // namespace kernel
 
 #endif // _KERNEL_GFP_HPP_

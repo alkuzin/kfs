@@ -28,6 +28,7 @@
 #define _KERNEL_SLAB_HPP_
 
 #include <kernel/types.hpp>
+#include <kernel/gfp.hpp>
 
 
 namespace kernel {
@@ -104,6 +105,17 @@ public:
 void init(void) noexcept;
 
 } // namespace kmem
+
+/**
+ * @brief Allocate memory in the kernel.
+ *
+ * @param [in] size - given size of memory block to allocate.
+ * @param [in] flags - given allocation flags.
+ * @return pointer to the allocated memory in case of success.
+ * @return nullptr in case of failure.
+ */
+void *kmalloc(size_t size, gfp_t flags) noexcept;
+
 } // namespace kernel
 
 #endif // _KERNEL_SLAB_HPP_
