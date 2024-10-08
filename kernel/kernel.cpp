@@ -22,6 +22,7 @@
 #include <kernel/terminal.hpp>
 #include <kernel/linkage.hpp>
 #include <kernel/printk.hpp>
+#include <kernel/panic.hpp>
 #include <kernel/core.hpp>
 #include <kernel/pmm.hpp>
 #include <kernel/slab.hpp>

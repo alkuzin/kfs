@@ -66,6 +66,7 @@ set(KERNEL_SOURCES
     # Kernel commond directory:
     "${KERNEL_COMMON_DIR}/terminal.cpp"
     "${KERNEL_COMMON_DIR}/printk.cpp"
+    "${KERNEL_COMMON_DIR}/panic.cpp"
 
     # Kernel arch/x86 directory:
     "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
