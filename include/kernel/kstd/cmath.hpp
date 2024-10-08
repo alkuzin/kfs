@@ -75,6 +75,37 @@ constexpr float64_t log(float64_t x) noexcept
     return (2.0 * result);
 }
 
+/**
+ * @brief Calculate the base-2 logarithm of a given value.
+ *
+ * @param [in] x - given value.
+ * @return base-2 logarithm of @a x.
+ */
+constexpr inline float64_t log2(float64_t x) noexcept
+{
+    return log(x) / log(2.0);
+}
+
+// Rounding Functions -----------------------------------------------
+
+/**
+ * @brief Calculates the smallest integer value >= the given value.
+ *
+ * @param [in] x - given value to ceil.
+ * @return ceil value of @a x.
+ */
+constexpr inline float64_t ceil(float64_t x) noexcept
+{
+    int32_t int_part = static_cast<int32_t>(x);
+
+    if (x == int_part)
+        return x;
+    else if (x > 0)
+        return int_part + 1;
+    else
+        return int_part;
+}
+
 } // namespace kstd
 } // namespace kernel
 
