@@ -51,7 +51,7 @@ using ssize_t = int64_t;
 
 using phys_addr_t = uint32_t;
 
-/** @brief Convert from bytes to KB.*/
+/** @brief KB literal.*/
 constexpr inline size_t operator"" _KB(size_t n) noexcept
 {
     return n << 0xA;
