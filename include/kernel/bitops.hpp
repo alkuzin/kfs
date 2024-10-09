@@ -67,6 +67,42 @@ constexpr inline size_t BYTES_TO_BITS(size_t n) noexcept
 template <typename T>
 constexpr inline size_t BITS_PER_TYPE = BYTES_TO_BITS(sizeof(T));
 
+/**
+ * @brief Set the specific bit of given value.
+ *
+ * @param [in] value - given value to change.
+ * @param [in] pos - given bit position to set.
+ */
+template <typename T>
+constexpr inline void set_bit(T& value, int32_t pos) noexcept
+{
+    value |= pos;
+}
+
+/**
+ * @brief Clear the specific bit of given value.
+ *
+ * @param [in] value - given value to change.
+ * @param [in] pos - given bit position to clear.
+ */
+template <typename T>
+constexpr inline void clear_bit(T& value, int32_t pos) noexcept
+{
+    value &= ~pos;
+}
+
+/**
+ * @brief Get the specific bit of given value.
+ *
+ * @param [in] value - given value to test.
+ * @param [in] pos - given bit position to test.
+ */
+template <typename T>
+constexpr inline bool test_bit(T& value, int32_t pos) noexcept
+{
+    return (value & pos);
+}
+
 } // namespace kernel
 
 #endif // _KERNEL_BITOPS_HPP_
