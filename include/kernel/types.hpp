@@ -50,11 +50,24 @@ using size_t  = uint64_t;
 using ssize_t = int64_t;
 
 using phys_addr_t = uint32_t;
+using virt_addr_t = uint32_t;
 
 /** @brief KB literal.*/
 constexpr inline size_t operator"" _KB(size_t n) noexcept
 {
-    return n << 0xA;
+    return n << 10;
+}
+
+/** @brief MB literal.*/
+constexpr inline size_t operator"" _MB(size_t n) noexcept
+{
+    return n << 20;
+}
+
+/** @brief GB literal.*/
+constexpr inline size_t operator"" _GB(size_t n) noexcept
+{
+    return n << 30;
 }
 
 } // namespace kernel
