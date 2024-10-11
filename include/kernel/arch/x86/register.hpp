@@ -17,63 +17,39 @@
  */
 
 /**
- * @file  system.hpp
- * @brief Contains system functions.
+ * @file  register.hpp
+ * @brief Contains functions for managing x86 registers.
  *
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
- * @date   26.09.2024
+ * @date   09.10.2024
  */
 
-#ifndef _KERNEL_ARCH_X86_SYSTEM_HPP_
-#define _KERNEL_ARCH_X86_SYSTEM_HPP_
+#ifndef _KERNEL_ARCH_X86_REGISTER_HPP_
+#define _KERNEL_ARCH_X86_REGISTER_HPP_
 
-#include <kernel/arch/x86/register.hpp>
+#include <kernel/types.hpp>
 
 
 namespace kernel {
 namespace arch {
 namespace x86 {
 
-/** @brief Halt CPU.*/
-inline void halt(void) noexcept
-{
-    for (;;) __asm__ volatile("hlt");
-}
+enum class REG {
+    ESP,
+    EBP,
+    CR0
+};
 
 /**
- * @brief Get current privilege level .
+ * @brief Get the specific register value.
  *
- * @return current privilege level.
+ * @param [in] reg - given register name.
+ * @return register value.
  */
-inline uint8_t ring(void) noexcept
-{
-    uint16_t cs;
-    __asm__ volatile ("mov %%cs, %0" : "=r"(cs)); // Read the CS register into cs
-    return cs & 0x3; // Return the lower 2 bits
-}
-
-/**
- * @brief Get current mode.
- *
- * @return mode in bits.
- */
-inline uint32_t mode(void) noexcept
-{
-    // TODO: replace with reg::cs() for getting cs register:
-    uint16_t cs;
-
-    __asm__ volatile ("mov %%cs, %0" : "=r"(cs));
-
-    if (cs & 0x0000FFFF)
-        return 32;
-    else if (cs & 0xFFFF0000)
-        return 64;
-    else
-        return 16;
-}
+uint32_t get_register(enum REG reg) noexcept;
 
 } // namespace x86
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_X86_SYSTEM_HPP_
+#endif // _KERNEL_ARCH_X86_REGISTER_HPP_

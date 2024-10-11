@@ -69,6 +69,7 @@ set(KERNEL_SOURCES
     "${KERNEL_COMMON_DIR}/panic.cpp"
 
     # Kernel arch/x86 directory:
+    "${KERNEL_ARCH_X86_DIR}/register.cpp"
     "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
 
     # Kernel shell directory:
@@ -78,8 +79,9 @@ set(KERNEL_SOURCES
     "${KERNEL_DEBUG_DIR}/kdump.cpp"
 
     # Kernel memory management directory:
-    "${KERNEL_MM_DIR}/pmm.cpp"
     "${KERNEL_MM_DIR}/slab.cpp"
+    "${KERNEL_MM_DIR}/pmm.cpp"
+    "${KERNEL_MM_DIR}/vmm.cpp"
 )
 
 # List of kernel assembly source files
