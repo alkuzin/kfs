@@ -83,7 +83,7 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
     kstd::memset(m_mem_map, 0, m_mem_map_size);
 
     // setting page frame numbers
-    for (size_t i = 0; i < m_mem_map_size; i++) {
+    for (size_t i = 0; i < m_max_pages; i++) {
         m_mem_map[i].m_cache = nullptr;
         m_mem_map[i].m_slab  = nullptr;
         m_mem_map[i].m_flags = 0;
@@ -98,6 +98,9 @@ void phys_mman_t::init(const multiboot_t& mboot) noexcept
 
     // mark kernel memory as used
     mark_as_used(phys_addr_t(KERNEL_START_PADDR), KERNEL_SIZE + PAGE_SIZE);
+
+    // mark memory between kernel end & bitmap
+    mark_as_used(phys_addr_t(bitmap_addr - STACK_SIZE), STACK_SIZE);
 
     // mark bitmap memory as used
     mark_as_used(phys_addr_t(m_bitmap.m_data), m_bitmap.m_size);
@@ -209,11 +212,7 @@ page_t *phys_mman_t::alloc_pages(gfp_t mask, uint32_t order) noexcept
 
 page_t *phys_mman_t::get_zeroed_page(gfp_t mask) noexcept
 {
-    // handle incorrect flags
-    if (!(mask & GFP::ZERO))
-        return nullptr;
-
-    page_t *page = alloc_pages(mask, 0);
+    page_t *page = alloc_pages(mask | GFP::ZERO, 0);
     return page;
 }
 
