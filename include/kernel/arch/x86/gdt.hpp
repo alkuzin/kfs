@@ -37,6 +37,15 @@ namespace gdt {
 
 inline const uint32_t GDT_BASE {0x00000800}; // GDT pointer address
 
+// GDT segment offsets
+inline const uint8_t NULL_SEGMENT           {0x00};
+inline const uint8_t KERNEL_CODE_SEGMENT    {0x08};
+inline const uint8_t KERNEL_DATA_SEGMENT    {0x10};
+inline const uint8_t KERNEL_STACK_SEGMENT   {0x18};
+inline const uint8_t USER_CODE_SEGMENT      {0x20};
+inline const uint8_t USER_DATA_SEGMENT      {0x28};
+inline const uint8_t USER_STACK_SEGMENT     {0x30};
+
 /** @brief GDT segment structure in 32-bit mode.*/
 struct entry_t
 {
@@ -54,7 +63,6 @@ struct ptr_t
    uint16_t m_size;     // GDT size - 1
    uint32_t m_offset;   // linear address of GDT.
 } __attribute__((packed));
-
 
 /** @brief Initialize Global Descriptor Table.*/
 void init(void) noexcept;
