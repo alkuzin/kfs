@@ -72,6 +72,18 @@ inline uint32_t mode(void) noexcept
         return 16;
 }
 
+/** @brief Enable interrupts.*/
+inline void sti(void) noexcept
+{
+    __asm__ volatile ("sti");
+}
+
+/** @brief Disable interrupts.*/
+inline void cli(void) noexcept
+{
+    __asm__ volatile ("cli");
+}
+
 } // namespace x86
 } // namespace arch
 } // namespace kernel
