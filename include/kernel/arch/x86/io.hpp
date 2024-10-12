@@ -47,6 +47,17 @@ inline uint8_t inb(uint16_t port) noexcept
     return rv;
 }
 
+/**
+ * @brief Output a byte to a specified port.
+ *
+ * @param [in] port -given port to which the data will be written.
+ * @param [in] data - given data byte to be written to the port.
+ */
+inline void outb(uint16_t port, uint8_t data) noexcept
+{
+    __asm__ volatile("outb %1, %0" : : "dN" (port), "a" (data));
+}
+
 } // namespace x86
 } // namespace arch
 } // namespace kernel
