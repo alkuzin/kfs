@@ -18,6 +18,7 @@
 
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/arch/x86/gdt.hpp>
+#include <kernel/arch/x86/idt.hpp>
 #include <kernel/shell/shell.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/linkage.hpp>
@@ -62,6 +63,9 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 
     kmem::init();
     printk(KERN_OK "%s\n", "initialized kernel heap");
+
+    arch::x86::idt::init();
+    printk(KERN_OK "%s\n", "initialized IDT");
 
     shell.process();
 }
