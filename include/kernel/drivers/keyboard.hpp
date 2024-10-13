@@ -34,35 +34,27 @@ namespace kernel {
 namespace driver {
 
 /** @brief Keyboard special keys enumeration.*/
-enum class key : uint8_t {
-    esc         = 0x01,
-    backspace   = 0x0E,
-    tab         = 0x0F,
-    enter       = 0x1C,
-    lctrl       = 0x1D,
-    lshft       = 0x2A,
-    backslash   = 0x2B,
-    lalt        = 0x38,
-    space       = 0x39,
-    caps_lock   = 0x3A,
-    left_arrow  = 0x4B,
-    right_arrow = 0x4D,
-    up_arrow    = 0x48,
-    down_arrow  = 0x50
+enum class KEY {
+    ESC         = 0X01,
+    BACKSPACE   = 0X0E,
+    TAB         = 0X0F,
+    ENTER       = 0X1C,
+    LCTRL       = 0X1D,
+    LSHIFT      = 0X2A,
+    BACKSLASH   = 0X2B,
+    LALT        = 0X38,
+    SPACE       = 0X39,
+    CAPS_LOCK   = 0X3A,
+    LEFT_ARROW  = 0X4B,
+    RIGHT_ARROW = 0X4D,
+    UP_ARROW    = 0X48,
+    DOWN_ARROW  = 0X50
 };
 
 struct keyboard_t
 {
-private:
-    mutable bool m_is_caps;
-    mutable bool m_is_caps_lock;
-
-    /** @brief Keyboard wait for user to press a key.*/
-    inline void wait(void) const noexcept;
-
-public:
     /** @brief Initialize keyboard.*/
-    void set(void) noexcept;
+    void init(void) noexcept;
 
     /**
      * @brief Keyboard get character on key press.
@@ -70,6 +62,14 @@ public:
      * @return Character read from the keyboard.
      */
     uint8_t getchar(void) const noexcept;
+
+    /**
+     * @brief Get the line from user.
+     *
+     * @param [out] buffer - given buffer to store input.
+     * @param [out] size - given size of buffer.
+     */
+    void get_line(char *buffer, size_t size) noexcept;
 };
 
 extern keyboard_t keyboard;

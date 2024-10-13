@@ -17,6 +17,9 @@
  */
 
 #include <kernel/drivers/keyboard.hpp>
+#include <kernel/arch/x86/irq.hpp>
+#include <kernel/kstd/cstdio.hpp>
+#include <kernel/kstd/cctype.hpp>
 #include <kernel/arch/x86/io.hpp>
 
 
@@ -79,40 +82,30 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
 UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN 
 };
 
-
-void keyboard_t::set(void) noexcept
-{
-    m_is_caps      = false;
-    m_is_caps_lock = false;
-}
-
-inline void keyboard_t::wait(void) const noexcept
-{
-    while((arch::x86::inb(0x64) & 0x01) == 0)
-        continue;
-}
+bool m_is_caps      = false;
+bool m_is_caps_lock = false;
 
 uint8_t keyboard_t::getchar(void) const noexcept
 {
-    wait();
+    while((arch::x86::inb(0x64) & 0x01) == 0)
+        continue;
 
     uint8_t scan_code = arch::x86::inb(0x60) & 0x7F; // get code of key that is pressed
     uint8_t press     = arch::x86::inb(0x60) & 0x80; // is key is pressed down or released
 
-    switch(static_cast<key>(scan_code)) {
-        case key::up_arrow:
-        case key::down_arrow:
-        case key::left_arrow:
-        case key::right_arrow:
-
-        case key::lshft:
+    switch(static_cast<KEY>(scan_code)) {
+        case KEY::UP_ARROW:
+        case KEY::DOWN_ARROW:
+        case KEY::LEFT_ARROW:
+        case KEY::RIGHT_ARROW:
+        case KEY::LSHIFT:
             if(!press)
                 m_is_caps = true;
             else
                 m_is_caps = false;
             break;
 
-        case key::caps_lock:
+        case KEY::CAPS_LOCK:
             if(!m_is_caps_lock && !press)
                 m_is_caps_lock = true;
             else if(m_is_caps_lock && !press)
@@ -133,6 +126,53 @@ uint8_t keyboard_t::getchar(void) const noexcept
             break;
     }
     return 0;
+}
+
+void keyboard_t::get_line(char *buffer, size_t size) noexcept
+{
+    uint32_t pos = 0;
+    char     ch  = 0;
+
+    do {
+        ch = static_cast<char>(getchar());
+
+        if (ch && ch != '\n') {
+            // handle backspace character
+            if (ch == '\b') {
+                if (pos == 0)
+                    continue;
+                else {
+                    pos--;
+                    buffer[pos] = 0;
+                }
+            }
+
+            kstd::putchar(ch);
+
+            // add character to the kernel shell buffer
+            if (pos < size && kstd::isprint(ch)) {
+                buffer[pos] = ch;
+                pos++;
+            }
+        }
+    } while (ch != '\n');
+
+    // truncate buffer
+    buffer[pos] = 0;
+    kstd::putchar('\n');
+}
+
+using namespace arch::x86;
+
+void keyboard_handler(irq::int_regs_t *regs) noexcept
+{
+    (void)regs; // unused
+    // TODO: implement?
+}
+
+void keyboard_t::init(void) noexcept
+{
+    irq::request(IRQ::KEYBOARD, &keyboard_handler);
 }
 
 keyboard_t keyboard;
