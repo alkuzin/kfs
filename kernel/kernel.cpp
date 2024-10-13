@@ -46,12 +46,6 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     printk(KERN_OK "%s\n", "initialized VESA driver");
     printk(KERN_OK "%s\n", "initialized kernel terminal");
 
-    driver::keyboard.set();
-    printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
-
-    shell.set();
-    printk(KERN_OK "%s\n", "initialized kernel shell");
-
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
         panic("invalid magic number: %#X\n", magic);
 
@@ -67,6 +61,11 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     arch::x86::idt::init();
     printk(KERN_OK "%s\n", "initialized IDT");
 
+    driver::keyboard.init();
+    printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
+
+    shell.init();
+    printk(KERN_OK "%s\n", "initialized kernel shell");
     shell.process();
 }
 

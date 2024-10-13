@@ -42,9 +42,6 @@ private:
     /** @brief Display kernel shell prompt.*/
     inline void display_prompt(void) const noexcept;
 
-    /** @brief Get the line from user.*/
-    void get_line(void) noexcept;
-
     /**
      * @brief Execute command.
      *
@@ -54,7 +51,7 @@ private:
 
 public:
     /** @brief Initialize kernel shell.*/
-    void set(void) noexcept;
+    void init(void) noexcept;
 
     /** @brief Process user input.*/
     void process(void) noexcept;

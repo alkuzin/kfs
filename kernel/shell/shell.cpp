@@ -29,7 +29,7 @@
 
 namespace kernel {
 
-void shell_t::set(void) noexcept
+void shell_t::init(void) noexcept
 {
     kstd::memset(m_buffer, 0, SHELL_BUFFER_SIZE);
 }
@@ -40,45 +40,11 @@ inline void shell_t::display_prompt(void) const noexcept
     kstd::putchar(' ');
 }
 
-void shell_t::get_line(void) noexcept
-{
-    uint32_t pos = 0;
-    char     ch  = 0;
-
-    do {
-        ch = static_cast<char>(driver::keyboard.getchar());
-
-        if (ch && ch != '\n') {
-            // handle backspace character
-            if (ch == '\b') {
-                if (pos == 0)
-                    continue;
-                else {
-                    pos--;
-                    m_buffer[pos] = 0;
-                }
-            }
-
-            kstd::putchar(ch);
-
-            // add character to the kernel shell buffer
-            if (pos < SHELL_BUFFER_SIZE && kstd::isprint(ch)) {
-                m_buffer[pos] = ch;
-                pos++;
-            }
-        }
-    } while (ch != '\n');
-
-    // truncate buffer
-    m_buffer[pos] = 0;
-    kstd::putchar('\n');
-}
-
 void shell_t::process(void) noexcept
 {
     for (;;) {
         display_prompt();
-        get_line();
+        driver::keyboard.get_line(m_buffer, SHELL_BUFFER_SIZE);
 
         if (m_buffer[0])
             exec(m_buffer);
