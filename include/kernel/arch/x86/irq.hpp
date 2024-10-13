@@ -32,6 +32,12 @@
 
 
 namespace kernel {
+
+enum IRQ : int32_t {
+    TIMER    = 0,
+    KEYBOARD = 1
+};
+
 namespace arch {
 namespace x86 {
 namespace irq {
