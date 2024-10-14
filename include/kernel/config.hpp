@@ -41,8 +41,8 @@ inline const auto __kernel_build_date__          {__DATE__};
 inline const auto __kernel_build_time__          {__TIME__};
 inline const auto __kernel_compiler_version__    {__VERSION__};
 inline const auto __kernel_version_major__       {0};
-inline const auto __kernel_version_minor__       {2};
-inline const auto __kernel_version_lower__       {5};
+inline const auto __kernel_version_minor__       {3};
+inline const auto __kernel_version_lower__       {0};
 
 /**
  * @brief Print current space.

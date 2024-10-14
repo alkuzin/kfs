@@ -1,5 +1,22 @@
 # Kernel From Scratch changes
 
+## release v0.3.0
+
+feat: added get_line() function
+refactor: removed shell_t::get_line() function
+feat: added IRQ enumeration
+feat: added Interrupt Descriptor Table (IDT)
+feat: added Interrupt Request (IRQ)
+feat: added Programmable Interrupt Controller
+feat: added sti() & cli() functions
+feat: added outb() function
+feat: added GDT segments offsets
+fix: fixed issue with setting mem_map
+feat: added get_register() function
+feat: added MB and GB literals
+feat: added some bit handeling functions
+
+
 ## release v0.2.5
 
 <img src="res/kfs_v0_2_5.png">
