@@ -52,6 +52,9 @@ using ssize_t = int64_t;
 using phys_addr_t = uint32_t;
 using virt_addr_t = uint32_t;
 
+// process identificator
+using pid_t = int32_t;
+
 /** @brief KB literal.*/
 constexpr inline size_t operator"" _KB(size_t n) noexcept
 {
