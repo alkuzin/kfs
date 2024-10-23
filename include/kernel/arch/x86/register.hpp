@@ -35,8 +35,20 @@ namespace arch {
 namespace x86 {
 
 enum class REG {
-    ESP,
+    CR2,
+    DS,
+    EDI,
+    ESI,
     EBP,
+    ESP,
+    EBX,
+    EDX,
+    ECX,
+    EAX,
+    EIP,
+    CS,
+    EFLAGS,
+    SS,
     CR0
 };
 
@@ -46,7 +58,15 @@ enum class REG {
  * @param [in] reg - given register name.
  * @return register value.
  */
-uint32_t get_register(enum REG reg) noexcept;
+uint32_t get_register(REG reg) noexcept;
+
+/**
+ * @brief Set the specific register.
+ *
+ * @param [in] reg - given register name.
+ * @param [in] value - given register value to set.
+ */
+void set_register(REG reg, uint32_t value) noexcept;
 
 } // namespace x86
 } // namespace arch
