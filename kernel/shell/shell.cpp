@@ -24,6 +24,7 @@
 #include <kernel/shell/shell.hpp>
 #include <kernel/config.hpp>
 #include <kernel/debug.hpp>
+#include <kernel/ktime.hpp>
 #include <kernel/pmm.hpp>
 
 
@@ -112,6 +113,8 @@ void shell_t::exec(const char *cmd) const noexcept
         printk("Total memory:       %u KB\n", pmm.m_mem_total >> 0xA);
         printk("Used memory:        %u KB\n", (pmm.m_used_pages * PAGE_SIZE) >> 0xA);
     }
+    else if (kstd::strncmp(cmd, "date", 4) == 0)
+        printk("%s\n", get_date());
     else
         printk("sh: %s: command not found \n", cmd);
 }
