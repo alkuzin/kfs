@@ -35,7 +35,8 @@ namespace kernel {
 
 enum IRQ : int32_t {
     TIMER    = 0,
-    KEYBOARD = 1
+    KEYBOARD = 1,
+    CLOCK    = 8
 };
 
 namespace arch {
