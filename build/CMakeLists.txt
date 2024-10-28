@@ -49,8 +49,8 @@ set(GFX_SOURCES "${GFX_DIR}/font.cpp")
 
 # List of kernel drivers source files
 set(DRIVERS_SOURCES
-    "${DRIVERS_DIR}/vesa.cpp"
     "${DRIVERS_DIR}/keyboard.cpp"
+    "${DRIVERS_DIR}/vesa.cpp"
 )
 
 # List of kernel standard library source files
@@ -67,6 +67,8 @@ set(KERNEL_SOURCES
     "${KERNEL_COMMON_DIR}/terminal.cpp"
     "${KERNEL_COMMON_DIR}/printk.cpp"
     "${KERNEL_COMMON_DIR}/panic.cpp"
+    "${KERNEL_COMMON_DIR}/ktime.cpp"
+    "${KERNEL_COMMON_DIR}/rtc.cpp"
 
     # Kernel arch/x86 directory:
     "${KERNEL_ARCH_X86_DIR}/register.cpp"

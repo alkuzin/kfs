@@ -24,10 +24,11 @@
 #include <kernel/linkage.hpp>
 #include <kernel/printk.hpp>
 #include <kernel/panic.hpp>
+#include <kernel/ktime.hpp>
 #include <kernel/core.hpp>
 #include <kernel/slab.hpp>
 #include <kernel/pmm.hpp>
-
+#include <kernel/rtc.hpp>
 
 namespace kernel {
 namespace core {
@@ -63,6 +64,10 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 
     driver::keyboard.init();
     printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
+
+    rtc::init();
+    set_utc(UTC::MSK);
+    printk(KERN_OK "%s\n", "initialized RTC driver");
 
     shell.init();
     printk(KERN_OK "%s\n", "initialized kernel shell");
