@@ -446,6 +446,15 @@ void handler_t::parse(const char *fmt) noexcept
 
 static handler_t handler;
 
+void snprintk(char *buf, size_t size, const char *fmt, ...) noexcept
+{
+    va_list args;
+
+    va_start(args, fmt);
+	vsnprintk(buf, size, fmt, args);
+    va_end(args);
+}
+
 void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept
 {
     va_list args_copy;

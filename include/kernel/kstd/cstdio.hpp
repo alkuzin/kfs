@@ -42,6 +42,16 @@ namespace kstd {
  * @param [in] fmt - given format string.
  * @param [in] args - given variable list of arguments.
  */
+void snprintk(char *buf, size_t size, const char *fmt, ...) noexcept;
+
+/**
+ * @brief Formats and prints data to buffer.
+ *
+ * @param [out] buf - given buffer for containing formated result.
+ * @param [in] size - given buffer size.
+ * @param [in] fmt - given format string.
+ * @param [in] args - given variable list of arguments.
+ */
 void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept;
 
 /**
