@@ -51,6 +51,7 @@ set(GFX_SOURCES "${GFX_DIR}/font.cpp")
 set(DRIVERS_SOURCES
     "${DRIVERS_DIR}/keyboard.cpp"
     "${DRIVERS_DIR}/vesa.cpp"
+    "${DRIVERS_DIR}/pit.cpp"
 )
 
 # List of kernel standard library source files

@@ -19,6 +19,7 @@
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/arch/x86/gdt.hpp>
 #include <kernel/arch/x86/idt.hpp>
+#include <kernel/drivers/pit.hpp>
 #include <kernel/shell/shell.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/linkage.hpp>
@@ -62,12 +63,15 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     arch::x86::idt::init();
     printk(KERN_OK "%s\n", "initialized IDT");
 
-    driver::keyboard.init();
-    printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
+    driver::pit::init();
+    printk(KERN_OK "%s\n", "initialized PIT driver");
 
     rtc::init();
     set_utc(UTC::MSK);
     printk(KERN_OK "%s\n", "initialized RTC driver");
+
+    driver::keyboard.init();
+    printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
 
     shell.init();
     printk(KERN_OK "%s\n", "initialized kernel shell");
