@@ -46,7 +46,7 @@ void shell_t::process(void) noexcept
 {
     for (;;) {
         display_prompt();
-        driver::keyboard.get_line(m_buffer, SHELL_BUFFER_SIZE);
+        driver::keyboard::get_line(m_buffer, SHELL_BUFFER_SIZE);
 
         if (m_buffer[0])
             exec(m_buffer);

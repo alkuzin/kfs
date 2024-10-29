@@ -70,7 +70,7 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     ktime::set_utc(ktime::UTC::MSK);
     printk(KERN_OK "%s\n", "initialized RTC driver");
 
-    driver::keyboard.init();
+    driver::keyboard::init();
     printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
 
     shell.init();

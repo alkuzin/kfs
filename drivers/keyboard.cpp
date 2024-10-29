@@ -25,6 +25,7 @@
 
 namespace kernel {
 namespace driver {
+namespace keyboard {
 
 inline const uint32_t UNKNOWN = 0xFFFFFFFF;
 inline const uint32_t ESC     = 0xFFFFFFFF - 1;
@@ -85,7 +86,7 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
 bool m_is_caps      = false;
 bool m_is_caps_lock = false;
 
-uint8_t keyboard_t::getchar(void) const noexcept
+uint8_t getchar(void) noexcept
 {
     while((arch::x86::inb(0x64) & 0x01) == 0)
         continue;
@@ -128,7 +129,7 @@ uint8_t keyboard_t::getchar(void) const noexcept
     return 0;
 }
 
-void keyboard_t::get_line(char *buffer, size_t size) noexcept
+void get_line(char *buffer, size_t size) noexcept
 {
     uint32_t pos = 0;
     char     ch  = 0;
@@ -170,12 +171,11 @@ void keyboard_handler(irq::int_regs_t *regs) noexcept
     // TODO: implement?
 }
 
-void keyboard_t::init(void) noexcept
+void init(void) noexcept
 {
     irq::request(IRQ::KEYBOARD, &keyboard_handler);
 }
 
-keyboard_t keyboard;
-
+} // namespace keyboard
 } // namespace driver
 } // namespace kernel

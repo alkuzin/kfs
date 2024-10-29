@@ -32,6 +32,7 @@
 
 namespace kernel {
 namespace driver {
+namespace keyboard {
 
 /** @brief Keyboard special keys enumeration.*/
 enum class KEY {
@@ -51,29 +52,25 @@ enum class KEY {
     DOWN_ARROW  = 0X50
 };
 
-struct keyboard_t
-{
-    /** @brief Initialize keyboard.*/
-    void init(void) noexcept;
+/** @brief Initialize keyboard.*/
+void init(void) noexcept;
 
-    /**
-     * @brief Keyboard get character on key press.
-     *
-     * @return Character read from the keyboard.
-     */
-    uint8_t getchar(void) const noexcept;
+/**
+ * @brief Keyboard get character on key press.
+ *
+ * @return Character read from the keyboard.
+ */
+uint8_t getchar(void) noexcept;
 
-    /**
-     * @brief Get the line from user.
-     *
-     * @param [out] buffer - given buffer to store input.
-     * @param [out] size - given size of buffer.
-     */
-    void get_line(char *buffer, size_t size) noexcept;
-};
+/**
+ * @brief Get the line from user.
+ *
+ * @param [out] buffer - given buffer to store input.
+ * @param [out] size - given size of buffer.
+ */
+void get_line(char *buffer, size_t size) noexcept;
 
-extern keyboard_t keyboard;
-
+} // namespace keyboard
 } // namespace driver
 } // namespace kernel
 
