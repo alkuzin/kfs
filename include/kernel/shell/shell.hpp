@@ -31,34 +31,15 @@
 
 
 namespace kernel {
+namespace shell {
 
-inline const auto SHELL_BUFFER_SIZE {128};
+/** @brief Initialize kernel shell.*/
+void init(void) noexcept;
 
-struct shell_t
-{
-    char m_buffer[SHELL_BUFFER_SIZE];
+/** @brief Process user input.*/
+void process(void) noexcept;
 
-private:
-    /** @brief Display kernel shell prompt.*/
-    inline void display_prompt(void) const noexcept;
-
-    /**
-     * @brief Execute command.
-     *
-     * @param [in] cmd - given command to execute.
-     */
-    void exec(const char *cmd) const noexcept;
-
-public:
-    /** @brief Initialize kernel shell.*/
-    void init(void) noexcept;
-
-    /** @brief Process user input.*/
-    void process(void) noexcept;
-};
-
-extern shell_t shell;
-
+} // namespace shell
 } // namespace kernel
 
 #endif // _KERNEL_SHELL_HPP_

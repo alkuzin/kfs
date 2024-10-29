@@ -73,12 +73,12 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     driver::keyboard::init();
     printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
 
-    shell.init();
+    shell::init();
     printk(KERN_OK "%s\n", "initialized kernel shell");
-    shell.process();
+    shell::process();
 }
 
-asmlinkage void kmain(kernel::uint32_t magic, const multiboot_t& mboot) noexcept
+asmlinkage void kmain(uint32_t magic, const multiboot_t& mboot) noexcept
 {
     kboot(magic, mboot);
     core::khalt();

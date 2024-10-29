@@ -30,34 +30,26 @@
 
 
 namespace kernel {
+namespace shell {
 
-void shell_t::init(void) noexcept
-{
-    kstd::memset(m_buffer, 0, SHELL_BUFFER_SIZE);
-}
+inline const auto SHELL_BUFFER_SIZE {128};
+static char shell_buffer[SHELL_BUFFER_SIZE];
 
-inline void shell_t::display_prompt(void) const noexcept
+/** @brief Display kernel shell prompt.*/
+static inline void display_prompt(void) noexcept
 {
     kstd::putchar('$');
     kstd::putchar(' ');
 }
 
-void shell_t::process(void) noexcept
+/**
+ * @brief Execute command.
+ *
+ * @param [in] cmd - given command to execute.
+ */
+static void exec(const char *cmd) noexcept
 {
-    for (;;) {
-        display_prompt();
-        driver::keyboard::get_line(m_buffer, SHELL_BUFFER_SIZE);
-
-        if (m_buffer[0])
-            exec(m_buffer);
-
-        kstd::memset(m_buffer, 0, SHELL_BUFFER_SIZE);
-    }
-}
-
-// TODO: move to shell builtins
-void shell_t::exec(const char *cmd) const noexcept
-{
+    // TODO: move to shell builtins
     if (kstd::strncmp(cmd, "gdt", 3) == 0) {
         // while trying to get GDT info by using GDT pointer struct
         // that set at GDT_BASE <0x00000800> compiler show warnings
@@ -99,6 +91,23 @@ void shell_t::exec(const char *cmd) const noexcept
         printk("sh: %s: command not found \n", cmd);
 }
 
-shell_t shell;
+void init(void) noexcept
+{
+    kstd::memset(shell_buffer, 0, SHELL_BUFFER_SIZE);
+}
 
+void process(void) noexcept
+{
+    for (;;) {
+        display_prompt();
+        driver::keyboard::get_line(shell_buffer, SHELL_BUFFER_SIZE);
+
+        if (shell_buffer[0])
+            exec(shell_buffer);
+
+        kstd::memset(shell_buffer, 0, SHELL_BUFFER_SIZE);
+    }
+}
+
+} // namespace shell
 } // namespace kernel
