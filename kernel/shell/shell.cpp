@@ -22,6 +22,7 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/shell/shell.hpp>
+#include <kernel/drivers/pit.hpp>
 #include <kernel/config.hpp>
 #include <kernel/debug.hpp>
 #include <kernel/ktime.hpp>
@@ -77,7 +78,7 @@ void shell_t::exec(const char *cmd) const noexcept
 
         gdt::ptr_t *gdt_ptr = reinterpret_cast<gdt::ptr_t*>(gdt::GDT_BASE);
 
-        printk("\nGDT descriptor: <%08p>\n", gdt_ptr);
+        printk("GDT descriptor: <%08p>\n", gdt_ptr);
         printk("offset:         <%08p>\n", gdt_ptr->m_offset);
         printk("size:             %u bytes\n", gdt_ptr->m_size);
 
@@ -109,12 +110,14 @@ void shell_t::exec(const char *cmd) const noexcept
             printk("<%s>\n", mem_types[mmmt->type - 1]);
         }
 
-        printk("\nMemory page size:   %u KB\n", PAGE_SIZE);
+        printk("Memory page size:   %u KB\n", PAGE_SIZE);
         printk("Total memory:       %u KB\n", pmm.m_mem_total >> 0xA);
         printk("Used memory:        %u KB\n", (pmm.m_used_pages * PAGE_SIZE) >> 0xA);
     }
     else if (kstd::strncmp(cmd, "date", 4) == 0)
         printk("%s\n", get_date());
+    else if (kstd::strncmp(cmd, "ticks", 5) == 0)
+        printk("PIT ticks: %u\n", driver::pit::get_ticks());
     else
         printk("sh: %s: command not found \n", cmd);
 }
