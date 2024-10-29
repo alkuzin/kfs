@@ -33,37 +33,34 @@
 namespace kernel {
 namespace tty {
 
-struct terminal_t
-{
-    int32_t    m_height;    // Screen height.
-    int32_t    m_width;     // Screen width.
-    int32_t    m_x_pos;     // X position of the cursor.
-    int32_t    m_y_pos;     // Y position of the cursor.
-    gfx::rgb_t m_fg;        // Foreground color.
-    gfx::rgb_t m_bg;        // Background color.
+/** @brief Set terminal.*/
+void init(void) noexcept;
 
-    private:
-        /** @brief Scroll screen.*/
-        void scroll(void) noexcept;
+/** @brief Clear screen.*/
+void clear(void) noexcept;
 
-    public:
-        /** @brief Set terminal.*/
-        void set(void) noexcept;
+/**
+ * @brief Print colored character on screen.
+ *
+ * @param [in] c - given character to print.
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color.
+ */
+void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept;
 
-        /** @brief Clear screen.*/
-        void clear(void) noexcept;
+/**
+ * @brief Get TTY foreground color.
+ *
+ * @return foreground color.
+ */
+gfx::rgb_t fgcolor(void) noexcept;
 
-        /**
-         * @brief Print colored character on screen.
-         *
-         * @param [in] c - given character to print.
-         * @param [in] fg - given foreground color.
-         * @param [in] bg - given background color.
-         */
-        void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept;
-};
-
-extern terminal_t terminal;
+/**
+ * @brief Get TTY background color.
+ *
+ * @return background color.
+ */
+gfx::rgb_t bgcolor(void) noexcept;
 
 } // namespace tty
 } // namespace kernel

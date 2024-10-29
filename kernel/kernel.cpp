@@ -43,8 +43,8 @@ namespace core {
 static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 {
     // set kernel subsystems
-    driver::vesa.set(mboot);
-    tty::terminal.set();
+    driver::vesa::init(mboot);
+    tty::init();
     printk(KERN_OK "%s\n", "initialized VESA driver");
     printk(KERN_OK "%s\n", "initialized kernel terminal");
 

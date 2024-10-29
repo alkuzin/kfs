@@ -91,7 +91,7 @@ void shell_t::exec(const char *cmd) const noexcept
         #pragma GCC diagnostic pop
     }
     else if (kstd::strncmp(cmd, "clear", 5) == 0)
-        tty::terminal.clear();
+        tty::clear();
     else if (kstd::strncmp(cmd, "uname", 5) == 0) {
         info::display_general();
         kstd::putchar('\n');
