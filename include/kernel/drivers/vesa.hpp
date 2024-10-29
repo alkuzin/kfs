@@ -33,53 +33,59 @@
 
 namespace kernel {
 namespace driver {
+namespace vesa {
 
-struct vesa_t
-{
-    uint32_t *m_addr;    // framebuffer address
-    uint32_t  m_pitch;   // number of bytes in a single row of the framebuffer
-    uint32_t  m_width;   // y-resolution
-    uint32_t  m_height;  // x-resolution
-    uint8_t   m_bpp;     // bytes per pixel
-
-    /**
-     * @brief Set VESA driver.
-     *
-     * @param [in] mboot - given multiboot info structure.
-     */
-    void set(const multiboot_t& mboot) noexcept;
-
-    /**
-     * @brief Draw pixel on the screen.
-     *
-     * @param [in] x - given pixel x-position.
-     * @param [in] y - given pixel y-position.
-     * @param [in] color - given pixel RGB color.
-     */
-    inline void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept;
-
-    /**
-     * @brief Fill screen with specific color.
-     *
-     * @param [in] color - given RGB color.
-     */
-    void fill_screen(gfx::rgb_t color) noexcept;
-
-    /**
-     * @brief Draw font character on the screen.
-     *
-     * @param [in] c - given character to print.
-     * @param [in] x - given x pixel position.
-     * @param [in] y - given y pixel position.
-     * @param [in] fg - given foreground color.
-     * @param [in] bg - given background color.
-     * @param [in] is_bg_on - given param determine whether to display the @a bg.
-     */
-    void draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept;
+struct fb_t {
+    uint32_t *addr;    // framebuffer address
+    uint32_t  pitch;   // number of bytes in a single row of the framebuffer
+    uint32_t  width;   // y-resolution
+    uint32_t  height;  // x-resolution
+    uint8_t   bpp;     // bytes per pixel
 };
 
-extern vesa_t vesa;
+/**
+ * @brief Set VESA driver.
+ *
+ * @param [in] mboot - given multiboot info structure.
+ */
+void init(const multiboot_t& mboot) noexcept;
 
+/**
+ * @brief Get the VESA framebuffer.
+ *
+ * @return VESA framebuffer.
+ */
+fb_t get_framebuffer(void) noexcept;
+
+/**
+ * @brief Draw pixel on the screen.
+ *
+ * @param [in] x - given pixel x-position.
+ * @param [in] y - given pixel y-position.
+ * @param [in] color - given pixel RGB color.
+ */
+inline void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept;
+
+/**
+ * @brief Fill screen with specific color.
+ *
+ * @param [in] color - given RGB color.
+ */
+void fill_screen(gfx::rgb_t color) noexcept;
+
+/**
+ * @brief Draw font character on the screen.
+ *
+ * @param [in] c - given character to print.
+ * @param [in] x - given x pixel position.
+ * @param [in] y - given y pixel position.
+ * @param [in] fg - given foreground color.
+ * @param [in] bg - given background color.
+ * @param [in] is_bg_on - given param determine whether to display the @a bg.
+ */
+void draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept;
+
+} // namespace vesa
 } // namespace driver
 } // namespace kernel
 

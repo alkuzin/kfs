@@ -22,39 +22,47 @@
 
 namespace kernel {
 namespace driver {
+namespace vesa {
 
-void vesa_t::set(const multiboot_t& mboot) noexcept
+static fb_t framebuffer {};
+
+void init(const multiboot_t& mboot) noexcept
 {
-    m_addr   = reinterpret_cast<uint32_t*>(mboot.framebuffer_addr);
-    m_pitch  = mboot.framebuffer_pitch;
-    m_width  = mboot.framebuffer_width;
-    m_height = mboot.framebuffer_height;
-    m_bpp    = mboot.framebuffer_bpp;
+    framebuffer.addr   = reinterpret_cast<uint32_t*>(mboot.framebuffer_addr);
+    framebuffer.pitch  = mboot.framebuffer_pitch;
+    framebuffer.width  = mboot.framebuffer_width;
+    framebuffer.height = mboot.framebuffer_height;
+    framebuffer.bpp    = mboot.framebuffer_bpp;
 }
 
-inline void vesa_t::draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept
+fb_t get_framebuffer(void) noexcept
 {
-    if (x < m_width && y < m_height)
-        m_addr[y * m_width + x] = color;
+    return framebuffer;
 }
 
-void vesa_t::fill_screen(gfx::rgb_t color) noexcept
+inline void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept
 {
-    for (uint32_t y = 0; y < m_height; y++) {
-        for (uint32_t x = 0; x < m_width; x++)
+    if (x < framebuffer.width && y < framebuffer.height)
+        framebuffer.addr[y * framebuffer.width + x] = color;
+}
+
+void fill_screen(gfx::rgb_t color) noexcept
+{
+    for (uint32_t y = 0; y < framebuffer.height; y++) {
+        for (uint32_t x = 0; x < framebuffer.width; x++)
             draw_pixel(x, y, color);
     }
 }
 
-void vesa_t::draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept
+void draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept
 {
     static constexpr uint8_t mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
     int32_t cx, cy;
 
-    uint8_t *glyph = static_cast<uint8_t*>(gfx::font) + static_cast<int32_t>(c) * 16;
+    uint8_t *glyph = static_cast<uint8_t*>(gfx::font) + int32_t(c) * 16;
 
-    for (cy = 0; cy < gfx::FONT_CHAR_HEIGHT; cy++) {
-        for (cx = 0; cx < gfx::FONT_CHAR_WIDTH; cx++) {
+    for (cy = 0; cy < FONT_CHAR_HEIGHT; cy++) {
+        for (cx = 0; cx < FONT_CHAR_WIDTH; cx++) {
             if (glyph[cy] & mask[cx])
                 draw_pixel(x + cx, y + cy, fg);
             else if (is_bg_on)
@@ -63,7 +71,6 @@ void vesa_t::draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_
     }
 }
 
-vesa_t vesa;
-
+} // namespace vesa
 } // namespace driver
 } // namespace kernel

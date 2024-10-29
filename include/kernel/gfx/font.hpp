@@ -30,11 +30,12 @@
 
 
 namespace kernel {
-namespace gfx {
 
-constexpr int32_t FONT_SIZE         {4_KB};
-constexpr int32_t FONT_CHAR_HEIGHT  {16};
-constexpr int32_t FONT_CHAR_WIDTH   {8};
+inline const int32_t FONT_SIZE         {4_KB};
+inline const int32_t FONT_CHAR_HEIGHT  {16};
+inline const int32_t FONT_CHAR_WIDTH   {8};
+
+namespace gfx {
 
 extern uint8_t font[FONT_SIZE];
 
