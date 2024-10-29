@@ -115,7 +115,7 @@ void shell_t::exec(const char *cmd) const noexcept
         printk("Used memory:        %u KB\n", (pmm.m_used_pages * PAGE_SIZE) >> 0xA);
     }
     else if (kstd::strncmp(cmd, "date", 4) == 0)
-        printk("%s\n", get_date());
+        printk("%s\n", ktime::get_date());
     else if (kstd::strncmp(cmd, "ticks", 5) == 0)
         printk("PIT ticks: %u\n", driver::pit::get_ticks());
     else

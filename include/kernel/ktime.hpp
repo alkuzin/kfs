@@ -31,6 +31,7 @@
 
 
 namespace kernel {
+namespace ktime {
 
 inline const uint32_t UNIX_BASE_YEAR    {1900};
 inline const uint32_t UNIX_EPOCH_YEAR   {1970};
@@ -75,16 +76,13 @@ struct tm {
     int32_t tm_isdst;   // daylight saving time flag
 };
 
-using ktime_t  = uint32_t; // representing time with millisecond precision
-using time32_t = uint32_t;
-
 /**
  * @brief Get seconds since the Epoch corresponding to given time.
  *
  * @param [in] ptm - given POSIX time structure.
  * @return seconds since Epoch.
  */
-time32_t mktime(const tm& ptm) noexcept;
+ktime_t mktime(const tm& ptm) noexcept;
 
 /**
  * @brief Converts seconds since the Epoch to a struct tm representation.
@@ -92,7 +90,7 @@ time32_t mktime(const tm& ptm) noexcept;
  * @param [in] timer - given number of seconds since the Epoch to convert.
  * @param [out] result - given time struct tm to fill.
  */
-void gmtime(time32_t timer, tm& result) noexcept;
+void gmtime(ktime_t timer, tm& result) noexcept;
 
 /**
  * @brief Get current date string representation.
@@ -115,17 +113,14 @@ void set_utc(UTC offset) noexcept;
  */
 int32_t get_utc(void) noexcept;
 
-namespace ktime {
-
 /**
  * @brief Get number of milliseconds since boot.
  *
  * @return number of milliseconds since boot.
  */
-ktime_t get(void) noexcept;
+ktime_t clock(void) noexcept;
 
 } // namespace ktime
-
 } // namespace kernel
 
 #endif // _KERNEL_KTIME_HPP_

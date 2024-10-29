@@ -25,6 +25,7 @@
 
 
 namespace kernel {
+namespace ktime {
 
 inline const int32_t SECONDS_PER_MINUTE    {60};
 inline const int32_t SECONDS_PER_HOUR      {3600};
@@ -94,7 +95,7 @@ static void rtc_to_posix(const rtc::rtc_time_t& rtm, tm& ptm) noexcept
     ptm.tm_isdst = -1;              // information is not available
 
     // converting local time to seconds since epoch
-    time32_t local_time = mktime(ptm);
+    ktime_t local_time = mktime(ptm);
 
     // adjusting for the UTC offset (in hours)
     local_time += utc * SECONDS_PER_HOUR; // Convert hours to seconds
@@ -158,7 +159,7 @@ static int32_t days_in_month(int32_t year, int32_t month) noexcept
     return 31;
 }
 
-time32_t mktime(const tm& ptm) noexcept
+ktime_t mktime(const tm& ptm) noexcept
 {
     if (ptm.tm_year < 70)
         panic("%s\n", "year must be >= 1970");
@@ -185,7 +186,7 @@ time32_t mktime(const tm& ptm) noexcept
     total_days += (day - 1);
 
     // calculate total seconds
-    time32_t total_seconds = total_days * SECONDS_PER_DAY;
+    ktime_t total_seconds = total_days * SECONDS_PER_DAY;
     total_seconds += hour * SECONDS_PER_HOUR;
     total_seconds += minute * SECONDS_PER_MINUTE;
     total_seconds += second;
@@ -193,7 +194,7 @@ time32_t mktime(const tm& ptm) noexcept
     return total_seconds;
 }
 
-void gmtime(time32_t timer, tm& result) noexcept
+void gmtime(ktime_t timer, tm& result) noexcept
 {
     uint32_t seconds          = timer;
     int32_t total_days        = seconds / SECONDS_PER_DAY;
@@ -269,9 +270,7 @@ int32_t get_utc(void) noexcept
     return utc;
 }
 
-namespace ktime {
-
-ktime_t get(void) noexcept
+ktime_t clock(void) noexcept
 {
     return driver::pit::get_ticks() * driver::pit::MILLISEC_PER_TICK;
 }

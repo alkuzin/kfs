@@ -55,6 +55,9 @@ using virt_addr_t = uint32_t;
 // process identificator
 using pid_t = int32_t;
 
+// representing time with millisecond precision
+using ktime_t  = uint32_t;
+
 /** @brief KB literal.*/
 constexpr inline size_t operator"" _KB(size_t n) noexcept
 {
