@@ -54,7 +54,7 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     arch::x86::gdt::init();
     printk(KERN_OK "%s\n", "initialized GDT");
 
-    core::memory::pmm.init(mboot);
+    core::memory::init(mboot);
     printk(KERN_OK "%s\n", "initialized physical memory manager");
 
     kmem::init();

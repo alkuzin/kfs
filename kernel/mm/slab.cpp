@@ -40,7 +40,7 @@ inline slab_list_t slabs;               // allocated slabs list
 
 void init(void) noexcept
 {
-    void *pages = pmm.alloc_pages(GFP::KERNEL, SLAB_PAGES_ORDER)->addr();
+    void *pages = alloc_pages(GFP::KERNEL, SLAB_PAGES_ORDER)->addr();
 
     if (!pages)
         panic("%s\n", "error to allocate pages for slabs structs");
@@ -53,7 +53,7 @@ void init(void) noexcept
     page_t *page   = nullptr;
 
     for (size_t i = 0; i < slabs.m_size; i++) {
-        page     = pmm.get_zeroed_page(GFP::KERNEL | GFP::ZERO);
+        page     = get_zeroed_page(GFP::KERNEL | GFP::ZERO);
         page_ptr = page->addr();
 
         if (!page_ptr)
@@ -158,7 +158,7 @@ void cache_t::alloc_slab(void) noexcept
                     m_list.m_next_free = slab;
                 }
 
-                page_t *page  = pmm.get_page(phys_addr_t(slab->m_s_mem));
+                page_t *page  = get_page(phys_addr_t(slab->m_s_mem));
                 page->m_cache = this;
                 page->m_slab  = slab;
 
@@ -283,7 +283,7 @@ void kfree(const void *objp) noexcept
     if (!objp)
         return;
 
-    page_t *page = pmm.get_page(phys_addr_t(objp));
+    page_t *page = get_page(phys_addr_t(objp));
     page->m_cache->free_slab(page->m_slab);
 }
 
@@ -293,7 +293,7 @@ size_t ksize(const void *objp) noexcept
     if (!objp)
         return 0;
 
-    page_t *page = pmm.get_page(phys_addr_t(objp));
+    page_t *page = get_page(phys_addr_t(objp));
     return page->m_cache->m_objsize;
 }
 
