@@ -114,6 +114,18 @@ static void free_available_memory(void) noexcept
     }
 }
 
+/**
+ * @brief Reserve specific page.
+ *
+ * @param [in] n - given page number.
+ */
+static inline void reserve_page(size_t n) noexcept
+{
+    pmm.bitmap.set(n);
+    pmm.mem_map[n].m_pfn = PG::RESERVED;
+    pmm.used_pages++;
+}
+
 void init(const multiboot_t& mboot) noexcept
 {
     // check that multiboot memory map is set correctly
@@ -166,11 +178,10 @@ void init(const multiboot_t& mboot) noexcept
     // mark pages memory map as used
     mark_as_used(phys_addr_t(pmm.mem_map), pmm.mem_map_size);
 
-    // first page containing reserved data (e.g. GDT), that should not
+    // these pages containing reserved data that should not
     // be accessed, so it was set as used:
-    pmm.bitmap.set(0);
-    pmm.mem_map[0].m_pfn = PG::RESERVED;
-    pmm.used_pages++;
+    reserve_page(0);    // containing GDT
+    reserve_page(16);   // containing multiboot info structure
 }
 
 /**
@@ -279,7 +290,7 @@ page_t *get_page(phys_addr_t addr) noexcept
     return &pmm.mem_map[pfn];
 }
 
-const char *mem_types[5] = {
+static const char *mem_types[5] = {
     "available",        // available RAM to use
     "reserved",         // reserved memory for kernel
     "ACPI reclaimable", // memory that managed by Advanced Configuration and Power Interface (ACPI)
@@ -294,13 +305,15 @@ void display_memory(void) noexcept
     for (size_t i = 0; i < pmm.mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(pmm.mboot->mmap_addr + i);
 
-        printk("%#08X-", mmmt->addr);
-        printk("%#08X  ", mmmt->addr + mmmt->len - 1);
-        printk("%u KB  ", mmmt->len >> 0xA);
-        printk("<%s>\n", mem_types[mmmt->type - 1]);
+        // printk("%#08X-", mmmt->addr);
+        // printk("%#08X  ", mmmt->addr + mmmt->len - 1);
+        // printk("%u KB  ", mmmt->len >> 0xA);
+        // printk("<%s>\n", mem_types[mmmt->type - 1]);
+        printk("%#08X-%#08X  %u KB  <%s>\n", mmmt->addr, mmmt->addr + mmmt->len - 1,
+        mmmt->len >> 0xA, mem_types[mmmt->type - 1]);
     }
 
-    printk("Memory page size:   %u KB\n", PAGE_SIZE);
+    printk("\nMemory page size:   %u KB\n", PAGE_SIZE);
     printk("Total memory:       %u KB\n", pmm.mem_total >> 0xA);
     printk("Used memory:        %u KB\n", (pmm.used_pages * PAGE_SIZE) >> 0xA);
 }

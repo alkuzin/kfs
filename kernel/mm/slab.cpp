@@ -53,7 +53,7 @@ void init(void) noexcept
     page_t *page   = nullptr;
 
     for (size_t i = 0; i < slabs.m_size; i++) {
-        page     = get_zeroed_page(GFP::KERNEL | GFP::ZERO);
+        page     = get_zeroed_page(GFP::KERNEL);
         page_ptr = page->addr();
 
         if (!page_ptr)

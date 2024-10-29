@@ -54,12 +54,6 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     arch::x86::gdt::init();
     printk(KERN_OK "%s\n", "initialized GDT");
 
-    core::memory::init(mboot);
-    printk(KERN_OK "%s\n", "initialized physical memory manager");
-
-    kmem::init();
-    printk(KERN_OK "%s\n", "initialized kernel heap");
-
     arch::x86::idt::init();
     printk(KERN_OK "%s\n", "initialized IDT");
 
@@ -69,6 +63,12 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     rtc::init();
     ktime::set_utc(ktime::UTC::MSK);
     printk(KERN_OK "%s\n", "initialized RTC driver");
+
+    core::memory::init(mboot);
+    printk(KERN_OK "%s\n", "initialized physical memory manager");
+
+    kmem::init();
+    printk(KERN_OK "%s\n", "initialized kernel heap");
 
     driver::keyboard::init();
     printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
