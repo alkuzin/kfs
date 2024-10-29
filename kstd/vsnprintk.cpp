@@ -38,7 +38,7 @@ struct handler_t
 {
 	char	*m_buffer;
 	size_t	 m_size;
-	va_list *m_args;
+	va_list  m_args;
 	uint8_t	 m_flags;
 	size_t   m_pos;
 	uint8_t  m_num;
@@ -101,7 +101,7 @@ public:
 	 * @param [in] size - given buffer size.
 	 * @param [in] args - given variable number of arguments.
 	 */
-	void init(char *buf, size_t size, va_list *args) noexcept;
+	void init(char *buf, size_t size, va_list args) noexcept;
 
 	/**
 	 * @brief Append character to buffer.
@@ -118,11 +118,12 @@ public:
 	void parse(const char *fmt) noexcept;
 };
 
-void handler_t::init(char *buf, size_t size, va_list *args) noexcept
+void handler_t::init(char *buf, size_t size, va_list args) noexcept
 {
 	m_buffer = buf;
 	m_size   = size;
-	m_args   = args;
+	// m_args   = args;
+	va_copy(m_args, args);
 	m_flags	 = 0;
 	m_pos    = 0;
 	m_num	 = 0;
@@ -146,7 +147,7 @@ inline void handler_t::set_flag(uint8_t pos) noexcept
 
 void handler_t::append_string(void) noexcept
 {
-	char *str = static_cast<char*>(va_arg(*m_args, char*));
+	char *str = static_cast<char*>(va_arg(m_args, char*));
 	auto i   = 0;
 
 	while(str[i]) {
@@ -174,7 +175,7 @@ inline char dtoh(int32_t v, bool is_upper = false) noexcept
 
 void handler_t::append_pointer(void) noexcept
 {
-	void *raw = reinterpret_cast<void*>(va_arg(*m_args, uint32_t));
+	void *raw = reinterpret_cast<void*>(va_arg(m_args, uint32_t));
 
 	if(!raw) {
 		auto i = 0;
@@ -239,7 +240,7 @@ size_t itoa_len(int32_t n) noexcept
 
 void handler_t::append_integer(void) noexcept
 {
-	int32_t n 	  = va_arg(*m_args, int32_t);
+	int32_t n 	  = va_arg(m_args, int32_t);
 	size_t i      = itoa_len(n);
 	size_t length = i;
 
@@ -291,7 +292,7 @@ size_t utoa_len(uint32_t n) noexcept
 
 void handler_t::append_uinteger(void) noexcept
 {
-	uint32_t n 	  = va_arg(*m_args, uint32_t);
+	uint32_t n 	  = va_arg(m_args, uint32_t);
 	size_t i      = utoa_len(n);
 	size_t length = i;
 
@@ -318,7 +319,7 @@ void handler_t::append_uinteger(void) noexcept
 
 void handler_t::append_hex(bool is_upper) noexcept
 {
-	uint32_t n = va_arg(*m_args, uint32_t);
+	uint32_t n = va_arg(m_args, uint32_t);
 	int32_t i  = (sizeof(n) << 3) - 4;
 	auto count = 0;
 
@@ -369,7 +370,7 @@ void handler_t::handle_argument(char type) noexcept
 	switch (type) {
 	// handle character
 	case 'c':
-		append(static_cast<char>(va_arg(*m_args, int32_t)));
+		append(static_cast<char>(va_arg(m_args, int32_t)));
 		break;
 
 	// handle string
@@ -444,7 +445,7 @@ void handler_t::parse(const char *fmt) noexcept
 	} while (ch);
 }
 
-static handler_t handler;
+static handler_t handler {};
 
 void snprintk(char *buf, size_t size, const char *fmt, ...) noexcept
 {
@@ -457,12 +458,9 @@ void snprintk(char *buf, size_t size, const char *fmt, ...) noexcept
 
 void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept
 {
-    va_list args_copy;
-
-    va_copy(args_copy, args);
-    handler.init(buf, size, &args_copy);
+    handler.init(buf, size, args);
     handler.parse(fmt);
-    va_end(args_copy);
+    va_end(handler.m_args);
 }
 
 } // namespace kstd

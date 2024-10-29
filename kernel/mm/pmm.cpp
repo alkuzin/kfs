@@ -293,24 +293,39 @@ page_t *get_page(phys_addr_t addr) noexcept
 static const char *mem_types[5] = {
     "available",        // available RAM to use
     "reserved",         // reserved memory for kernel
-    "ACPI reclaimable", // memory that managed by Advanced Configuration and Power Interface (ACPI)
-    "NVS",              // Non-Volatile Storage memory (store data that must persist across system reboots)
+    "ACPI reclaimable", // memory that managed by ACPI
+    "NVS",              // non-volatile storage memory
     "bad RAM"           // should not be used by the OS
 };
 
+/**
+ * @brief Get the memory area type string representation.
+ *
+ * @param [in] type - given memory area type.
+ * @return memory area type string representation.
+ */
+static inline const char *get_mem_type(int32_t type) noexcept
+{
+    if (type < 0 || type >= 5)
+        return "undefined";
+    else
+        return mem_types[type];
+}
+
 void display_memory(void) noexcept
 {
-    multiboot_entry_t *mmmt;
+    multiboot_entry_t *mmmt {nullptr};
+    size_t i = 0;
 
-    for (size_t i = 0; i < pmm.mboot->mmap_length; i += sizeof(multiboot_entry_t)) {
+    while (i < pmm.mboot->mmap_length) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(pmm.mboot->mmap_addr + i);
 
-        // printk("%#08X-", mmmt->addr);
-        // printk("%#08X  ", mmmt->addr + mmmt->len - 1);
-        // printk("%u KB  ", mmmt->len >> 0xA);
-        // printk("<%s>\n", mem_types[mmmt->type - 1]);
-        printk("%#08X-%#08X  %u KB  <%s>\n", mmmt->addr, mmmt->addr + mmmt->len - 1,
-        mmmt->len >> 0xA, mem_types[mmmt->type - 1]);
+        printk("%#08x-", mmmt->addr);
+        printk("%#08x  ", mmmt->addr + mmmt->len - 1);
+        printk("%u KB  ", mmmt->len >> 0xA);
+        printk("<%s>\n", get_mem_type(mmmt->type - 1));
+
+        i += sizeof(multiboot_entry_t);
     }
 
     printk("\nMemory page size:   %u KB\n", PAGE_SIZE);
