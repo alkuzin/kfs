@@ -18,6 +18,7 @@
 
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cstdio.hpp>
+#include <kernel/drivers/pit.hpp>
 #include <kernel/panic.hpp>
 #include <kernel/ktime.hpp>
 #include <kernel/rtc.hpp>
@@ -267,5 +268,14 @@ int32_t get_utc(void) noexcept
 {
     return utc;
 }
+
+namespace ktime {
+
+ktime_t get(void) noexcept
+{
+    return driver::pit::get_ticks() * driver::pit::MILLISEC_PER_TICK;
+}
+
+} // namespace ktime
 
 } // namespace kernel

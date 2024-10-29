@@ -75,13 +75,7 @@ struct tm {
     int32_t tm_isdst;   // daylight saving time flag
 };
 
-// structure for representing time with nanosecond precision
-struct ktime_t
-{
-    int32_t  tv_sec;    // seconds
-    uint32_t tv_nsec;   // nanoseconds
-};
-
+using ktime_t  = uint32_t; // representing time with millisecond precision
 using time32_t = uint32_t;
 
 /**
@@ -122,7 +116,14 @@ void set_utc(UTC offset) noexcept;
 int32_t get_utc(void) noexcept;
 
 namespace ktime {
-// TODO: implement get() function
+
+/**
+ * @brief Get number of milliseconds since boot.
+ *
+ * @return number of milliseconds since boot.
+ */
+ktime_t get(void) noexcept;
+
 } // namespace ktime
 
 } // namespace kernel
