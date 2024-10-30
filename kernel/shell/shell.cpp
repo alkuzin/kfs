@@ -112,10 +112,58 @@ void init(void) noexcept
     kstd::memset(shell_buffer, 0, SHELL_BUFFER_SIZE);
 }
 
+// TODO: implement structures for shell builtins
+static const char *builtins[7] {
+    "clear",
+    "uname",
+    "date",
+    "lscpu",
+    "lsmem",
+    "gdt",
+    "ticks",
+};
+
+static const char *get_suitable_cmd(const char *str, int32_t len) noexcept
+{
+    // warning: for large number of shell commands it is better to use algorithm
+    // based on the search tree (with search complexity O(log N)) in order to get
+    // suitable command instead of this (with search complexity O(N))
+
+    for (int32_t i = 0; i < 7; i++) {
+        // TODO: handle few similar commands
+        if (kstd::strncmp(builtins[i], str, len) == 0)
+            return builtins[i];
+    }
+
+    return nullptr;
+}
+
+static bool tab_handler(void) noexcept
+{
+    int32_t len         = kstd::strlen(shell_buffer);
+    const char *command = get_suitable_cmd(shell_buffer, len);
+
+    if (command) {
+        // updating shell buffer
+        kstd::strncpy(shell_buffer, command, SHELL_BUFFER_SIZE);
+
+        // clearing input
+        for (int32_t i = 0; i < len; i++)
+            kstd::putchar('\b');
+
+        // printing full command
+        kstd::putk(shell_buffer);
+        return true;
+    }
+
+    return false;
+}
+
 void process(void) noexcept
 {
     for (;;) {
         display_prompt();
+        driver::keyboard::set_tab_handler(tab_handler);
         driver::keyboard::get_line(shell_buffer, SHELL_BUFFER_SIZE);
 
         if (shell_buffer[0])
