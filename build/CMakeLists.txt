@@ -80,6 +80,7 @@ set(KERNEL_SOURCES
     "${KERNEL_ARCH_X86_DIR}/cpu.cpp"
 
     # Kernel shell directory:
+    "${KERNEL_SHELL_DIR}/builtin.cpp"
     "${KERNEL_SHELL_DIR}/shell.cpp"
 
     # Kernel debug directory:
