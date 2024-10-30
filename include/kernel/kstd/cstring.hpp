@@ -79,6 +79,14 @@ int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept;
  */
 size_t strncpy(char *dest, const char *src, size_t size) noexcept;
 
+/**
+ * @brief Get string length.
+ *
+ * @param [in] str - given null terminated string.
+ * @return str length.
+ */
+int32_t strlen(const char *str) noexcept;
+
 } // namespace kstd
 } // namespace kernel
 

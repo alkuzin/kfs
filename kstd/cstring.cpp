@@ -81,5 +81,15 @@ size_t strncpy(char *dest, const char *src, size_t size) noexcept
     return i;
 }
 
+int32_t strlen(const char *str) noexcept
+{
+    int32_t i = 0;
+
+    while(str[i])
+        i++;
+
+    return i;
+}
+
 } // namespace kstd
 } // namespace kernel
