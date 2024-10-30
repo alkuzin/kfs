@@ -51,13 +51,8 @@ inline const uint8_t PIC_8086_MODE              {0x01};
 inline const uint8_t ALL_INTERRUPTS_ENABLED     {0x00};
 inline const uint8_t END_OF_INTERRUPT           {0x20};
 
-struct pic_t
-{
-    /** @brief Initialize Programmable Interrupt Controller (PIC).*/
-    void init(void) noexcept;
-};
-
-extern pic_t pic;
+/** @brief Initialize Programmable Interrupt Controller (PIC).*/
+void init(void) noexcept;
 
 } // namespace pic
 } // namespace x86

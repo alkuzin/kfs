@@ -25,7 +25,7 @@ namespace arch {
 namespace x86 {
 namespace pic {
 
-void pic_t::init(void) noexcept
+void init(void) noexcept
 {
     // send the initialization command to both the master and slave PICs
     outb(MASTER_PIC_CMD, PIC_INIT_CMD);
@@ -47,8 +47,6 @@ void pic_t::init(void) noexcept
     outb(MASTER_PIC_DATA, ALL_INTERRUPTS_ENABLED);
     outb(SLAVE_PIC_DATA,  ALL_INTERRUPTS_ENABLED);
 }
-
-pic_t pic;
 
 } // namespace pic
 } // namespace x86
