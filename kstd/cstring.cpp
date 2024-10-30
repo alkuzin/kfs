@@ -33,6 +33,28 @@ void *memset(void *s, int32_t c, size_t n) noexcept
     return s;
 }
 
+void *memcpy(void *dest, const void *src, size_t n) noexcept
+{
+    const uint8_t *csrc {nullptr};
+    uint8_t *cdest {nullptr};
+    int32_t i = 0;
+
+    if (n == 0)
+        return dest;
+
+    cdest = reinterpret_cast<uint8_t*>(dest);
+    csrc  = reinterpret_cast<const uint8_t*>(src);
+    i     = 0;
+
+   	while(csrc[i] && n > 0) {
+        cdest[i] = csrc[i];
+        n--;
+        i++;
+    }
+
+    return dest;
+}
+
 int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept
 {
     size_t i = 0;

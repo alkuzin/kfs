@@ -48,6 +48,16 @@ namespace kstd {
 void *memset(void *s, int32_t c, size_t n) noexcept;
 
 /**
+ * @brief Copies n bytes from memory area src to memory area dest.
+ *
+ * @param [out] dest - given destination buffer.
+ * @param [in] src - given source buffer.
+ * @param [in] n - given number of bytes to copy.
+ * @return destination buffer pointer.
+ */
+void *memcpy(void *dest, const void *src, size_t n) noexcept;
+
+/**
  * @brief Compares the two strings s1 and s2.
  *
  * @param [in] s1 - first given null terminated string.
