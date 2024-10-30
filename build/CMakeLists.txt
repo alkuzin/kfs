@@ -77,6 +77,7 @@ set(KERNEL_SOURCES
     "${KERNEL_ARCH_X86_DIR}/idt.cpp"
     "${KERNEL_ARCH_X86_DIR}/irq.cpp"
     "${KERNEL_ARCH_X86_DIR}/pic.cpp"
+    "${KERNEL_ARCH_X86_DIR}/cpu.cpp"
 
     # Kernel shell directory:
     "${KERNEL_SHELL_DIR}/shell.cpp"
