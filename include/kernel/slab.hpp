@@ -38,30 +38,30 @@ inline const uint32_t CACHE_NAMELEN {16};
 
 struct slab_t
 {
-    slab_t   *m_next;    // next slab
-    slab_t   *m_prev;    // previous slab
-    void     *m_s_mem;   // starting address of the first object
-    void     *m_free;    // starting address of the first free object
-    uint32_t  m_inuse;   // number of active objects in the slab
-    bool      m_is_free; // checks if this slab is not used by cache
+    slab_t   *next;    // next slab
+    slab_t   *prev;    // previous slab
+    void     *s_mem;   // starting address of the first object
+    void     *free;    // starting address of the first free object
+    uint32_t  inuse;   // number of active objects in the slab
+    bool      is_free; // checks if this slab is not used by cache
 };
 
 struct slab_list_t
 {
-    slab_t *m_next_free; // starting address of the next free slab
-    slab_t *m_head;      // list head pointer
-    size_t  m_size;      // number of elements
+    slab_t *next_free; // starting address of the next free slab
+    slab_t *head;      // list head pointer
+    size_t  size;      // number of elements
 };
 
 struct cache_t
 {
-    slab_list_t m_list;                // list of partial and full slabs
-    slab_list_t m_freelist;            // list of free slabs
-    uint32_t    m_gfporder;            // size of slab in pages (2^gfporder)
-    uint32_t    m_objsize;             // object size
-    uint32_t    m_objnum;              // number of objects in each slab
-    uint8_t     m_flags;               // cache flags
-    char        m_name[CACHE_NAMELEN]; // cache name
+    slab_list_t list;                // list of partial and full slabs
+    slab_list_t freelist;            // list of free slabs
+    uint32_t    gfporder;            // size of slab in pages (2^gfporder)
+    uint32_t    objsize;             // object size
+    uint32_t    objnum;              // number of objects in each slab
+    uint8_t     flags;               // cache flags
+    char        name[CACHE_NAMELEN]; // cache name
 
 private:
     /** @brief Allocate a single slab.*/

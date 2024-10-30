@@ -36,12 +36,12 @@ inline const auto FLAG_PADDING {2};
 
 struct handler_t
 {
-	char	*m_buffer;
-	size_t	 m_size;
-	va_list  m_args;
-	uint8_t	 m_flags;
-	size_t   m_pos;
-	uint8_t  m_num;
+	char	*buffer;
+	size_t	 size;
+	va_list  args;
+	uint8_t	 flags;
+	size_t   pos;
+	uint8_t  num;
 
 private:
 	/**
@@ -120,35 +120,34 @@ public:
 
 void handler_t::init(char *buf, size_t size, va_list args) noexcept
 {
-	m_buffer = buf;
-	m_size   = size;
-	// m_args   = args;
-	va_copy(m_args, args);
-	m_flags	 = 0;
-	m_pos    = 0;
-	m_num	 = 0;
+	va_copy(this->args, args);
+	buffer 		= buf;
+	this->size 	= size;
+	flags		= 0;
+	pos			= 0;
+	num			= 0;
 }
 
 void handler_t::append(char ch) noexcept
 {
-	m_buffer[m_pos] = ch;
-	m_pos++;
+	buffer[pos] = ch;
+	pos++;
 }
 
 inline bool handler_t::get_flag(uint8_t pos) const noexcept
 {
-	return (m_flags >> pos) & 0x1;
+	return (flags >> pos) & 0x1;
 }
 
 inline void handler_t::set_flag(uint8_t pos) noexcept
 {
-	m_flags |= (1 << pos);
+	flags |= (1 << pos);
 }
 
 void handler_t::append_string(void) noexcept
 {
-	char *str = static_cast<char*>(va_arg(m_args, char*));
-	auto i   = 0;
+	char *str = static_cast<char*>(va_arg(args, char*));
+	auto i    = 0;
 
 	while(str[i]) {
 		append(str[i]);
@@ -175,7 +174,7 @@ inline char dtoh(int32_t v, bool is_upper = false) noexcept
 
 void handler_t::append_pointer(void) noexcept
 {
-	void *raw = reinterpret_cast<void*>(va_arg(m_args, uint32_t));
+	void *raw = reinterpret_cast<void*>(va_arg(args, uint32_t));
 
 	if(!raw) {
 		auto i = 0;
@@ -193,10 +192,10 @@ void handler_t::append_pointer(void) noexcept
 		int32_t i  = (sizeof(ptr) << 3) - 4;
 		auto count = 0;
 
-		if (m_num > 8)
-			m_num = 8;
+		if (num > 8)
+			num = 8;
 
-		auto skip_count = 8 - m_num;
+		auto skip_count = 8 - num;
 
 		// skip first zeros
 		while(i >= 0 && skip_count && ((dtoh((ptr >> i) & 0xf) == '0'))) {
@@ -240,7 +239,7 @@ size_t itoa_len(int32_t n) noexcept
 
 void handler_t::append_integer(void) noexcept
 {
-	int32_t n 	  = va_arg(m_args, int32_t);
+	int32_t n 	  = va_arg(args, int32_t);
 	size_t i      = itoa_len(n);
 	size_t length = i;
 
@@ -292,7 +291,7 @@ size_t utoa_len(uint32_t n) noexcept
 
 void handler_t::append_uinteger(void) noexcept
 {
-	uint32_t n 	  = va_arg(m_args, uint32_t);
+	uint32_t n 	  = va_arg(args, uint32_t);
 	size_t i      = utoa_len(n);
 	size_t length = i;
 
@@ -319,7 +318,7 @@ void handler_t::append_uinteger(void) noexcept
 
 void handler_t::append_hex(bool is_upper) noexcept
 {
-	uint32_t n = va_arg(m_args, uint32_t);
+	uint32_t n = va_arg(args, uint32_t);
 	int32_t i  = (sizeof(n) << 3) - 4;
 	auto count = 0;
 
@@ -328,10 +327,10 @@ void handler_t::append_hex(bool is_upper) noexcept
 		append('x');
 	}
 
-	if (m_num > 8)
-		m_num = 8;
+	if (num > 8)
+		num = 8;
 
-	auto skip_count = 8 - m_num;
+	auto skip_count = 8 - num;
 
 	// skip first zeros
 	while(i >= 0 && skip_count && ((dtoh((n >> i) & 0xf, is_upper) == '0'))) {
@@ -370,7 +369,7 @@ void handler_t::handle_argument(char type) noexcept
 	switch (type) {
 	// handle character
 	case 'c':
-		append(static_cast<char>(va_arg(m_args, int32_t)));
+		append(static_cast<char>(va_arg(args, int32_t)));
 		break;
 
 	// handle string
@@ -402,7 +401,7 @@ void handler_t::handle_argument(char type) noexcept
 	default:
 		// handle padding
 		if (get_flag(FLAG_PADDING) && kstd::isdigit(type))
-			m_num = type - '0';
+			num = type - '0';
 		else
 			append(type);
 
@@ -419,7 +418,7 @@ void handler_t::parse(const char *fmt) noexcept
 		ch = fmt[i];
 
 		// handle '%' if it isn't the last one
-		if ((ch == '%') && (i < m_size - 1)) {
+		if ((ch == '%') && (i < size - 1)) {
 			ch = fmt[i + 1];
 
 			while (ch) {
@@ -436,8 +435,8 @@ void handler_t::parse(const char *fmt) noexcept
 				}
 			}
 
-			m_flags = 0x0;
-			m_num   = 0;
+			flags = 0x0;
+			num   = 0;
 		}
 
 		append(ch);
@@ -460,7 +459,7 @@ void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept
 {
     handler.init(buf, size, args);
     handler.parse(fmt);
-    va_end(handler.m_args);
+    va_end(handler.args);
 }
 
 } // namespace kstd

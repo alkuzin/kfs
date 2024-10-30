@@ -45,14 +45,14 @@ void init(void) noexcept
     if (!pages)
         panic("%s\n", "error to allocate pages for slabs structs");
 
-    slabs.m_head = reinterpret_cast<slab_t*>(pages);
-    slabs.m_size = ((1 << SLAB_PAGES_ORDER) << PAGE_SHIFT) / sizeof(slab_t);
+    slabs.head = reinterpret_cast<slab_t*>(pages);
+    slabs.size = ((1 << SLAB_PAGES_ORDER) << PAGE_SHIFT) / sizeof(slab_t);
 
     // allocating pages for each slab objects
     void *page_ptr = nullptr;
     page_t *page   = nullptr;
 
-    for (size_t i = 0; i < slabs.m_size; i++) {
+    for (size_t i = 0; i < slabs.size; i++) {
         page     = get_zeroed_page(GFP::KERNEL);
         page_ptr = page->addr();
 
@@ -60,14 +60,14 @@ void init(void) noexcept
             panic("%s\n", "error to allocate pages for objects");
 
         // set page as used in slab
-        page->m_flags |= PG::SLAB;
+        page->flags |= PG::SLAB;
 
-        slabs.m_head[i].m_s_mem   = page_ptr;
-        slabs.m_head[i].m_free    = page_ptr;
-        slabs.m_head[i].m_next    = nullptr;
-        slabs.m_head[i].m_prev    = nullptr;
-        slabs.m_head[i].m_is_free = true;
-        slabs.m_head[i].m_inuse   = 0;
+        slabs.head[i].s_mem   = page_ptr;
+        slabs.head[i].free    = page_ptr;
+        slabs.head[i].next    = nullptr;
+        slabs.head[i].prev    = nullptr;
+        slabs.head[i].is_free = true;
+        slabs.head[i].inuse   = 0;
     }
 
     caches[8].create("kmalloc-2k", 2_KB, 0);
@@ -84,35 +84,35 @@ void init(void) noexcept
 void cache_t::create(const char *name, size_t size, uint32_t flags) noexcept
 {
     // initializing cache structure
-    m_list          = {nullptr, nullptr, 0};
-    m_freelist      = {nullptr, nullptr, 0};
-    m_objsize       = roundup_pow_of_two(size);
-    m_gfporder      = kstd::ceil(kstd::log2(m_objsize));
-    m_objnum        = PAGE_SIZE >> m_gfporder;
-    m_flags         = flags;
-    kstd::strncpy(m_name, name, CACHE_NAMELEN);
+    list          = {nullptr, nullptr, 0};
+    freelist      = {nullptr, nullptr, 0};
+    objsize       = roundup_pow_of_two(size);
+    gfporder      = kstd::ceil(kstd::log2(objsize));
+    objnum        = PAGE_SIZE >> gfporder;
+    flags         = flags;
+    kstd::strncpy(this->name, name, CACHE_NAMELEN);
 }
 
 void *cache_t::alloc(uint8_t flags) noexcept
 {
     (void)flags;    // TODO: handle SLAB_KERNEL
 
-    if (m_list.m_size == 0)
+    if (list.size == 0)
         alloc_slab();
 
-    slab_t *slab = m_list.m_next_free;
-    void *ptr    = slab->m_free;
+    slab_t *slab = list.next_free;
+    void *ptr    = slab->free;
 
     // handle case if all objects in the last slab are used
-    if (slab->m_inuse == m_objnum) {
+    if (slab->inuse == objnum) {
         alloc_slab();
-        slab = m_list.m_next_free;
-        ptr  = slab->m_free;
+        slab = list.next_free;
+        ptr  = slab->free;
     }
 
     // update slab info
-    slab->m_inuse++;
-    slab->m_free = reinterpret_cast<uint8_t*>(slab->m_free) + m_objsize;
+    slab->inuse++;
+    slab->free = reinterpret_cast<uint8_t*>(slab->free) + objsize;
 
     return ptr;
 }
@@ -123,46 +123,46 @@ void cache_t::alloc_slab(void) noexcept
     slab_t *slab;
 
     // first looking into the freelist for free slabs
-    if (m_freelist.m_head) {
-        m_list.m_next_free->m_next             = m_freelist.m_next_free;
-        m_freelist.m_next_free->m_next         = nullptr;
-        m_freelist.m_next_free->m_prev->m_next = nullptr;
+    if (freelist.head) {
+        list.next_free->next            = freelist.next_free;
+        freelist.next_free->next        = nullptr;
+        freelist.next_free->prev->next  = nullptr;
 
-        if (m_freelist.m_size)
-            m_freelist.m_next_free = m_freelist.m_next_free->m_prev;
+        if (freelist.size)
+            freelist.next_free = freelist.next_free->prev;
 
-        m_list.m_next_free->m_next->m_prev = m_list.m_next_free;
-        m_list.m_next_free = m_list.m_next_free->m_next;
+        list.next_free->next->prev = list.next_free;
+        list.next_free             = list.next_free->next;
 
-        m_list.m_size++;
-        m_freelist.m_size--;
+        list.size++;
+        freelist.size--;
         is_allocated = true;
     }
     else {
         // if there is no free slabs in freelist - then search them
         // in the external slabs array (m_slabs)
-        while (slab_pos < slabs.m_size) {
-            slab = &slabs.m_head[slab_pos];
+        while (slab_pos < slabs.size) {
+            slab = &slabs.head[slab_pos];
 
-            if (slab->m_is_free) {
-                slab->m_is_free = false;
+            if (slab->is_free) {
+                slab->is_free = false;
 
-                if (m_list.m_head) {
-                    slab->m_prev               = m_list.m_next_free;
-                    slab->m_next               = nullptr;
-                    m_list.m_next_free->m_next = slab;
-                    m_list.m_next_free         = slab;
+                if (list.head) {
+                    slab->prev           = list.next_free;
+                    slab->next           = nullptr;
+                    list.next_free->next = slab;
+                    list.next_free       = slab;
                 }
                 else {
-                    m_list.m_head      = slab;
-                    m_list.m_next_free = slab;
+                    list.head      = slab;
+                    list.next_free = slab;
                 }
 
-                page_t *page  = get_page(phys_addr_t(slab->m_s_mem));
-                page->m_cache = this;
-                page->m_slab  = slab;
+                page_t *page = get_page(phys_addr_t(slab->s_mem));
+                page->cache  = this;
+                page->slab   = slab;
 
-                m_list.m_size++;
+                list.size++;
                 is_allocated = true;
                 break;
             }
@@ -177,35 +177,35 @@ void cache_t::alloc_slab(void) noexcept
 
 void cache_t::free_slab(slab_t *slab) noexcept
 {
-    slab->m_free = reinterpret_cast<uint8_t*>(slab->m_free) - m_objsize;
+    slab->free = reinterpret_cast<uint8_t*>(slab->free) - objsize;
 
-    if (slab->m_inuse > 0)
-        slab->m_inuse--;
+    if (slab->inuse > 0)
+        slab->inuse--;
 
     // handle slab with all objects free
-    if (slab->m_inuse == 0 && m_list.m_next_free != slab) {
-        kstd::memset(slab->m_s_mem, 0, m_objnum << m_gfporder);
+    if (slab->inuse == 0 && list.next_free != slab) {
+        kstd::memset(slab->s_mem, 0, objnum << gfporder);
 
-        if (slab->m_prev)
-            slab->m_prev->m_next = slab->m_next;
+        if (slab->prev)
+            slab->prev->next = slab->next;
 
-        slab->m_next->m_prev = slab->m_prev;
+        slab->next->prev = slab->prev;
 
         // append free slab into freelist
-        if (m_freelist.m_head) {
-            slab->m_prev                   = m_freelist.m_next_free;
-            slab->m_next                   = nullptr;
-            m_freelist.m_next_free->m_next = slab;
-            m_freelist.m_next_free         = slab;
+        if (freelist.head) {
+            slab->prev               = freelist.next_free;
+            slab->next               = nullptr;
+            freelist.next_free->next = slab;
+            freelist.next_free       = slab;
         }
         else {
-            slab->m_prev           = nullptr;
-            slab->m_next           = nullptr;
-            m_freelist.m_head      = slab;
-            m_freelist.m_next_free = slab;
+            slab->prev         = nullptr;
+            slab->next         = nullptr;
+            freelist.head      = slab;
+            freelist.next_free = slab;
         }
-        m_freelist.m_size++;
-        m_list.m_size--;
+        freelist.size++;
+        list.size--;
     }
 }
 
@@ -218,16 +218,16 @@ void cache_t::free(void *objp) noexcept
     // traverse through the list to find a suitable slab
     // traversing from the end of the list because it is more likely that
     // slab object to be freed is one of the closest allocated ones
-    slab_t *slab = m_list.m_next_free;
+    slab_t *slab = list.next_free;
 
-    for (size_t i = m_list.m_size; i > 0; i--) {
-        if (phys_addr_t(slab->m_s_mem) == page_addr) {
+    for (size_t i = list.size; i > 0; i--) {
+        if (phys_addr_t(slab->s_mem) == page_addr) {
             free_slab(slab);
             is_free = true;
             break;
         }
 
-        slab = slab->m_prev;
+        slab = slab->prev;
     }
 
     if (!is_free)
@@ -284,7 +284,7 @@ void kfree(const void *objp) noexcept
         return;
 
     page_t *page = get_page(phys_addr_t(objp));
-    page->m_cache->free_slab(page->m_slab);
+    page->cache->free_slab(page->slab);
 }
 
 size_t ksize(const void *objp) noexcept
@@ -294,7 +294,7 @@ size_t ksize(const void *objp) noexcept
         return 0;
 
     page_t *page = get_page(phys_addr_t(objp));
-    return page->m_cache->m_objsize;
+    return page->cache->objsize;
 }
 
 } // namespace kernel

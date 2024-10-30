@@ -37,9 +37,9 @@ namespace kstd {
 template <typename T>
 struct bitmap_t
 {
-    T*     m_data;  // bitmap data pointer
-    size_t m_size;  // size of data in bytes
-    size_t m_bits;  // total number of bits in data
+    T*     data;  // bitmap data pointer
+    size_t size;  // size of data in bytes
+    size_t bits;  // total number of bits in data
 
     /**
      * @brief Initialize bitmap.
@@ -92,27 +92,27 @@ struct bitmap_t
 template <typename T>
 inline void bitmap_t<T>::init(T *data, size_t size) noexcept
 {
-    m_data = data;
-    m_size = size;
-    m_bits = BYTES_TO_BITS(m_size);
+    this->data = data;
+    this->size = size;
+    this->bits = BYTES_TO_BITS(size);
 }
 
 template <typename T>
 inline bool bitmap_t<T>::get(size_t pos) const noexcept
 {
-    return m_data[pos / BITS_PER_TYPE<T>] & (0x1 << (pos % BITS_PER_TYPE<T>));
+    return data[pos / BITS_PER_TYPE<T>] & (0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
 inline void bitmap_t<T>::set(size_t pos) noexcept
 {
-    m_data[pos / BITS_PER_TYPE<T>] |= (0x1 << (pos % BITS_PER_TYPE<T>));
+    data[pos / BITS_PER_TYPE<T>] |= (0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
 inline void bitmap_t<T>::unset(size_t pos) noexcept
 {
-    m_data[pos / BITS_PER_TYPE<T>] &= ~(0x1 << (pos % BITS_PER_TYPE<T>));
+    data[pos / BITS_PER_TYPE<T>] &= ~(0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
@@ -124,7 +124,7 @@ inline size_t bitmap_t<T>::bits_per_element(void) const noexcept
 template <typename T>
 inline size_t bitmap_t<T>::capacity(void) const noexcept
 {
-    return (m_bits + BITS_PER_TYPE<T> - 1) / BITS_PER_TYPE<T>;
+    return (bits + BITS_PER_TYPE<T> - 1) / BITS_PER_TYPE<T>;
 }
 
 } // namespace kstd

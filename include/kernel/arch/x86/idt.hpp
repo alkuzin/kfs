@@ -38,18 +38,18 @@ namespace idt {
 /** @brief IDT gate descriptor structure in 32-bit mode.*/
 struct entry_t
 {
-    uint16_t m_offset_low;  // entry point of the ISR (lower bits)
-    uint16_t m_selector;    // point to a valid code segment in GDT
-    uint8_t  m_reserved;    // unused
-    uint8_t  m_flags;       // gate type & other control bits
-    uint16_t m_offset_high; // entry point of the ISR (higher bits)
+    uint16_t offset_low;  // entry point of the ISR (lower bits)
+    uint16_t selector;    // point to a valid code segment in GDT
+    uint8_t  reserved;    // unused
+    uint8_t  flags;       // gate type & other control bits
+    uint16_t offset_high; // entry point of the ISR (higher bits)
 } __attribute__((packed));
 
 /** @brief IDT pointer.*/
 struct ptr_t
 {
-    uint16_t m_size;        // size of IDT
-    uint32_t m_offset;      // the linear address of the IDT
+    uint16_t size;        // size of IDT
+    uint32_t offset;      // the linear address of the IDT
 } __attribute__((packed));
 
 /** @brief Initialize Interrupt Descriptor Table.*/

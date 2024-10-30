@@ -53,13 +53,13 @@ ptr_t   *gdt_ptr = reinterpret_cast<ptr_t*>(GDT_BASE);
  */
 constexpr void set_entry(uint32_t eno, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags) noexcept
 {
-    GDT[eno].m_base_low  = (base & 0xFFFF);           // get first 2 bytes
-    GDT[eno].m_base_mid  = ((base >> 0x10) & 0xFF);   // get third byte
-    GDT[eno].m_base_high = ((base >> 0x18) & 0xFF);   // get last byte
-    GDT[eno].m_limit     = (limit & 0xFFFF);
-    GDT[eno].m_flags     = ((limit >> 0x10) & 0x0F);
-    GDT[eno].m_flags     |= (flags & 0xF0);
-    GDT[eno].m_access    = access;
+    GDT[eno].base_low  = (base & 0xFFFF);           // get first 2 bytes
+    GDT[eno].base_mid  = ((base >> 0x10) & 0xFF);   // get third byte
+    GDT[eno].base_high = ((base >> 0x18) & 0xFF);   // get last byte
+    GDT[eno].limit     = (limit & 0xFFFF);
+    GDT[eno].flags     = ((limit >> 0x10) & 0x0F);
+    GDT[eno].flags     |= (flags & 0xF0);
+    GDT[eno].access    = access;
 }
 
 /**
@@ -86,8 +86,8 @@ void init(void) noexcept
     set_entry(6, ENTRY_BASE, ENTRY_LIMIT, USER_ACCESS_STACK, ENTRY_FLAGS);
 
     // set GDT pointer:
-    gdt_ptr->m_size   = sizeof(GDT) - 1;
-    gdt_ptr->m_offset = reinterpret_cast<uint32_t>(&GDT);
+    gdt_ptr->size   = sizeof(GDT) - 1;
+    gdt_ptr->offset = reinterpret_cast<uint32_t>(&GDT);
 
     // update GDT:
     gdt_flush(reinterpret_cast<uint32_t>(gdt_ptr));

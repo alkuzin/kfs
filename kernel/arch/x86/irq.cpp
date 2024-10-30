@@ -82,14 +82,14 @@ asmlinkage void irq_handler(int_regs_t *regs)
 {
     // IRQ handler processes the interrupt by calling the appropriate
     // handler function based on the interrupt number
-    handler_t handler = routines[regs->m_int_no - 32];
+    handler_t handler = routines[regs->int_no - 32];
 
     // handle interrupt if handler exists
     if(handler)
         handler(regs);
 
     // this tells the slave PIC that interrupt handling was finished
-    if(regs->m_int_no >= 40)
+    if(regs->int_no >= 40)
         outb(pic::SLAVE_PIC_CMD, pic::END_OF_INTERRUPT);
 
     // this tells the master PIC that interrupt handling was finished
@@ -99,8 +99,8 @@ asmlinkage void irq_handler(int_regs_t *regs)
 asmlinkage void isr_handler(int_regs_t *regs)
 {
     // handle exceptions
-    if(regs->m_int_no < 32)
-        panic("%s\n", exception_msgs[regs->m_int_no]);
+    if(regs->int_no < 32)
+        panic("%s\n", exception_msgs[regs->int_no]);
 }
 
 } // namespace irq

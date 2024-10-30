@@ -69,10 +69,10 @@ constexpr inline size_t PHYS_PFN(phys_addr_t addr) noexcept
 
 struct page_t
 {
-    kmem::cache_t *m_cache; // memory allocator cache (only if PG::SLAB is set)
-    kmem::slab_t  *m_slab;  // memory allocator slab (only if PG::SLAB is set)
-    size_t         m_pfn;   // page frame number - position in bitmap & memory map
-    uint8_t        m_flags; // describes page status
+    kmem::cache_t *cache; // memory allocator cache (only if PG::SLAB is set)
+    kmem::slab_t  *slab;  // memory allocator slab (only if PG::SLAB is set)
+    size_t         pfn;   // page frame number (position in bitmap/mem map)
+    uint8_t        flags; // page status
 
     /**
      * @brief Get page memory address.
@@ -84,7 +84,7 @@ struct page_t
 
 inline void *page_t::addr(void) const noexcept
 {
-    return reinterpret_cast<void*>(PFN_PHYS(m_pfn));
+    return reinterpret_cast<void*>(PFN_PHYS(pfn));
 }
 
 } // namespace memory

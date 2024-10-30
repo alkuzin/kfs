@@ -49,19 +49,19 @@ inline const uint8_t USER_STACK_SEGMENT     {0x30};
 /** @brief GDT segment structure in 32-bit mode.*/
 struct entry_t
 {
-    uint16_t m_limit;       // maximum addressable unit.
-    uint16_t m_base_low;    // linear address where the segment begins (low bytes).
-    uint8_t  m_base_mid;    // linear address where the segment begins (middle byte).
-    uint8_t  m_access;      // privileges of segment.
-    uint8_t  m_flags;       // segment mode (16-bit, 32-bit or long mode - 64-bit).
-    uint8_t  m_base_high;   // linear address where the segment begins (high byte).
+    uint16_t limit;       // maximum addressable unit.
+    uint16_t base_low;    // linear address where the segment begins.
+    uint8_t  base_mid;    // linear address where the segment begins.
+    uint8_t  access;      // privileges of segment.
+    uint8_t  flags;       // segment mode
+    uint8_t  base_high;   // linear address where the segment begins.
 } __attribute__((packed));
 
 /** @brief GDT pointer.*/
 struct ptr_t
 {
-   uint16_t m_size;     // GDT size - 1
-   uint32_t m_offset;   // linear address of GDT.
+   uint16_t size;     // GDT size - 1
+   uint32_t offset;   // linear address of GDT.
 } __attribute__((packed));
 
 /** @brief Initialize Global Descriptor Table.*/

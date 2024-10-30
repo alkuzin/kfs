@@ -122,7 +122,7 @@ static void free_available_memory(void) noexcept
 static inline void reserve_page(size_t n) noexcept
 {
     pmm.bitmap.set(n);
-    pmm.mem_map[n].m_pfn = PG::RESERVED;
+    pmm.mem_map[n].pfn = PG::RESERVED;
     pmm.used_pages++;
 }
 
@@ -145,7 +145,7 @@ void init(const multiboot_t& mboot) noexcept
     pmm.bitmap.init(bitmap_addr, bitmap_size);
 
     // setting memory map
-    auto pos = pmm.bitmap.m_data + bitmap_size;
+    auto pos = pmm.bitmap.data + bitmap_size;
     pmm.mem_map      = reinterpret_cast<page_t*>(pos);
     pmm.mem_map_size = sizeof(page_t) * pmm.max_pages;
 
@@ -154,10 +154,10 @@ void init(const multiboot_t& mboot) noexcept
 
     // setting page frame numbers
     for (size_t i = 0; i < pmm.max_pages; i++) {
-        pmm.mem_map[i].m_cache = nullptr;
-        pmm.mem_map[i].m_slab  = nullptr;
-        pmm.mem_map[i].m_flags = 0;
-        pmm.mem_map[i].m_pfn   = i;
+        pmm.mem_map[i].cache = nullptr;
+        pmm.mem_map[i].slab  = nullptr;
+        pmm.mem_map[i].flags = 0;
+        pmm.mem_map[i].pfn   = i;
     }
 
     // mark all memory as used
@@ -173,7 +173,7 @@ void init(const multiboot_t& mboot) noexcept
     mark_as_used(phys_addr_t(bitmap_addr - STACK_SIZE), STACK_SIZE);
 
     // mark bitmap memory as used
-    mark_as_used(phys_addr_t(pmm.bitmap.m_data), pmm.bitmap.m_size);
+    mark_as_used(phys_addr_t(pmm.bitmap.data), pmm.bitmap.size);
 
     // mark pages memory map as used
     mark_as_used(phys_addr_t(pmm.mem_map), pmm.mem_map_size);
@@ -203,7 +203,7 @@ static size_t get_free_pages(gfp_t mask, uint32_t order) noexcept
 
     for (size_t i = 0; i < pmm.bitmap.capacity(); i++) {
         // skip groups of used pages
-        if (pmm.bitmap.m_data[i] != 0xFFFFFFFF) {
+        if (pmm.bitmap.data[i] != 0xFFFFFFFF) {
             // handle each group
             for (size_t j = 0; j < pmm.bitmap.bits_per_element(); j++) {
                 pos = 32 * i + j;

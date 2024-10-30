@@ -64,14 +64,14 @@ static void exec(const char *cmd) noexcept
         gdt::ptr_t *gdt_ptr = reinterpret_cast<gdt::ptr_t*>(gdt::GDT_BASE);
 
         printk("GDT descriptor: <%08p>\n", gdt_ptr);
-        printk("offset:         <%08p>\n", gdt_ptr->m_offset);
-        printk("size:             %u bytes\n", gdt_ptr->m_size);
+        printk("offset:         <%08p>\n", gdt_ptr->offset);
+        printk("size:             %u bytes\n", gdt_ptr->size);
 
         printk("\n%s\n", "kernel dump of GDT descriptor:");
         debug::kdump(gdt::GDT_BASE, 0);
 
         printk("\n%s\n", "kernel dump of Global Descriptor Table:");
-        debug::kdump(gdt_ptr->m_offset, gdt_ptr->m_size);
+        debug::kdump(gdt_ptr->offset, gdt_ptr->size);
 
         #pragma GCC diagnostic pop
     }

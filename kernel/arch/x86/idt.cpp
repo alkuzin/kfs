@@ -46,11 +46,11 @@ ptr_t   idt_ptr;
  */
 void set_gate(uint8_t num, uint32_t offset, uint16_t selector, uint8_t flags) noexcept
 {
-    IDT[num].m_offset_low  = (offset & 0xFFFF);
-    IDT[num].m_selector    = selector;
-    IDT[num].m_reserved    = 0;
-    IDT[num].m_flags       = flags | 0x60;
-    IDT[num].m_offset_high = ((offset >> 0x10) & 0xFFFF);
+    IDT[num].offset_low  = (offset & 0xFFFF);
+    IDT[num].selector    = selector;
+    IDT[num].reserved    = 0;
+    IDT[num].flags       = flags | 0x60;
+    IDT[num].offset_high = ((offset >> 0x10) & 0xFFFF);
 }
 
 /**
@@ -134,11 +134,11 @@ asmlinkage void idt_flush(phys_addr_t ptr);
 void init(void) noexcept
 {
     // set pointer structure to IDT
-    idt_ptr.m_size   = sizeof(IDT) - 1;
-    idt_ptr.m_offset = phys_addr_t(&IDT);
+    idt_ptr.size   = sizeof(IDT) - 1;
+    idt_ptr.offset = phys_addr_t(&IDT);
     kstd::memset(&IDT, 0, sizeof(IDT));
 
-    pic::pic.init();
+    pic::init();
     set_gates();
 
     // update IDT

@@ -45,23 +45,23 @@ namespace irq {
 
 /** @brief Structure representing interrupt register state.*/
 struct int_regs_t {
-    uint32_t m_cr2;         // control register 2
-    uint32_t m_ds;          // data segment
-    uint32_t m_edi;         // destination index
-    uint32_t m_esi;         // source index
-    uint32_t m_ebp;         // base pointer
-    uint32_t m_esp;         // stack pointer
-    uint32_t m_ebx;         // base register
-    uint32_t m_edx;         // data register
-    uint32_t m_ecx;         // counter register
-    uint32_t m_eax;         // accumulator register
-    uint32_t m_int_no;      // interrupt number
-    uint32_t m_err_code;    // error code
-    uint32_t m_eip;         // instruction pointer
-    uint32_t m_cs;          // code segment
-    uint32_t m_eflags;      // flags register
-    uint32_t m_useresp;     // user stack pointer
-    uint32_t m_ss;          // stack segment
+    uint32_t cr2;         // control register 2
+    uint32_t ds;          // data segment
+    uint32_t edi;         // destination index
+    uint32_t esi;         // source index
+    uint32_t ebp;         // base pointer
+    uint32_t esp;         // stack pointer
+    uint32_t ebx;         // base register
+    uint32_t edx;         // data register
+    uint32_t ecx;         // counter register
+    uint32_t eax;         // accumulator register
+    uint32_t int_no;      // interrupt number
+    uint32_t err_code;    // error code
+    uint32_t eip;         // instruction pointer
+    uint32_t cs;          // code segment
+    uint32_t eflags;      // flags register
+    uint32_t useresp;     // user stack pointer
+    uint32_t ss;          // stack segment
 } __attribute__((packed));
 
 // Interrupt requests handler function alias

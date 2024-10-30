@@ -67,13 +67,13 @@ inline const uint8_t VENDOR_ID_SIZE {13};
 inline const uint8_t BRAND_SIZE     {49};
 
 struct details_t {
-    char vendor[VENDOR_ID_SIZE];
-    char brand[BRAND_SIZE];
-    uint32_t high_param;    // highest function parameter (max leaf number)
-    uint8_t stepping;       // product revision number
-    uint8_t model;          // process model
-    uint8_t family;         // process family
-    uint8_t type;           // process type
+    char     vendor[VENDOR_ID_SIZE];
+    char     brand[BRAND_SIZE];
+    uint32_t high_param;        // highest function parameter (max leaf number)
+    uint8_t  stepping;          // product revision number
+    uint8_t  model;             // process model
+    uint8_t  family;            // process family
+    uint8_t  type;              // process type
 };
 
 /**

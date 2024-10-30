@@ -62,37 +62,43 @@ inline const uint32_t ALTGR   = 0xFFFFFFFF - 31;
 inline const uint32_t NUMLCK  = 0xFFFFFFFF - 32;
 
 const uint32_t lowercase[128] = {
-UNKNOWN,ESC,'1','2','3','4','5','6','7','8', '9','0','-','=','\b','\t','q','w','e','r',
-'t','y','u','i','o','p','[',']','\n',CTRL, 'a','s','d','f','g','h','j','k','l',';',
-'\'','`',LSHFT,'\\','z','x','c','v','b','n', 'm',',','.','/',RSHFT,'*',ALT,' ',CAPS,F1,
-F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK, SCRLCK,HOME,UP,PGUP,'-',LEFT,UNKNOWN,RIGHT,'+',END,
-DOWN,PGDOWN,INS,DEL,UNKNOWN,UNKNOWN,UNKNOWN,F11,F12,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN, UNKNOWN,UNKNOWN,UNKNOWN
+UNKNOWN,ESC,'1','2','3','4','5','6','7','8', '9','0','-','=','\b','\t','q','w',
+'e','r','t','y','u','i','o','p','[',']','\n',CTRL, 'a','s','d','f','g','h','j',
+'k','l',';','\'','`',LSHFT,'\\','z','x','c','v','b','n', 'm',',','.','/',RSHFT,
+'*',ALT,' ',CAPS,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK, SCRLCK,HOME,UP,PGUP,
+'-',LEFT,UNKNOWN,RIGHT,'+',END,DOWN,PGDOWN,INS,DEL,UNKNOWN,UNKNOWN,UNKNOWN,F11,
+F12,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+UNKNOWN,UNKNOWN,UNKNOWN
 };
 
 const uint32_t uppercase[128] = {
-UNKNOWN,ESC,'!','@','#','$','%','^','&','*', '(',')','_','+','\b','\t','Q','W','E','R',
-'T','Y','U','I','O','P','{','}','\n',CTRL, 'A','S','D','F','G','H','J','K','L',':',
-'"','~',LSHFT,'|','Z','X','C','V','B','N', 'M','<','>','?',RSHFT,'*',ALT,' ',CAPS,F1,
-F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK, SCRLCK,HOME,UP,PGUP,'-',LEFT,UNKNOWN,RIGHT,'+',END,
-DOWN,PGDOWN,INS,DEL,UNKNOWN,UNKNOWN,UNKNOWN,F11,F12,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN 
+UNKNOWN,ESC,'!','@','#','$','%','^','&','*', '(',')','_','+','\b','\t','Q','W',
+'E','R','T','Y','U','I','O','P','{','}','\n',CTRL, 'A','S','D','F','G','H','J',
+'K','L',':','"','~',LSHFT,'|','Z','X','C','V','B','N', 'M','<','>','?',RSHFT,
+'*',ALT,' ',CAPS,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK, SCRLCK,HOME,UP,PGUP,
+'-',LEFT,UNKNOWN,RIGHT,'+',END,DOWN,PGDOWN,INS,DEL,UNKNOWN,UNKNOWN,UNKNOWN,F11,
+F12,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+UNKNOWN,UNKNOWN,UNKNOWN
 };
 
-bool m_is_caps      = false;
-bool m_is_caps_lock = false;
+using namespace arch::x86;
+
+static bool is_caps      = false;
+static bool is_caps_lock = false;
 
 uint8_t getchar(void) noexcept
 {
-    while((arch::x86::inb(0x64) & 0x01) == 0)
+    while((inb(0x64) & 0x01) == 0)
         continue;
 
-    uint8_t scan_code = arch::x86::inb(0x60) & 0x7F; // get code of key that is pressed
-    uint8_t press     = arch::x86::inb(0x60) & 0x80; // is key is pressed down or released
+    uint8_t scan_code = inb(0x60) & 0x7F; // get code of key that is pressed
+    uint8_t press     = inb(0x60) & 0x80; // is key is pressed down or released
 
     switch(static_cast<KEY>(scan_code)) {
         case KEY::UP_ARROW:
@@ -100,24 +106,20 @@ uint8_t getchar(void) noexcept
         case KEY::LEFT_ARROW:
         case KEY::RIGHT_ARROW:
         case KEY::LSHIFT:
-            if(!press)
-                m_is_caps = true;
-            else
-                m_is_caps = false;
+            is_caps = !press;
             break;
 
         case KEY::CAPS_LOCK:
-            if(!m_is_caps_lock && !press)
-                m_is_caps_lock = true;
-            else if(m_is_caps_lock && !press)
-                m_is_caps_lock = false;
+            if (!press)
+                is_caps_lock = !is_caps_lock;
             break;
 
         default:
             if(!press) {
-                uint8_t cc;
+                bool    is_upper = (is_caps || is_caps_lock);
+                uint8_t cc {0};
 
-                if((m_is_caps || m_is_caps_lock) && (lowercase[scan_code] != UNKNOWN))
+                if(is_upper && (lowercase[scan_code] != UNKNOWN))
                     cc = uppercase[scan_code];
                 else
                     cc = lowercase[scan_code];
@@ -135,7 +137,7 @@ void get_line(char *buffer, size_t size) noexcept
     char     ch  = 0;
 
     do {
-        ch = static_cast<char>(getchar());
+        ch = getchar();
 
         if (ch && ch != '\n') {
             // handle backspace character
@@ -162,8 +164,6 @@ void get_line(char *buffer, size_t size) noexcept
     buffer[pos] = 0;
     kstd::putchar('\n');
 }
-
-using namespace arch::x86;
 
 void keyboard_handler(irq::int_regs_t *regs) noexcept
 {
