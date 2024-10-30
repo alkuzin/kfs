@@ -54,6 +54,22 @@ constexpr inline size_t roundup_pow_of_two(size_t n) noexcept
     return n + 1;
 }
 
+/**
+ * @brief Print current space.
+ *
+ * @param [in] ring - given current privilege level.
+ * @return current space.
+ */
+inline const char *current_space(uint32_t ring) noexcept
+{
+    if (ring == 0)
+        return "kernel space";
+    else if(ring == 3)
+        return "user space";
+    else
+        return "unknown";
+}
+
 } // namespace kernel
 
 #endif // _KERNEL_KERNEL_HPP_

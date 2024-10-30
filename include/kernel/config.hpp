@@ -28,6 +28,7 @@
 #define _KERNEL_CONFIG_HPP_
 
 #include <kernel/arch/x86/system.hpp>
+#include <kernel/kernel.hpp>
 #include <kernel/printk.hpp>
 
 
@@ -44,21 +45,6 @@ inline const auto __kernel_version_major__       {0};
 inline const auto __kernel_version_minor__       {3};
 inline const auto __kernel_version_lower__       {0};
 
-/**
- * @brief Print current space.
- *
- * @param [in] ring - given current privilege level.
- * @return current space.
- */
-inline const char *current_space(uint32_t ring) noexcept
-{
-    if (ring == 0)
-        return "kernel space";
-    else if(ring == 3)
-        return "user space";
-    else
-        return "unknown";
-}
 
 /** @brief Display main OS info: name, version and architecture.*/
 inline void display_general(void) noexcept
