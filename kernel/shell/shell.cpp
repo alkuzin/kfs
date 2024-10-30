@@ -19,6 +19,7 @@
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/arch/x86/system.hpp>
 #include <kernel/arch/x86/gdt.hpp>
+#include <kernel/arch/x86/cpu.hpp>
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/shell/shell.hpp>
@@ -87,6 +88,21 @@ static void exec(const char *cmd) noexcept
         printk("%s\n", ktime::get_date());
     else if (kstd::strncmp(cmd, "ticks", 5) == 0)
         printk("PIT ticks: %u\n", driver::pit::get_ticks());
+    else if (kstd::strncmp(cmd, "lscpu", 5) == 0) {
+        using namespace arch::x86;
+
+        cpu::details_t details {};
+        cpu::get_details(details);
+
+        printk("Architecture:   %s\n", cpu::arch);
+        printk("CPU op-mode(s): %s\n", cpu::get_op_modes());
+        printk("Byte Order:     %s\n", cpu::byte_order);
+        printk("Vendor ID:      %s\n", details.vendor);
+        printk("CPU type:       %s\n", cpu::type_to_str(cpu::TYPE(details.type)));
+        printk("Model name:     %s\n", details.brand);
+        printk("CPU family:     %u\n", details.family);
+        printk("CPU model:      %u\n", details.model);
+    }
     else
         printk("sh: %s: command not found \n", cmd);
 }
