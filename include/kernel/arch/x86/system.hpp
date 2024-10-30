@@ -47,9 +47,7 @@ inline void halt(void) noexcept
  */
 inline uint8_t ring(void) noexcept
 {
-    uint16_t cs;
-    __asm__ volatile ("mov %%cs, %0" : "=r"(cs)); // Read the CS register into cs
-    return cs & 0x3; // Return the lower 2 bits
+    return get_register(REG::CS) & 0x3;
 }
 
 /**
@@ -59,10 +57,7 @@ inline uint8_t ring(void) noexcept
  */
 inline uint32_t mode(void) noexcept
 {
-    // TODO: replace with reg::cs() for getting cs register:
-    uint16_t cs;
-
-    __asm__ volatile ("mov %%cs, %0" : "=r"(cs));
+    uint16_t cs = get_register(REG::CS);
 
     if (cs & 0x0000FFFF)
         return 32;

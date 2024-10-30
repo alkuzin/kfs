@@ -34,30 +34,6 @@ namespace kernel {
 namespace debug {
 
 /**
- * @brief Get ESP (stack pointer) register value.
- *
- * @return esp register value.
- */
-inline uint32_t esp(void) noexcept
-{
-    uint32_t ret;
-    __asm__ volatile("mov %%esp, %0" : "=r"(ret));
-    return ret;
-}
-
-/**
- * @brief Get EBP (base pointer) register value.
- *
- * @return ebp register value.
- */
-inline uint32_t ebp(void) noexcept
-{
-    uint32_t ret;
-    __asm__ volatile("mov %%ebp, %0" : "=r"(ret));
-    return ret;
-}
-
-/**
  * @brief Get memory dump.
  *
  * @param [in] addr - given memory address.

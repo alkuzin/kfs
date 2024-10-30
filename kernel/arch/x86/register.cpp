@@ -23,7 +23,6 @@ namespace kernel {
 namespace arch {
 namespace x86 {
 
-// TODO: add all registers
 // TODO: add debug function that prints all registers
 uint32_t get_register(REG reg) noexcept
 {

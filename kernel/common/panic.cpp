@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <kernel/arch/x86/register.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/printk.hpp>
 #include <kernel/debug.hpp>
@@ -30,10 +31,10 @@ inline const auto BUF_SIZE {1_KB};
 static char buffer[BUF_SIZE];
 
 // kernel panic types:
-inline const auto P_FATAL       {0};   // fatal error  (stop kernel)
+inline const auto P_FATAL       {0};   // fatal error (stop kernel)
 inline const auto P_ERR         {1};   // simple error (don't stop kernel)
-inline const auto P_DEBUG       {2};   // like fatal error, but outputs memory dump
-inline const auto P_DEFAULT     {9};   // like PANIC_FATAL
+inline const auto P_DEBUG       {2};   // like fatal error with memory dump
+inline const auto P_DEFAULT     {9};   // fatal error (stop kernel)
 
 
 void panic(const char *fmt, ...) noexcept
@@ -80,8 +81,10 @@ void panic(const char *fmt, ...) noexcept
 	kstd::putk(buffer);
 
     if (mem_dump) {
-        auto esp = debug::esp();
-        auto ebp = debug::ebp();
+        using namespace arch::x86;
+
+        auto esp = get_register(REG::ESP);
+        auto ebp = get_register(REG::EBP);
         printk(KERN_EMERG "ESP: <%08p>\n", esp);
         printk(KERN_EMERG "EBP: <%08p>\n", ebp);
         debug::kdump(esp-64, 128);
