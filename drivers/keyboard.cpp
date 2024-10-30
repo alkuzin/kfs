@@ -18,6 +18,7 @@
 
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/arch/x86/irq.hpp>
+#include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/arch/x86/io.hpp>
@@ -131,6 +132,13 @@ uint8_t getchar(void) noexcept
     return 0;
 }
 
+static key_handler tab_handler {nullptr};
+
+void set_tab_handler(key_handler handler) noexcept
+{
+    tab_handler = handler;
+}
+
 void get_line(char *buffer, size_t size) noexcept
 {
     uint32_t pos = 0;
@@ -149,6 +157,22 @@ void get_line(char *buffer, size_t size) noexcept
                     buffer[pos] = 0;
                 }
             }
+            else if (ch == '\t') {
+                if (tab_handler) {
+                    bool ret = tab_handler();
+
+                    if (ret)
+                        pos = kstd::strlen(buffer);
+
+                    continue;
+                }
+                else {
+                    while (pos < size) {
+                        buffer[pos] = ' ';
+                        pos++;
+                    }
+                }
+            }
 
             kstd::putchar(ch);
 
@@ -163,6 +187,8 @@ void get_line(char *buffer, size_t size) noexcept
     // truncate buffer
     buffer[pos] = 0;
     kstd::putchar('\n');
+
+    tab_handler = nullptr;
 }
 
 void keyboard_handler(irq::int_regs_t *regs) noexcept

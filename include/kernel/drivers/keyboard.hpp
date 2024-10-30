@@ -70,6 +70,15 @@ uint8_t getchar(void) noexcept;
  */
 void get_line(char *buffer, size_t size) noexcept;
 
+using key_handler = bool(*)(void);
+
+/**
+ * @brief Set the TAB key custom handler
+ *
+ * @param [in] handler - given TAB handler to set.
+ */
+void set_tab_handler(key_handler handler) noexcept;
+
 } // namespace keyboard
 } // namespace driver
 } // namespace kernel
