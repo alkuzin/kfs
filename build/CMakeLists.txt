@@ -45,7 +45,11 @@ set(INCLUDE_DIR             ${CMAKE_SOURCE_DIR}/../include)
 set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
 
 # List of kernel drivers source files
-set(GFX_SOURCES "${GFX_DIR}/font.cpp")
+set(GFX_SOURCES
+    "${GFX_DIR}/graphics.cpp"
+    "${GFX_DIR}/font.cpp"
+    "${GFX_DIR}/tui.cpp"
+)
 
 # List of kernel drivers source files
 set(DRIVERS_SOURCES
