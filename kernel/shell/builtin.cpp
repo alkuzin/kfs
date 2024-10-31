@@ -22,6 +22,7 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/drivers/pit.hpp>
 #include <kernel/arch/x86/io.hpp>
+#include <kernel/gfx/tui.hpp>
 #include <kernel/config.hpp>
 #include <kernel/debug.hpp>
 #include <kernel/ktime.hpp>
@@ -31,7 +32,7 @@
 namespace kernel {
 namespace shell {
 
-inline const uint8_t BUILTINS_COUNT {10};
+inline const uint8_t BUILTINS_COUNT {11};
 
 static void help(int32_t argc, char **argv) noexcept;
 static void clear(int32_t argc, char **argv) noexcept;
@@ -43,6 +44,7 @@ static void gdt(int32_t argc, char **argv) noexcept;
 static void ticks(int32_t argc, char **argv) noexcept;
 static void reboot(int32_t argc, char **argv) noexcept;
 static void shutdown(int32_t argc, char **argv) noexcept;
+static void tui(int32_t argc, char **argv) noexcept;
 
 static builtin_t builtins[BUILTINS_COUNT] {
     {"help",  "show list of available commands", nullptr, 0, help},
@@ -55,6 +57,7 @@ static builtin_t builtins[BUILTINS_COUNT] {
     {"ticks", "display current number of PIT ticks", nullptr, 0, ticks},
     {"reboot", "reboot the machine", nullptr, 0, reboot},
     {"shutdown", "power off the machine", nullptr, 0, shutdown},
+    {"tui", "test Terminal User Interface", nullptr, 0, tui},
 };
 
 void exec(const char *cmd) noexcept
@@ -213,6 +216,37 @@ static void shutdown(int32_t argc, char **argv) noexcept
 
     arch::x86::outw(0x0604, 0x2000); // for QEMU
     arch::x86::outw(0x4004, 0x3400); // for VirtualBox
+}
+
+static void tui(int32_t argc, char **argv) noexcept
+{
+    (void)argc; (void)argv; // unused
+
+    using namespace gfx::tui;
+
+    frame_t frame;
+    frame.init();
+
+    window_t window;
+
+    window.init(frame, "TUI window");
+    window.add_content("Open application?\n");
+
+    auto submit_on_click = [](void *wptr) {
+        auto window = static_cast<window_t*>(wptr);
+        window->destroy();
+        tty::clear();
+        printk(KERN_ERR "%s\n", "not implemented...");
+    };
+
+    auto reject_on_click = [](void *wptr) {
+        auto window = static_cast<window_t*>(wptr);
+        window->destroy();
+    };
+
+    window.add_button("< YES >", submit_on_click, &window, {100, 225});
+    window.add_button("< NO >", reject_on_click, &window, {200, 225});
+    window.show();
 }
 
 } // namespace shell
