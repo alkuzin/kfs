@@ -34,7 +34,7 @@ namespace kernel {
 namespace gfx {
 namespace tui {
 
-using action_t = void(*)(void);
+using action_t = void(*)(void*);
 
 struct button_t {
     const char *label;
@@ -46,6 +46,7 @@ struct button_t {
     int32_t  height;
     button_t *prev;     // previous button in list
     button_t *next;     // next button in list
+    void     *arg;
 };
 
 struct frame_t {
@@ -79,9 +80,11 @@ struct frame_t {
     void reset(void) noexcept;
 };
 
-inline const uint8_t WINDOW_TITLE_SIZE {32};
+inline const uint8_t WINDOW_TITLE_SIZE      {32};
+inline const uint8_t WINDOW_CONTENT_SIZE    {255};
 
 struct window_t {
+    char    content[WINDOW_CONTENT_SIZE];
     char    title[WINDOW_TITLE_SIZE];
     frame_t frame;
 
@@ -91,7 +94,7 @@ struct window_t {
      * @param [in] fr - given frame to connect to the window.
      * @param [in] title - given window title.
      */
-    void init(const frame_t& fr, const char *title = "window") noexcept;
+    void init(const frame_t& fr, const char *title) noexcept;
 
     /** @brief Display window on the screen.*/
     void show(void) noexcept;
@@ -103,11 +106,18 @@ struct window_t {
      * @param [in] on_click - given function to execute on button click.
      * @param [in] begin - given button begin point.
      */
-    void add_button(const char *label, action_t on_click, point_t begin = {0, 0}) noexcept;
-};
+    void add_button(const char *label, action_t on_click, void *arg, point_t begin = {0, 0}) noexcept;
 
-/** @brief Initialize Terminal User Interface (TUI).*/
-void init(void) noexcept;
+    /**
+     * @brief Add string content to window.
+     *
+     * @param [in] content - given string content.
+     */
+    void add_content(const char *content) noexcept;
+
+    /** @brief Destroy window.*/
+    void destroy(void) noexcept;
+};
 
 } // namespace tui
 } // namespace gfx

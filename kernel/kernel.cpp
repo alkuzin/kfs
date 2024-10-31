@@ -23,7 +23,6 @@
 #include <kernel/shell/shell.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/linkage.hpp>
-#include <kernel/gfx/tui.hpp>
 #include <kernel/printk.hpp>
 #include <kernel/panic.hpp>
 #include <kernel/ktime.hpp>
@@ -73,8 +72,6 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 
     driver::keyboard::init();
     printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
-
-    gfx::tui::init();
 
     shell::init();
     printk(KERN_OK "%s\n", "initialized kernel shell");

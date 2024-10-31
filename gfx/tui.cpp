@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <kernel/drivers/keyboard.hpp>
 #include <kernel/drivers/vesa.hpp>
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/gfx/font.hpp>
@@ -82,19 +83,13 @@ void frame_t::init(point_t begin) noexcept
     last        = buttons;
 }
 
-void submit_on_click(void) noexcept
-{
-    printk(KERN_EMERG "%s\n", "CLICKED OK\n");
-}
-
-void reject_on_click(void) noexcept
-{
-    printk(KERN_EMERG "%s\n", "CLICKED NO\n");
-}
-
 void window_t::init(const frame_t& fr, const char *title) noexcept
 {
     frame = fr;
+
+    if (!title)
+        title = "window";
+
     kstd::strncpy(this->title, title, WINDOW_TITLE_SIZE);
     frame.update();
 }
@@ -132,16 +127,20 @@ void window_t::show(void) noexcept
     cprintk(color::black, color::white, " %s ", title);
 
     // display top bar "buttons"
-    auto shift = FRAME_PADDING * 4 - 9;
+    auto shift = FRAME_PADDING * 4 + 9;
     tty::terminal.x_pos = (frame.begin_x_pos + frame.width) - shift;
     cprintk(color::black, color::white, "%s\n", " - = X ");
 
     // display window content
     tty::terminal.x_pos = frame.x_pos;
     tty::terminal.y_pos = frame.y_pos;
-    cprintk(color::black, color::white, "\n%s\n", "text");
 
-    // display all buttons
+    if (!content[0])
+        kstd::strncpy(this->content, "window content", WINDOW_CONTENT_SIZE);
+
+    cprintk(color::black, color::white, "\n%s", content);
+
+    button_t *current_button {nullptr};
     button_t *btn = frame.buttons;
 
     while (btn) {
@@ -149,12 +148,61 @@ void window_t::show(void) noexcept
         btn = btn->next;
     }
 
-    frame.reset();
+    current_button    = frame.buttons;
+    keyboard::KEY key = keyboard::getch();
+
+    bool is_pressed = false;
+
+    while (key != keyboard::KEY::ESC) {
+        key = keyboard::getch();
+
+        switch (key) {
+            case keyboard::KEY::A:
+                is_pressed = true;
+                current_button->bg = color::gray;
+                display_button(current_button);
+                current_button     = current_button->prev;
+
+                if (!current_button)
+                    current_button = frame.buttons;
+
+                current_button->bg = color::blue;
+                display_button(current_button);
+                break;
+
+            case keyboard::KEY::D:
+                is_pressed = true;
+                current_button->bg = color::gray;
+                current_button->bg = color::gray;
+                display_button(current_button);
+                current_button = current_button->next;
+
+                if (!current_button)
+                    current_button = frame.last;
+
+                current_button->bg = color::blue;
+                display_button(current_button);
+                break;
+
+            case keyboard::KEY::ENTER:
+                if (!is_pressed)
+                    break;
+
+                current_button->bg = color::black;
+                display_button(current_button);
+
+                if (current_button)
+                    current_button->on_click(current_button->arg);
+                return;
+
+            default:
+                break;
+        }
+    }
 }
 
-void window_t::add_button(const char *label, action_t on_click, point_t begin) noexcept
+void window_t::add_button(const char *label, action_t on_click, void *arg, point_t begin) noexcept
 {
-    // TODO: free all memory allocated for buttons in window.destroy()
     void *ptr = kmalloc(sizeof(button_t), GFP::KERNEL | GFP::ZERO);
 
     if (!ptr)
@@ -172,6 +220,7 @@ void window_t::add_button(const char *label, action_t on_click, point_t begin) n
     button->height     = kstd::strlen(label);
     button->begin.x    = begin.x + frame.begin.x + FRAME_PADDING;
     button->begin.y    = begin.y + 30 + frame.begin.y;
+    button->arg        = arg;
 
     // append button to buttons list
     if (!frame.buttons) {
@@ -186,17 +235,40 @@ void window_t::add_button(const char *label, action_t on_click, point_t begin) n
     }
 }
 
-void init(void) noexcept
+void window_t::add_content(const char *content) noexcept
 {
-    frame_t frame;
-    frame.init();
+    if (!content)
+        content = "window content";
 
-    window_t window;
+    kstd::strncpy(this->content, content, WINDOW_CONTENT_SIZE);
+}
 
-    window.init(frame, "example window");
-    window.add_button("< OK >", submit_on_click, {100, 225});
-    window.add_button("< NO >", reject_on_click, {200, 225});
-    window.show();
+void window_t::destroy(void) noexcept
+{
+    frame.reset();
+
+    // display window shadow
+    auto shadow_margin = 10;
+    auto shadow_begin  = (frame.begin + FRAME_PADDING - shadow_margin);
+    fill_rectangle(shadow_begin, frame.width, frame.height, tty::terminal.bg);
+
+    // display window
+    fill_rectangle(frame.begin, frame.width, frame.height, tty::terminal.bg);
+
+    // display frame inside window
+    auto fr_padding = 30;
+    auto fr_width   = frame.width - fr_padding;
+    auto fr_height  = frame.height - fr_padding;
+    draw_rectangle(frame.begin + 15, fr_width, fr_height, tty::terminal.bg);
+
+    button_t *btn = frame.buttons;
+    button_t *cur {nullptr};
+
+    while (btn) {
+        cur = btn;
+        btn = btn->next;
+        kfree(cur);
+    }
 }
 
 } // namespace tui
