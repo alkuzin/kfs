@@ -64,7 +64,7 @@ fb_t get_framebuffer(void) noexcept;
  * @param [in] y - given pixel y-position.
  * @param [in] color - given pixel RGB color.
  */
-inline void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept;
+void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept;
 
 /**
  * @brief Fill screen with specific color.

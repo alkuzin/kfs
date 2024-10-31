@@ -39,7 +39,7 @@ static inline char to_print(uint8_t ch)
 inline const auto BYTES_PER_LINE    {16};
 inline const auto FG_COLOR          {gfx::color::gray};
 inline const auto PTR_COLOR         {gfx::color::green};
-inline const auto BG_COLOR          {tty::bgcolor()};
+inline const auto BG_COLOR          {tty::terminal.bg};
 
 
 void kdump(phys_addr_t addr, size_t size) noexcept

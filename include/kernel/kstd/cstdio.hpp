@@ -61,7 +61,7 @@ void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept;
  */
 inline void putchar(const int32_t c) noexcept
 {
-	tty::putc(c, tty::fgcolor(), tty::bgcolor());
+	tty::putc(c, tty::terminal.fg, tty::terminal.bg);
 }
 
 /**
@@ -71,7 +71,7 @@ inline void putchar(const int32_t c) noexcept
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-inline void putk(const char *str, gfx::rgb_t fg = tty::fgcolor(), gfx::rgb_t bg = tty::bgcolor()) noexcept
+inline void putk(const char *str, gfx::rgb_t fg = tty::terminal.fg, gfx::rgb_t bg = tty::terminal.bg) noexcept
 {
     uint32_t i = 0;
 

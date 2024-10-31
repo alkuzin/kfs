@@ -40,7 +40,7 @@ fb_t get_framebuffer(void) noexcept
     return framebuffer;
 }
 
-inline void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept
+void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept
 {
     if (x < framebuffer.width && y < framebuffer.height)
         framebuffer.addr[y * framebuffer.width + x] = color;

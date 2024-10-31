@@ -33,8 +33,20 @@
 namespace kernel {
 namespace tty {
 
-/** @brief Set terminal.*/
-void init(void) noexcept;
+struct terminal_t {
+	driver::vesa::fb_t fb;      // VESA framebuffer
+    gfx::rgb_t  fg;             // foreground color
+    gfx::rgb_t  bg;             // background color
+    int32_t     begin_x_pos;    // x-position of the cursor
+    int32_t     begin_y_pos;    // y-position of the cursor
+    int32_t     x_pos;          // x-position of the cursor
+    int32_t     y_pos;          // y-position of the cursor
+    int32_t     width;          // output width
+    int32_t     height;         // output height
+
+    /** @brief Initialize terminal.*/
+    void init(void) noexcept;
+};
 
 /** @brief Clear screen.*/
 void clear(void) noexcept;
@@ -48,19 +60,7 @@ void clear(void) noexcept;
  */
 void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept;
 
-/**
- * @brief Get TTY foreground color.
- *
- * @return foreground color.
- */
-gfx::rgb_t fgcolor(void) noexcept;
-
-/**
- * @brief Get TTY background color.
- *
- * @return background color.
- */
-gfx::rgb_t bgcolor(void) noexcept;
+extern terminal_t terminal;
 
 } // namespace tty
 } // namespace kernel

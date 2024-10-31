@@ -25,28 +25,22 @@
 namespace kernel {
 namespace tty {
 
-using namespace driver;
-
 inline const auto TAB_WIDTH {4};
 
-struct terminal_t
-{
-	vesa::fb_t fb;		// VESA framebuffer
-    int32_t    x_pos;   // X position of the cursor.
-    int32_t    y_pos;   // Y position of the cursor.
-    gfx::rgb_t fg;      // Foreground color.
-    gfx::rgb_t bg;      // Background color.
-};
+using namespace driver::vesa;
 
-static terminal_t terminal;
 
-void init(void) noexcept
+void terminal_t::init(void) noexcept
 {
-	terminal.fb 	= vesa::get_framebuffer();
-    terminal.x_pos 	= 0;
-    terminal.y_pos 	= 0;
-    terminal.fg    	= gfx::color::white;
-    terminal.bg    	= gfx::color::black;
+	fb 			= get_framebuffer();
+    fg    		= gfx::color::white;
+    bg    		= gfx::color::black;
+    begin_x_pos	= 0;
+    begin_y_pos	= 0;
+    x_pos 		= 0;
+    y_pos 		= 0;
+    width 		= fb.width;
+    height 		= fb.height;
 }
 
 /** @brief Scroll screen.*/
@@ -67,27 +61,27 @@ static void scroll(void) noexcept
 
 void clear(void) noexcept
 {
-    terminal.x_pos = 0;
-    terminal.y_pos = 0;
-    vesa::fill_screen(terminal.bg);
+    terminal.x_pos = terminal.begin_x_pos;
+    terminal.y_pos = terminal.begin_y_pos;
+    fill_screen(terminal.bg);
 }
 
 void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept
 {
-	if(terminal.x_pos >= int32_t(terminal.fb.width)) {
-		terminal.x_pos = 0;
+	if(terminal.x_pos >= terminal.begin_x_pos + int32_t(terminal.width)) {
+		terminal.x_pos = terminal.begin_x_pos;
 		terminal.y_pos += FONT_CHAR_HEIGHT;
 	}
 
 	switch(c) {
 		case '\n':
 			terminal.y_pos += FONT_CHAR_HEIGHT;
-			terminal.x_pos = 0;
+			terminal.x_pos = terminal.begin_x_pos;
 			break;
 
 		case '\t':
 			for (int32_t i = 0; i < TAB_WIDTH; i++) {
-            	vesa::draw_char(' ', terminal.x_pos, terminal.y_pos,
+            	draw_char(' ', terminal.x_pos, terminal.y_pos,
 				fg, bg, true);
 				terminal.x_pos += FONT_CHAR_WIDTH;
 			}
@@ -98,15 +92,15 @@ void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept
 
             if(!terminal.x_pos && terminal.y_pos) {
 			    terminal.y_pos -= FONT_CHAR_HEIGHT;
-                terminal.x_pos = terminal.fb.width;
+                terminal.x_pos = terminal.width;
             }
 
-            vesa::draw_char(' ', terminal.x_pos, terminal.y_pos, fg, bg, true);
+            draw_char(' ', terminal.x_pos, terminal.y_pos, fg, bg, true);
 			break;
 
 		default:
             if(kstd::isprint(c)) {
-                vesa::draw_char(c, terminal.x_pos, terminal.y_pos,
+                draw_char(c, terminal.x_pos, terminal.y_pos,
 				fg, bg, true);
 			    terminal.x_pos += FONT_CHAR_WIDTH;
             }
@@ -121,15 +115,7 @@ void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept
     }
 }
 
-gfx::rgb_t fgcolor(void) noexcept
-{
-	return terminal.fg;
-}
-
-gfx::rgb_t bgcolor(void) noexcept
-{
-	return terminal.bg;
-}
+terminal_t terminal;
 
 } // namespace tty
 } // namespace kernel
