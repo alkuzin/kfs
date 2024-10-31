@@ -17,14 +17,11 @@
  */
 
 #include <kernel/shell/builtin.hpp>
-#include <kernel/drivers/keyboard.hpp>
-#include <kernel/arch/x86/system.hpp>
 #include <kernel/arch/x86/gdt.hpp>
 #include <kernel/arch/x86/cpu.hpp>
 #include <kernel/kstd/cstring.hpp>
-#include <kernel/kstd/cctype.hpp>
-#include <kernel/shell/shell.hpp>
 #include <kernel/drivers/pit.hpp>
+#include <kernel/arch/x86/io.hpp>
 #include <kernel/config.hpp>
 #include <kernel/debug.hpp>
 #include <kernel/ktime.hpp>
@@ -34,7 +31,7 @@
 namespace kernel {
 namespace shell {
 
-inline const uint8_t BUILTINS_COUNT {8};
+inline const uint8_t BUILTINS_COUNT {10};
 
 static void help(int32_t argc, char **argv) noexcept;
 static void clear(int32_t argc, char **argv) noexcept;
@@ -44,6 +41,8 @@ static void lscpu(int32_t argc, char **argv) noexcept;
 static void lsmem(int32_t argc, char **argv) noexcept;
 static void gdt(int32_t argc, char **argv) noexcept;
 static void ticks(int32_t argc, char **argv) noexcept;
+static void reboot(int32_t argc, char **argv) noexcept;
+static void shutdown(int32_t argc, char **argv) noexcept;
 
 static builtin_t builtins[BUILTINS_COUNT] {
     {"help",  "show list of available commands", nullptr, 0, help},
@@ -54,6 +53,8 @@ static builtin_t builtins[BUILTINS_COUNT] {
     {"lsmem", "list the ranges of available memory", nullptr, 0, lsmem},
     {"gdt",   "display information about GDT", nullptr, 0, gdt},
     {"ticks", "display current number of PIT ticks", nullptr, 0, ticks},
+    {"reboot", "reboot the machine", nullptr, 0, reboot},
+    {"shutdown", "power off the machine", nullptr, 0, shutdown},
 };
 
 void exec(const char *cmd) noexcept
@@ -191,6 +192,23 @@ static void ticks(int32_t argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
     printk("PIT ticks: %u\n", driver::pit::get_ticks());
+}
+
+static void reboot(int32_t argc, char **argv) noexcept
+{
+    (void)argc; (void)argv; // unused
+
+    arch::x86::cli();               // disable interrupts
+    arch::x86::outb(0x64, 0xFE);    // reset CPU
+    arch::x86::halt();              // halt CPU
+}
+
+static void shutdown(int32_t argc, char **argv) noexcept
+{
+    (void)argc; (void)argv; // unused
+
+    arch::x86::outw(0x0604, 0x2000); // for QEMU
+    arch::x86::outw(0x4004, 0x3400); // for VirtualBox
 }
 
 } // namespace shell
