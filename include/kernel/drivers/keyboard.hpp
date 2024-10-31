@@ -47,13 +47,17 @@ enum class KEY {
     SPACE       = 0X39,
     CAPS_LOCK   = 0X3A,
     LEFT_ARROW  = 0X4B,
-    RIGHT_ARROW = 0X4D,
+    RIGHT_ARROW = 0X60,
     UP_ARROW    = 0X48,
-    DOWN_ARROW  = 0X50
+    DOWN_ARROW  = 0X50,
+    A           = 0x1E,
+    D           = 0x20
 };
 
 /** @brief Initialize keyboard.*/
 void init(void) noexcept;
+
+KEY getch(void) noexcept;
 
 /**
  * @brief Keyboard get character on key press.

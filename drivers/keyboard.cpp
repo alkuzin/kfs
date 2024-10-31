@@ -93,6 +93,18 @@ using namespace arch::x86;
 static bool is_caps      = false;
 static bool is_caps_lock = false;
 
+KEY getch(void) noexcept
+{
+    while((inb(0x64) & 0x01) == 0)
+        continue;
+
+    uint8_t scan_code = inb(0x60) & 0x7F; // get code of key that is pressed
+    uint8_t press     = inb(0x60) & 0x80; // is key is pressed down or released
+
+    (void)press; // unused
+    return static_cast<KEY>(scan_code);
+}
+
 uint8_t getchar(void) noexcept
 {
     while((inb(0x64) & 0x01) == 0)
