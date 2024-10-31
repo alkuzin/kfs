@@ -58,6 +58,17 @@ inline void outb(uint16_t port, uint8_t data) noexcept
     __asm__ volatile("outb %1, %0" : : "dN" (port), "a" (data));
 }
 
+/**
+ * @brief Output a 16-bit value to a specified port.
+ *
+ * @param [in] port -given port to which the data will be written.
+ * @param [in] data - given data byte to be written to the port.
+ */
+inline void outw(uint16_t port, uint16_t data) noexcept
+{
+    __asm__ volatile("outw %0, %1" : : "a"(data), "Nd"(port));
+}
+
 } // namespace x86
 } // namespace arch
 } // namespace kernel
