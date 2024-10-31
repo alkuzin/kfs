@@ -59,10 +59,14 @@ static builtin_t builtins[BUILTINS_COUNT] {
 
 void exec(const char *cmd) noexcept
 {
-    int32_t len = kstd::strlen(cmd);
+    const char *target {nullptr};
+    int32_t len {0};
 
     for (int32_t i = 0; i < BUILTINS_COUNT; i++) {
-        if (kstd::strncmp(builtins[i].name, cmd, len) == 0) {
+        target = builtins[i].name;
+        len    = kstd::strlen(target);
+
+        if (kstd::strncmp(target, cmd, len) == 0) {
             // TODO: handle shell arguments
             builtins[i].func(0, nullptr);
             return;
