@@ -106,6 +106,20 @@ constexpr inline float64_t ceil(float64_t x) noexcept
         return int_part;
 }
 
+// Absolute and Maximum/Minimum Functions ----------------------------------
+
+/**
+ * @brief Calculate the absolute value of a given value.
+ *
+ * @param [in] x - given value.
+ * @return the absolute value of the given value.
+ */
+template <typename T>
+constexpr inline T abs(T x) noexcept
+{
+    return ((x) < 0 ? -(x) : (x));
+}
+
 } // namespace kstd
 } // namespace kernel
 
