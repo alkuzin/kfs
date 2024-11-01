@@ -19,6 +19,7 @@
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/drivers/vesa.hpp>
 #include <kernel/kstd/cstring.hpp>
+#include <kernel/drivers/pit.hpp>
 #include <kernel/gfx/font.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/gfx/tui.hpp>
@@ -190,6 +191,7 @@ void window_t::show(void) noexcept
 
                 current_button->bg = color::black;
                 display_button(current_button);
+                driver::pit::delay(80);
 
                 if (current_button)
                     current_button->on_click(current_button->arg);
