@@ -5,7 +5,7 @@ Monolithic Unix-like kernel from scratch.
 
 ## Overview
 
-<img src="res/kfs_v0_2_0.png">
+<img src="res/kfs_v0_3_5.png">
 
 List of changes [here](CHANGELOG.md).
 
