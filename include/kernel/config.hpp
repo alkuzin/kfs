@@ -45,42 +45,6 @@ inline const auto __kernel_version_major__       {0};
 inline const auto __kernel_version_minor__       {3};
 inline const auto __kernel_version_lower__       {0};
 
-
-/** @brief Display main OS info: name, version and architecture.*/
-inline void display_general(void) noexcept
-{
-    uint32_t mode = arch::x86::mode();
-    uint32_t ring = arch::x86::ring();
-
-    printk(
-        "kernel name:      |  %s\n"
-        "kernel version:   |  v%d.%d.%d\n"
-        "Architecture:     |  %s\n"
-        "Operating mode:   |  %u-bit protected\n"
-        "Privilege level:  |  ring %u (%s)\n"
-        "Author:           |  %s - 2024\n",
-        __kernel_name__,
-        __kernel_version_major__,
-        __kernel_version_minor__,
-        __kernel_version_lower__,
-        __kernel_arch__,
-        mode,
-        ring,
-        current_space(ring),
-        __kernel_author__
-    );
-}
-
-/** @brief Display OS build info: build date and time.*/
-inline void display_build(void) noexcept
-{
-    printk("build time: %s %s [g++-%s]\n",
-    __kernel_build_time__,
-    __kernel_build_date__,
-    __kernel_compiler_version__
-    );
-}
-
 } // namespace info
 } // namespace kernel
 

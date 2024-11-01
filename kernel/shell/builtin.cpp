@@ -129,9 +129,34 @@ static void uname(int32_t argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
-    info::display_general();
-    kstd::putchar('\n');
-    info::display_build();
+    // display general kernel info
+    uint32_t mode = arch::x86::mode();
+    uint32_t ring = arch::x86::ring();
+
+    printk(
+        "kernel name:      |  %s\n"
+        "kernel version:   |  v%d.%d.%d\n"
+        "Architecture:     |  %s\n"
+        "Operating mode:   |  %u-bit protected\n"
+        "Privilege level:  |  ring %u (%s)\n"
+        "Author:           |  %s - 2024\n",
+        info::__kernel_name__,
+        info::__kernel_version_major__,
+        info::__kernel_version_minor__,
+        info::__kernel_version_lower__,
+        info::__kernel_arch__,
+        mode,
+        ring,
+        current_space(ring),
+        info::__kernel_author__
+    );
+
+    // display kernel build info
+    printk("\nbuild time: %s %s [g++-%s]\n",
+        info::__kernel_build_time__,
+        info::__kernel_build_date__,
+        info::__kernel_compiler_version__
+    );
 }
 
 static void date(int32_t argc, char **argv) noexcept
@@ -230,7 +255,7 @@ static void tui(int32_t argc, char **argv) noexcept
     window_t window;
 
     window.init(frame, "TUI window");
-    window.add_content("Open application?\n");
+    window.add_content("Open an application?\n");
 
     auto submit_on_click = [](void *wptr) {
         auto window = static_cast<window_t*>(wptr);

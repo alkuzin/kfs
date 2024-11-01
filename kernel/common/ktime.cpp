@@ -257,7 +257,7 @@ void gmtime(ktime_t timer, tm& result) noexcept
     else
         day_of_week--;
 
-    result.tm_wday = day_of_week;
+    result.tm_wday = day_of_week + 5; // TODO: fix issue with displaying day & week day
 }
 
 void set_utc(UTC offset) noexcept
