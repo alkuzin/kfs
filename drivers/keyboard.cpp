@@ -90,19 +90,17 @@ UNKNOWN,UNKNOWN,UNKNOWN
 
 using namespace arch::x86;
 
+static volatile uint8_t scan_code   {0};
+static volatile uint8_t press       {0};
+
 static bool is_caps      = false;
 static bool is_caps_lock = false;
 
 KEY getch(void) noexcept
 {
-    while((inb(0x64) & 0x01) == 0)
-        continue;
-
-    uint8_t scan_code = inb(0x60) & 0x7F; // get code of key that is pressed
-    uint8_t press     = inb(0x60) & 0x80; // is key is pressed down or released
-
-    (void)press; // unused
-    return static_cast<KEY>(scan_code);
+    auto key  = static_cast<KEY>(scan_code);
+    scan_code = 0;
+    return key;
 }
 
 uint8_t getchar(void) noexcept
@@ -110,14 +108,7 @@ uint8_t getchar(void) noexcept
     while((inb(0x64) & 0x01) == 0)
         continue;
 
-    uint8_t scan_code = inb(0x60) & 0x7F; // get code of key that is pressed
-    uint8_t press     = inb(0x60) & 0x80; // is key is pressed down or released
-
     switch(static_cast<KEY>(scan_code)) {
-        case KEY::UP_ARROW:
-        case KEY::DOWN_ARROW:
-        case KEY::LEFT_ARROW:
-        case KEY::RIGHT_ARROW:
         case KEY::LSHIFT:
             is_caps = !press;
             break;
@@ -206,7 +197,9 @@ void get_line(char *buffer, size_t size) noexcept
 void keyboard_handler(irq::int_regs_t *regs) noexcept
 {
     (void)regs; // unused
-    // TODO: implement?
+
+    scan_code = inb(0x60) & 0x7F; // get code of key that is pressed
+    press     = inb(0x60) & 0x80; // is key is pressed down or released
 }
 
 void init(void) noexcept
