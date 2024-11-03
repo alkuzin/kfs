@@ -36,7 +36,10 @@ namespace kstd {
 // Math Constants ---------------------------------------------------------
 
 /** @brief The mathematical constant e (Euler's number).*/
-constexpr inline float64_t M_E {2.7182818284590452354};
+constexpr inline float64_t M_E      {2.7182818284590452354};
+
+/** @brief The mathematical constant Pi divided by 2.*/
+constexpr inline float64_t M_PI_2   {1.57079632679489661923};
 
 /** @brief Represents a NaN (Not-a-Number) value.*/
 const auto NAN {(0.0f / 0.0f)};
@@ -118,6 +121,44 @@ template <typename T>
 constexpr inline T abs(T x) noexcept
 {
     return ((x) < 0 ? -(x) : (x));
+}
+
+// Trigonometric Functions -----------------------------------------------
+
+/**
+ * @brief Calculates the sine of given value.
+ *
+ * @param [in] x - given value.
+ * @return sine of @a x.
+ */
+constexpr float64_t sin(float64_t x) noexcept
+{
+    float64_t cur  = x;
+    float64_t acc  = 1;
+    float64_t fact = 1;
+    float64_t pow  = x;
+    int32_t i      = 1;
+
+    while (kstd::abs(acc) > 1e-8 && i < 100) {
+        fact *= ((2 * i) * (2 * i + 1));
+        pow  *= -1 * x*x;
+        acc  =  pow / fact;
+        cur  += acc;
+        i++;
+    }
+
+    return cur;
+}
+
+/**
+ * @brief Calculates the cosine of given value.
+ *
+ * @param [in] x - given value.
+ * @return cosine of @a x.
+ */
+constexpr inline float64_t cos(float64_t x) noexcept
+{
+    return sin(x + M_PI_2);
 }
 
 } // namespace kstd
