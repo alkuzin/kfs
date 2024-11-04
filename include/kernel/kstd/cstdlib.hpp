@@ -96,6 +96,14 @@ T stou(const char *str) noexcept
     return result;
 }
 
+/**
+ * @brief Convert from string to hex.
+ *
+ * @param [in] str - given string to convert.
+ * @return hex representation of string.
+ */
+uint32_t stoh(const char *str) noexcept;
+
 } // namespace kstd
 } // namespace kernel
 

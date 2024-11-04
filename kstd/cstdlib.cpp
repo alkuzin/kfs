@@ -17,6 +17,7 @@
  */
 
 #include <kernel/kstd/cstdlib.hpp>
+#include <kernel/panic.hpp>
 #include <kernel/slab.hpp>
 
 
@@ -26,6 +27,9 @@ namespace kstd {
 
 char **split(const char *str, const char *delim, int *count) noexcept
 {
+    if (!str || !delim || !count)
+        return nullptr;
+
     char* str_copy = strdup(str);
 
     if (!str_copy)
@@ -36,7 +40,8 @@ char **split(const char *str, const char *delim, int *count) noexcept
     char *token = strtok(str_copy, delim);
 
     while (token) {
-        token_count++;
+        if (strlen(token) > 0) // only count non-empty tokens
+            token_count++;
         token = strtok(nullptr, delim);
     }
 
@@ -56,19 +61,21 @@ char **split(const char *str, const char *delim, int *count) noexcept
     int32_t index = 0;
 
     while (token) {
-        result[index] = strdup(token);
+        if (strlen(token) > 0) {
+            result[index] = strdup(token);
 
-        if (!result[index]) {
-            // freeing previously allocated strings in case of failure
-            for (int j = 0; j < index; j++)
-                kfree(result[j]);
+            if (!result[index]) {
+                // freeing previously allocated strings in case of failure
+                for (int j = 0; j < index; j++)
+                    kfree(result[j]);
 
-            kfree(result);
-            kfree(str_copy);
-            return nullptr; // memory allocation failed
+                kfree(result);
+                kfree(str_copy);
+                return nullptr; // memory allocation failed
+            }
+
+            index++;
         }
-
-        index++;
         token = strtok(nullptr, delim);
     }
     result[index] = nullptr;
@@ -85,6 +92,41 @@ void free_split(char **result) noexcept
         kfree(result[i]);
 
     kfree(result);
+}
+
+uint32_t stoh(const char *str) noexcept
+{
+    if (!str)
+        panic(PANIC_ERR "%s\n", "empty string");
+
+    auto i = 0;
+
+    // skip "0x" or "0X" prefix if present
+    if (strncmp(str, "0x", 2) == 0 || strncmp(str, "0X", 2) == 0)
+        i = 2;
+
+    uint32_t result = 0;
+    char c {0};
+
+    // converting each character to its corresponding value
+    auto len = strlen(str);
+
+    while (i < len) {
+        // converting character to uppercase for uniformity
+        c = toupper(str[i]);
+
+        // check if the character is a valid hex digit
+        if (isdigit(c))
+            result = (result << 4) | (c - '0');         // 0-9
+        else if (c >= 'A' && c <= 'F')
+            result = (result << 4) | (c - 'A' + 10);    // A-F
+        else
+            panic(PANIC_ERR "incorrect hex character: '%c'\n", c);
+
+        i++;
+    }
+
+    return result;
 }
 
 } // namespace kstd
