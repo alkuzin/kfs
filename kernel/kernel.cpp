@@ -42,8 +42,10 @@ namespace core {
  */
 static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 {
+    using namespace driver;
+
     // set kernel subsystems
-    driver::vesa::init(mboot);
+    vesa::init(mboot);
     tty::terminal.init();
     printk(KERN_OK "%s\n", "initialized VESA driver");
     printk(KERN_OK "%s\n", "initialized kernel terminal");
@@ -57,7 +59,7 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     arch::x86::idt::init();
     printk(KERN_OK "%s\n", "initialized IDT");
 
-    driver::pit::init();
+    pit::init();
     printk(KERN_OK "%s\n", "initialized PIT driver");
 
     rtc::init();
@@ -70,7 +72,7 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
     kmem::init();
     printk(KERN_OK "%s\n", "initialized kernel heap");
 
-    driver::keyboard::init();
+    keyboard::init();
     printk(KERN_OK "%s\n", "initialized PS/2 keyboard driver");
 
     shell::init();

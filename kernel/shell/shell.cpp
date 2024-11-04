@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <kernel/arch/x86/io.hpp>
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/shell/builtin.hpp>
 #include <kernel/kstd/cstring.hpp>
@@ -26,14 +27,21 @@
 namespace kernel {
 namespace shell {
 
+using namespace driver;
+
 inline const auto SHELL_BUFFER_SIZE {128};
 static char shell_buffer[SHELL_BUFFER_SIZE];
+
+static int32_t x_pos {0};
+static int32_t y_pos {0};
 
 /** @brief Display kernel shell prompt.*/
 static inline void display_prompt(void) noexcept
 {
     kstd::putchar('$');
     kstd::putchar(' ');
+    x_pos = tty::terminal.x_pos;
+    y_pos = tty::terminal.y_pos;
 }
 
 /** @brief Custom TAB key handler.*/
@@ -52,15 +60,52 @@ static bool tab_handler(void) noexcept
 
         // printing full command
         kstd::putk(shell_buffer);
+
+        // update keyboard get_line position
+        auto new_pos = keyboard::get_pos() + kstd::strlen(command) - len;
+        keyboard::set_pos(new_pos);
+
+        shell_buffer[keyboard::get_pos()] = ' ';
+        kstd::putchar(' ');
         return true;
     }
 
+    for (int32_t i = 0; i < tty::TAB_WIDTH; i++)
+        kstd::putchar(' ');
+
     return false;
+}
+
+static bool clear_input(void) noexcept
+{
+    int32_t len = kstd::strlen(shell_buffer);
+
+    // clearing input & shell buffer
+    for (int32_t i = 0; i < len; i++) {
+        shell_buffer[i] = 0;
+        kstd::putchar('\b');
+    }
+
+    tty::terminal.x_pos = x_pos;
+    tty::terminal.y_pos = y_pos;
+    driver::keyboard::set_pos(0);
+
+    return true;
 }
 
 void init(void) noexcept
 {
     kstd::memset(shell_buffer, 0, SHELL_BUFFER_SIZE);
+
+    auto clear_screen = []() -> bool {
+        tty::clear();
+        display_prompt();
+        kstd::putk(shell_buffer);
+        return true;
+    };
+
+    keyboard::set_ctrl_handler(keyboard::KEY::BACKSPACE, clear_input);
+    keyboard::set_ctrl_handler(keyboard::KEY::L, clear_screen);
 }
 
 void process(void) noexcept
