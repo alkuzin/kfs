@@ -87,6 +87,39 @@ size_t strncpy(char *dest, const char *src, size_t size) noexcept;
  */
 int32_t strlen(const char *str) noexcept;
 
+/**
+ * @brief Get string duplicate.
+ *
+ * @param [in] str - given string to duplicate.
+ * @return pointer to a duplicate string in case of success.
+ * @return nullptr in case of failure.
+ */
+char *strdup(const char* str) noexcept;
+
+/**
+ * @brief Breaks a string into a sequence of zero or more nonempty tokens.
+ *
+ * On the first call to strtok(), the string to be parsed should be
+ * specified in str. In each subsequent call that should parse
+ * the same string, str must be nullptr.
+ *
+ * @param [in] str - given string to parse.
+ * @param [in] delim - given set of the tockens delimiters in the string.
+ * @return pointer to the next token.
+ * @return nullptr if there are no more tokens.
+ */
+char *strtok(char *str, const char *delim) noexcept;
+
+/**
+ * @brief Search a string for any of a set of bytes.
+ *
+ * @param [in] str - given string.
+ * @param [in] accept - given string to find.
+ * @return pointer to the byte in s that matches one of the bytes in accept.
+ * @return nullptr if no such byte is found.
+ */
+char *strpbrk(const char *str, const char *accept) noexcept;
+
 } // namespace kstd
 } // namespace kernel
 
