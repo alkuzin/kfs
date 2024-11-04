@@ -33,6 +33,8 @@
 namespace kernel {
 namespace tty {
 
+inline const int32_t TAB_WIDTH {4};
+
 struct terminal_t {
 	driver::vesa::fb_t fb;      // VESA framebuffer
     gfx::rgb_t  fg;             // foreground color

@@ -25,8 +25,6 @@
 namespace kernel {
 namespace tty {
 
-inline const auto TAB_WIDTH {4};
-
 using namespace driver::vesa;
 
 
