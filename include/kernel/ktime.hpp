@@ -120,6 +120,9 @@ int32_t get_utc(void) noexcept;
  */
 ktime_t clock(void) noexcept;
 
+void set_boot_time(void) noexcept;
+ktime_t get_boot_time(void) noexcept;
+
 } // namespace ktime
 } // namespace kernel
 

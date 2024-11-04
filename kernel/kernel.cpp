@@ -64,6 +64,7 @@ static void kboot(uint32_t magic, const multiboot_t& mboot) noexcept
 
     rtc::init();
     ktime::set_utc(ktime::UTC::MSK);
+    ktime::set_boot_time();
     printk(KERN_OK "%s\n", "initialized RTC driver");
 
     core::memory::init(mboot);

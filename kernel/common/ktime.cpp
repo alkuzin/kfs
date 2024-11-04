@@ -55,6 +55,8 @@ static const char *utc_offsets[25] {
 static char timebuf[32];
 static int32_t utc {0};
 
+static ktime_t boot_time {0};
+
 /**
  * @brief Get the UTC offset string representation.
  *
@@ -276,6 +278,16 @@ int32_t get_utc(void) noexcept
 ktime_t clock(void) noexcept
 {
     return driver::pit::get_ticks() * driver::pit::MILLISEC_PER_TICK;
+}
+
+void set_boot_time(void) noexcept
+{
+    boot_time = clock();
+}
+
+ktime_t get_boot_time(void) noexcept
+{
+    return boot_time;
 }
 
 } // namespace ktime

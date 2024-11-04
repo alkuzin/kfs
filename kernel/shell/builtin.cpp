@@ -35,7 +35,7 @@
 namespace kernel {
 namespace shell {
 
-inline const uint8_t BUILTINS_COUNT {12};
+inline const uint8_t BUILTINS_COUNT {13};
 
 static void help(int32_t argc, char **argv) noexcept;
 static void clear(int32_t argc, char **argv) noexcept;
@@ -49,6 +49,7 @@ static void reboot(int32_t argc, char **argv) noexcept;
 static void shutdown(int32_t argc, char **argv) noexcept;
 static void tui(int32_t argc, char **argv) noexcept;
 static void interrupt(int32_t argc, char **argv) noexcept;
+static void uptime(int32_t argc, char **argv) noexcept;
 
 static builtin_t builtins[BUILTINS_COUNT] {
     {"help",  "show list of available commands", nullptr, 0, help},
@@ -63,6 +64,7 @@ static builtin_t builtins[BUILTINS_COUNT] {
     {"shutdown", "power off the machine", nullptr, 0, shutdown},
     {"tui", "test Terminal User Interface", nullptr, 0, tui},
     {"int", "trigger interrupt", nullptr, 0, interrupt},
+    {"uptime", "tell how long the system has been running", nullptr, 0, uptime},
 };
 
 void exec(const char *cmd) noexcept
@@ -487,6 +489,30 @@ static void interrupt(int32_t argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
     __asm__ volatile ("int $13");
+}
+
+static void uptime(int32_t argc, char **argv) noexcept
+{
+    (void)argc; (void)argv; // unused
+    ktime_t boot_time = ktime::get_boot_time();
+    ktime_t cur_time  = ktime::clock();
+    ktime_t diff_time = cur_time - boot_time;
+
+    auto days = diff_time / 86400000;
+    if (days > 0)
+        printk("%u days, ", days % 24);
+
+    auto hours = diff_time / 3600000;
+    if (hours > 0)
+        printk("%u hours, ", hours % 60);
+
+    auto minutes = diff_time / 60000;
+    if (minutes > 0)
+        printk("%u minutes, ", minutes % 60);
+
+    auto seconds = diff_time / 1000;
+    printk("%u seconds, ", seconds % 60);
+    printk("%u milliseconds\n", diff_time % 1000);
 }
 
 } // namespace shell
