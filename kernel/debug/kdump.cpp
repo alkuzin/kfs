@@ -65,7 +65,7 @@ void kdump(phys_addr_t addr, size_t size) noexcept
 
         cprintk(FG_COLOR, BG_COLOR, "%08x  ", rows);
         kstd::putchar('<');
-        cprintk(PTR_COLOR, BG_COLOR, "%08p", stack_ptr + k * 0x10);
+        cprintk(PTR_COLOR, BG_COLOR, "%#08x", stack_ptr + k * 0x10);
         printk("%s", ">  ");
 
         // print first half of 8 bytes in hexadecimal format

@@ -35,7 +35,7 @@
 namespace kernel {
 namespace shell {
 
-inline const uint8_t BUILTINS_COUNT {13};
+inline const uint8_t BUILTINS_COUNT {14};
 
 static void help(int32_t argc, char **argv) noexcept;
 static void clear(int32_t argc, char **argv) noexcept;
@@ -50,6 +50,7 @@ static void shutdown(int32_t argc, char **argv) noexcept;
 static void tui(int32_t argc, char **argv) noexcept;
 static void interrupt(int32_t argc, char **argv) noexcept;
 static void uptime(int32_t argc, char **argv) noexcept;
+static void dump(int32_t argc, char **argv) noexcept;
 
 static builtin_t builtins[BUILTINS_COUNT] {
     {"help",  "show list of available commands", nullptr, 0, help},
@@ -65,6 +66,7 @@ static builtin_t builtins[BUILTINS_COUNT] {
     {"tui", "test Terminal User Interface", nullptr, 0, tui},
     {"int", "trigger interrupt", nullptr, 0, interrupt},
     {"uptime", "tell how long the system has been running", nullptr, 0, uptime},
+    {"dump", "memory dump specific memmory address", nullptr, 0, dump},
 };
 
 void exec(const char *cmd) noexcept
@@ -80,8 +82,6 @@ void exec(const char *cmd) noexcept
         len    = kstd::strlen(target);
 
         if (kstd::strncmp(target, cmd, len) == 0) {
-            // TODO: handle shell arguments
-
             argv = kstd::split(cmd, " ", &argc);
             builtins[i].func(argc, argv);
 
@@ -438,7 +438,6 @@ static void round_cube(void) noexcept
         default:
             break;
         }
-
     }
 }
 
@@ -498,21 +497,37 @@ static void uptime(int32_t argc, char **argv) noexcept
     ktime_t cur_time  = ktime::clock();
     ktime_t diff_time = cur_time - boot_time;
 
-    auto days = diff_time / 86400000;
-    if (days > 0)
-        printk("%u days, ", days % 24);
-
-    auto hours = diff_time / 3600000;
-    if (hours > 0)
-        printk("%u hours, ", hours % 60);
-
+    auto days    = diff_time / 86400000;
+    auto hours   = diff_time / 3600000;
     auto minutes = diff_time / 60000;
-    if (minutes > 0)
-        printk("%u minutes, ", minutes % 60);
-
     auto seconds = diff_time / 1000;
+
+    if (days > 0) printk("%u days, ", days % 24);
+    if (hours > 0) printk("%u hours, ", hours % 60);
+    if (minutes > 0) printk("%u minutes, ", minutes % 60);
+
     printk("%u seconds, ", seconds % 60);
     printk("%u milliseconds\n", diff_time % 1000);
+}
+
+static void dump(int32_t argc, char **argv) noexcept
+{
+    if (argc == 1 || argc > 3) {
+        printk("dump: %s\n", "incorrect number of arguments");
+        printk("dump: %s\n", "try: 'dump <addr> <lines>'");
+        return;
+    }
+
+    if (argc == 2) {
+        phys_addr_t addr = kstd::stoh(argv[1]);
+        printk(KERN_DEBUG "addr: %X\n", addr);
+        debug::kdump(addr, 32);
+    }
+    else if (argc == 3) {
+        phys_addr_t addr = kstd::stoh(argv[1]);
+        uint32_t lines   = kstd::stou<uint32_t>(argv[2]);
+        debug::kdump(addr, lines);
+    }
 }
 
 } // namespace shell
