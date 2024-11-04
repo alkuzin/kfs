@@ -60,8 +60,9 @@ set(DRIVERS_SOURCES
 
 # List of kernel standard library source files
 set(KSTD_SOURCES
-    "${KSTD_DIR}/cstring.cpp"
     "${KSTD_DIR}/vsnprintk.cpp"
+    "${KSTD_DIR}/cstring.cpp"
+    "${KSTD_DIR}/cstdlib.cpp"
 )
 
 # List of kernel core source files
