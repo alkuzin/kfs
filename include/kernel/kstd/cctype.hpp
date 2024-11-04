@@ -98,6 +98,30 @@ constexpr inline bool isalnum(T c) noexcept
     return (isalpha(c) || isdigit(c));
 }
 
+/**
+ * @brief Checks for a lowercase character.
+ *
+ * @param [in] c - given character.
+ * @return whether c is a lowercase character or not.
+ */
+template <typename T>
+constexpr inline bool islower(T c) noexcept
+{
+    return ((c >= 'a') && (c <= 'z'));
+}
+
+/**
+ * @brief Converts to an uppercase character.
+ *
+ * @param [in] c - given character.
+ * @return uppercase c character.
+ */
+template <typename T>
+constexpr inline char toupper(T c) noexcept
+{
+    return (islower(c) ? (c - ('a' - 'A')) : c);
+}
+
 } // namespace kstd
 } // namespace kernel
 
