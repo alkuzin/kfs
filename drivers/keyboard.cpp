@@ -127,8 +127,11 @@ static void handle_ctrl(int32_t key) noexcept
     auto handler = ctrl_handler[pos];
 
     // handle case when there is no custom key handler
-    if (handler)
+    if (handler && !press)
         handler();
+
+    press   = true;
+    is_ctrl = false;
 }
 
 uint8_t getchar(void) noexcept
@@ -164,10 +167,10 @@ uint8_t getchar(void) noexcept
 
                 return cc;
             }
-            else if (!press && is_ctrl) {
+            else if (!press && is_ctrl)
                 handle_ctrl(scan_code);
-                is_ctrl = false;
-            }
+
+            is_ctrl = false;
             break;
     }
     return 0;
@@ -180,10 +183,22 @@ void set_tab_handler(key_handler handler) noexcept
     tab_handler = handler;
 }
 
+static uint32_t pos {0};
+
+uint32_t get_pos(void) noexcept
+{
+    return pos;
+}
+
+void set_pos(uint32_t p) noexcept
+{
+    pos = p;
+}
+
 void get_line(char *buffer, size_t size) noexcept
 {
-    uint32_t pos = 0;
-    char     ch  = 0;
+    pos      = 0;
+    char ch  = 0;
 
     do {
         ch = getchar();

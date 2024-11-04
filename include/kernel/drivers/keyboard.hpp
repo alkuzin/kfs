@@ -51,7 +51,9 @@ enum class KEY {
     UP_ARROW    = 0X48,
     DOWN_ARROW  = 0X50,
     A           = 0x1E,
-    D           = 0x20
+    D           = 0x20,
+    L           = 0x26,
+    E           = 0x12,
 };
 
 /** @brief Initialize keyboard.*/
@@ -95,6 +97,20 @@ void set_tab_handler(key_handler handler) noexcept;
  * @param [in] handler - given CTRL+key handler to set.
  */
 void set_ctrl_handler(KEY key, key_handler handler) noexcept;
+
+/**
+ * @brief Set the get_line() position.
+ *
+ * @param [in] p - given new position to set.
+ */
+void set_pos(uint32_t p) noexcept;
+
+/**
+ * @brief Get the get_line() position.
+ *
+ * @return get_line() position.
+ */
+uint32_t get_pos(void) noexcept;
 
 } // namespace keyboard
 } // namespace driver
