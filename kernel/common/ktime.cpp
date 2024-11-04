@@ -159,6 +159,17 @@ static int32_t days_in_month(int32_t year, int32_t month) noexcept
     return 31;
 }
 
+/**
+ * @brief Get number of days in specific year.
+ *
+ * @param [in] year - given year.
+ * @return number of days.
+ */
+static inline int32_t days_in_year(int32_t year) noexcept
+{
+    return is_leap_year(year) ? DAYS_PER_LEAP_YEAR : DAYS_PER_YEAR;
+}
+
 ktime_t mktime(const tm& ptm) noexcept
 {
     if (ptm.tm_year < 70)
@@ -176,14 +187,14 @@ ktime_t mktime(const tm& ptm) noexcept
 
     // adding days for the complete years
     for (int y = UNIX_EPOCH_YEAR; y < year; ++y)
-        total_days += is_leap_year(y) ? DAYS_PER_LEAP_YEAR : DAYS_PER_YEAR;
+        total_days += days_in_year(y);
 
     // adding days for the complete months of the current year
-    for (int m = 0; m <= month; ++m)
+    for (int m = 0; m < month; ++m)
         total_days += days_in_month(year, m);
 
     // adding the days of the current month
-    total_days += (day - 1);
+    total_days += (day);
 
     // calculate total seconds
     ktime_t total_seconds = total_days * SECONDS_PER_DAY;
@@ -206,25 +217,22 @@ void gmtime(ktime_t timer, tm& result) noexcept
     result.tm_sec     = remaining_seconds % SECONDS_PER_MINUTE;
 
     // calculating the current year
-    int32_t days_in_year {0};
     result.tm_year = UNIX_EPOCH_YEAR;
+    int32_t days   = 0;
 
     for (;;) {
-        days_in_year = DAYS_PER_YEAR;
+        days = days_in_year(result.tm_year);
 
-        if (is_leap_year(result.tm_year))
-            days_in_year = DAYS_PER_LEAP_YEAR;
-
-        if (total_days < days_in_year)
+        if (total_days < days)
             break;
 
-        total_days -= days_in_year;
+        total_days -= days;
         result.tm_year++;
     }
 
     // calculating the current month
     result.tm_mon = 0;
-    int32_t days  = 0;
+    days          = 0;
 
     for (result.tm_mon = 0; result.tm_mon < MONTHS_PER_YEAR; result.tm_mon++) {
         days = days_in_month(result.tm_year, result.tm_mon);
@@ -235,12 +243,8 @@ void gmtime(ktime_t timer, tm& result) noexcept
         total_days -= days;
     }
 
-    // the day of the month is total_days + 1 (1-based index)
-    result.tm_mday = total_days + 1;
-
-    // adjusting year and month for struct tm
-    result.tm_year -= UNIX_BASE_YEAR;
-    result.tm_mon -= 1;
+    result.tm_mday = total_days;
+    result.tm_year -= UNIX_BASE_YEAR; // adjusting year and month for struct tm
 
     // Zeller's Congruence algorithm to calculate day of the week
     int32_t century         = result.tm_year / 100;
@@ -248,16 +252,15 @@ void gmtime(ktime_t timer, tm& result) noexcept
 
     auto part1       = (year_of_century + (year_of_century / 4));
     auto part2       = ((century / 4) - (2 * century));
-    auto part3       = ((26 * (result.tm_mon + 1)) + result.tm_mday + 1);
+    auto part3       = ((26 * (result.tm_mon + 1)) + result.tm_mday + 2);
     auto day_of_week = (part1 + part2 + part3) % 7;
 
     // adjusting for Sunday being index 0
-    if (day_of_week == 6)
-        day_of_week = 0;
-    else
-        day_of_week--;
+    day_of_week = (day_of_week == 6) ? 0 : (day_of_week - 1);
 
-    result.tm_wday = day_of_week + 5; // TODO: fix issue with displaying day & week day
+    // adjusting week day for UNIX Epoch that started at
+    // the 1st January of 1970 (Thursday (4)):
+    result.tm_wday = (day_of_week + 4) % 7;
 }
 
 void set_utc(UTC offset) noexcept
