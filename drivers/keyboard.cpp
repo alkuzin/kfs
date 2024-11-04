@@ -22,6 +22,7 @@
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/arch/x86/io.hpp>
+#include <kernel/panic.hpp>
 
 
 namespace kernel {
@@ -90,11 +91,14 @@ UNKNOWN,UNKNOWN,UNKNOWN
 
 using namespace arch::x86;
 
+static key_handler ctrl_handler[128] {nullptr};
+
 static volatile uint8_t scan_code   {0};
 static volatile uint8_t press       {0};
 
 static bool is_caps      = false;
 static bool is_caps_lock = false;
+static bool is_ctrl      = false;
 
 KEY getch(void) noexcept
 {
@@ -103,12 +107,42 @@ KEY getch(void) noexcept
     return key;
 }
 
+void set_ctrl_handler(KEY key, key_handler handler) noexcept
+{
+    auto pos = static_cast<int32_t>(key);
+    ctrl_handler[pos] = handler;
+}
+
+/**
+ * @brief Handle CTRL+key.
+ *
+ * @param [in] key - given key to handle.
+ */
+static void handle_ctrl(int32_t key) noexcept
+{
+    auto pos = static_cast<int32_t>(key);
+    if (pos <= 0 || pos >= 128)
+        panic(PANIC_ERR "%s\n", "incorrect key");
+
+    auto handler = ctrl_handler[pos];
+
+    // handle case when there is no custom key handler
+    if (handler)
+        handler();
+}
+
 uint8_t getchar(void) noexcept
 {
     while((inb(0x64) & 0x01) == 0)
         continue;
 
-    switch(static_cast<KEY>(scan_code)) {
+    auto key = static_cast<KEY>(scan_code);
+
+    switch(key) {
+        case KEY::LCTRL:
+            is_ctrl = true;
+            break;
+
         case KEY::LSHIFT:
             is_caps = !press;
             break;
@@ -119,7 +153,7 @@ uint8_t getchar(void) noexcept
             break;
 
         default:
-            if(!press) {
+            if(!press && !is_ctrl) {
                 bool    is_upper = (is_caps || is_caps_lock);
                 uint8_t cc {0};
 
@@ -129,6 +163,10 @@ uint8_t getchar(void) noexcept
                     cc = lowercase[scan_code];
 
                 return cc;
+            }
+            else if (!press && is_ctrl) {
+                handle_ctrl(scan_code);
+                is_ctrl = false;
             }
             break;
     }

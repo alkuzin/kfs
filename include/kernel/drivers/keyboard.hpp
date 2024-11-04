@@ -57,6 +57,11 @@ enum class KEY {
 /** @brief Initialize keyboard.*/
 void init(void) noexcept;
 
+/**
+ * @brief Keyboard get character on key press.
+ *
+ * @return Character read from the keyboard.
+ */
 KEY getch(void) noexcept;
 
 /**
@@ -82,6 +87,14 @@ using key_handler = bool(*)(void);
  * @param [in] handler - given TAB handler to set.
  */
 void set_tab_handler(key_handler handler) noexcept;
+
+/**
+ * @brief Set the CTRL+KEY combination handler.
+ *
+ * @param [in] key - given second key.
+ * @param [in] handler - given CTRL+key handler to set.
+ */
+void set_ctrl_handler(KEY key, key_handler handler) noexcept;
 
 } // namespace keyboard
 } // namespace driver
