@@ -21,6 +21,7 @@
 #include <kernel/arch/x86/gdt.hpp>
 #include <kernel/arch/x86/cpu.hpp>
 #include <kernel/kstd/cstring.hpp>
+#include <kernel/kstd/cstdlib.hpp>
 #include <kernel/drivers/pit.hpp>
 #include <kernel/arch/x86/io.hpp>
 #include <kernel/kstd/cmath.hpp>
@@ -34,7 +35,7 @@
 namespace kernel {
 namespace shell {
 
-inline const uint8_t BUILTINS_COUNT {11};
+inline const uint8_t BUILTINS_COUNT {12};
 
 static void help(int32_t argc, char **argv) noexcept;
 static void clear(int32_t argc, char **argv) noexcept;
@@ -47,6 +48,7 @@ static void ticks(int32_t argc, char **argv) noexcept;
 static void reboot(int32_t argc, char **argv) noexcept;
 static void shutdown(int32_t argc, char **argv) noexcept;
 static void tui(int32_t argc, char **argv) noexcept;
+static void interrupt(int32_t argc, char **argv) noexcept;
 
 static builtin_t builtins[BUILTINS_COUNT] {
     {"help",  "show list of available commands", nullptr, 0, help},
@@ -60,12 +62,16 @@ static builtin_t builtins[BUILTINS_COUNT] {
     {"reboot", "reboot the machine", nullptr, 0, reboot},
     {"shutdown", "power off the machine", nullptr, 0, shutdown},
     {"tui", "test Terminal User Interface", nullptr, 0, tui},
+    {"int", "trigger interrupt", nullptr, 0, interrupt},
 };
 
 void exec(const char *cmd) noexcept
 {
     const char *target {nullptr};
-    int32_t len {0};
+    int32_t len  {0};
+
+    char **argv  {nullptr};
+    int32_t argc {0};
 
     for (int32_t i = 0; i < BUILTINS_COUNT; i++) {
         target = builtins[i].name;
@@ -73,7 +79,11 @@ void exec(const char *cmd) noexcept
 
         if (kstd::strncmp(target, cmd, len) == 0) {
             // TODO: handle shell arguments
-            builtins[i].func(0, nullptr);
+
+            argv = kstd::split(cmd, " ", &argc);
+            builtins[i].func(argc, argv);
+
+            kstd::free_split(argv);
             return;
         }
     }
@@ -471,6 +481,12 @@ static void tui(int32_t argc, char **argv) noexcept
     window.add_button("< YES >", submit_on_click, &window, {100, 225});
     window.add_button("< NO >",  reject_on_click, &window, {200, 225});
     window.show();
+}
+
+static void interrupt(int32_t argc, char **argv) noexcept
+{
+    (void)argc; (void)argv; // unused
+    __asm__ volatile ("int $13");
 }
 
 } // namespace shell
