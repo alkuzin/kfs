@@ -22,33 +22,37 @@ ENTRY(boot)
 SECTIONS
 {
     /* conventional place for kernels to be loaded at by the bootloader */
-	. = 1M;
-    kernel_phys_start = .;
+	base_address = 0xC0000000;
+	. = 1M + base_address;
 
-	.text BLOCK(4K) : ALIGN(4K)
+    kernel_virt_start = .;
+    kernel_phys_start = kernel_virt_start - base_address;
+
+	.text ALIGN(4K) : AT(ADDR(.text) - base_address)
 	{
 		*(.multiboot)
 		*(.text)        /* place all the code in this section */
 	}
 
 	/* align read-only data (such as const variables) boundary */
-	.rodata BLOCK(4K) : ALIGN(4K)
+	.rodata ALIGN(4K) : AT(ADDR(.rodata) - base_address)
 	{
 		*(.rodata)
 	}
 
 	/* read/write data (initialized) */
-	.data BLOCK(4K) : ALIGN(4K)
+	.data ALIGN(4K) : AT(ADDR(.data) - base_address)
 	{
 		*(.data)
 	}
 
 	/* global/static variables (unitialized) */
-	.bss BLOCK(4K) : ALIGN(4K)
+	.bss ALIGN(4K) : AT(ADDR(.bss) - base_address)
 	{
 		*(COMMON)
 		*(.bss)
 	}
 
-	kernel_phys_end = .;
+	kernel_virt_end = .;
+	kernel_phys_end = kernel_virt_end - base_address;
 }
