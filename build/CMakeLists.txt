@@ -16,9 +16,8 @@
 
 
 cmake_minimum_required(VERSION 3.20.0)
-
 # Set project name & programming languages
-project(NOS LANGUAGES CXX ASM_NASM)
+project(KFS LANGUAGES CXX ASM)
 
 # Check if the compiler is g++
 if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -135,7 +134,7 @@ set(LDFLAGS
 )
 
 set(ASMFLAGS
-    "-f elf"                # Generate output in the ELF format.
+    "--32"                  # Generate output in the 32-bit ELF format.
 )
 
 # List to hold the object files generated from assembly
@@ -149,7 +148,7 @@ foreach(ASM_FILE ${ASM_SOURCES})
 
     add_custom_command(
         OUTPUT ${OBJ_FILE}
-        COMMAND nasm ${ASMFLAGS} -o ${OBJ_FILE} ${ASM_FILE}
+        COMMAND as ${ASMFLAGS} -o ${OBJ_FILE} ${ASM_FILE}
         DEPENDS ${ASM_FILE}
     )
 endforeach()

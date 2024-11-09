@@ -487,7 +487,7 @@ static void tui(int32_t argc, char **argv) noexcept
 static void interrupt(int32_t argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
-    __asm__ volatile ("int $13");
+    __asm__ volatile ("int $0");
 }
 
 static void uptime(int32_t argc, char **argv) noexcept
