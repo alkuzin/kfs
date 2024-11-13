@@ -55,7 +55,7 @@ constexpr void set_entry(uint32_t eno, uint32_t base, uint32_t limit, uint8_t ac
 {
     GDT[eno].base_low  = (base & 0xFFFF);           // get first 2 bytes
     GDT[eno].base_mid  = ((base >> 0x10) & 0xFF);   // get third byte
-    GDT[eno].base_high = ((base >> 0x18) & 0xFF);   // get last byte
+    GDT[eno].base_high = static_cast<u8>((base >> 0x18) & 0xFF);   // get last byte
     GDT[eno].limit     = (limit & 0xFFFF);
     GDT[eno].flags     = ((limit >> 0x10) & 0x0F);
     GDT[eno].flags     |= (flags & 0xF0);

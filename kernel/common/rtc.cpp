@@ -91,7 +91,7 @@ static inline int32_t from_bcd(uint8_t bcd) noexcept
 static inline uint8_t get_register(REG reg) noexcept
 {
     outb(RTC_PORT_INDEX, static_cast<uint32_t>(reg));
-    return from_bcd(inb(RTC_PORT_DATA));
+    return static_cast<u8>(from_bcd(inb(RTC_PORT_DATA)));
 }
 
 /** @brief Set RTC time structure.*/

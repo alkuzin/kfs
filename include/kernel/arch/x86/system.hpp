@@ -57,7 +57,7 @@ inline uint8_t ring(void) noexcept
  */
 inline uint32_t mode(void) noexcept
 {
-    uint16_t cs = get_register(REG::CS);
+    uint16_t cs = static_cast<uint16_t>(get_register(REG::CS));
 
     if (cs & 0x0000FFFF)
         return 32;

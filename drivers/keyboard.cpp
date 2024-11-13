@@ -161,9 +161,9 @@ uint8_t getchar(void) noexcept
                 uint8_t cc {0};
 
                 if(is_upper && (lowercase[scan_code] != UNKNOWN))
-                    cc = uppercase[scan_code];
+                    cc = static_cast<u8>(uppercase[scan_code]);
                 else
-                    cc = lowercase[scan_code];
+                    cc = static_cast<u8>(lowercase[scan_code]);
 
                 return cc;
             }

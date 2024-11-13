@@ -50,7 +50,7 @@ void set_gate(uint8_t num, uint32_t offset, uint16_t selector, uint8_t flags) no
     IDT[num].selector    = selector;
     IDT[num].reserved    = 0;
     IDT[num].flags       = flags | 0x60;
-    IDT[num].offset_high = ((offset >> 0x10) & 0xFFFF);
+    IDT[num].offset_high = static_cast<u16>((offset >> 0x10) & 0xFFFF);
 }
 
 /**

@@ -108,7 +108,7 @@ static void free_available_memory(void) noexcept
         mmmt = reinterpret_cast<multiboot_entry_t*>(pmm.mboot->mmap_addr + i);
 
         if (mmmt->type == MULTIBOOT_MEMORY_AVAILABLE)
-            mark_as_free(mmmt->addr, mmmt->len);
+            mark_as_free(static_cast<phys_addr_t>(mmmt->addr), mmmt->len);
 
         i += sizeof(multiboot_entry_t);
     }

@@ -78,7 +78,7 @@ void free(int32_t irq) noexcept
     routines[irq] = 0;
 }
 
-asmlinkage void irq_handler(int_regs_t *regs)
+asmlinkage void irq_handler(int_regs_t *regs) noexcept
 {
     // IRQ handler processes the interrupt by calling the appropriate
     // handler function based on the interrupt number
@@ -96,7 +96,7 @@ asmlinkage void irq_handler(int_regs_t *regs)
     outb(pic::MASTER_PIC_CMD, pic::END_OF_INTERRUPT);
 }
 
-asmlinkage void isr_handler(int_regs_t *regs)
+asmlinkage void isr_handler(int_regs_t *regs) noexcept
 {
     // handle exceptions
     if(regs->int_no < 32)

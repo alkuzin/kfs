@@ -59,7 +59,7 @@ void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept;
  *
  * @param [in] c - given character to print.
  */
-inline void putchar(const int32_t c) noexcept
+inline void putchar(char c) noexcept
 {
 	tty::putc(c, tty::terminal.fg, tty::terminal.bg);
 }

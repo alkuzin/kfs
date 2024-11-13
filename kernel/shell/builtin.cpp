@@ -124,7 +124,7 @@ static void help(int32_t argc, char **argv) noexcept
 
         kstd::putk(builtins[i].name);
 
-        for (int32_t i = 0; i < 16 - len; i++)
+        for (int32_t j = 0; j < 16 - len; j++)
             kstd::putchar(' ');
 
         kstd::putk(builtins[i].descr);
@@ -294,14 +294,14 @@ inline const int32_t SCREEN_SHIFT {300};
  */
 static void project(const vertice_t& vert, gfx::point_t& point, float32_t angle) noexcept
 {
-    float32_t scale     = 200.0f; // scale factor for projection
-    float32_t z_offset  = 3.0f;   // distance from the viewer
+    f32 scale     = 200.0f; // scale factor for projection
+    f32 z_offset  = 3.0f;   // distance from the viewer
 
     // applying rotation around the Y-axis
-    float32_t cos_angle = kstd::cos(angle);
-    float32_t sin_angle = kstd::sin(angle);
-    float32_t rotated_x = vert.x * cos_angle - vert.z * sin_angle;
-    float32_t rotated_z = vert.x * sin_angle + vert.z * cos_angle;
+    f32 cos_angle = static_cast<f32>(kstd::cos(angle));
+    f32 sin_angle = static_cast<f32>(kstd::sin(angle));
+    f32 rotated_x = vert.x * cos_angle - vert.z * sin_angle;
+    f32 rotated_z = vert.x * sin_angle + vert.z * cos_angle;
 
     // perspective projection
     auto center_x = scale * rotated_x / (rotated_z + z_offset);
@@ -458,8 +458,8 @@ static void tui(int32_t argc, char **argv) noexcept
     window.add_content("Open an application?\n");
 
     auto submit_on_click = [](void *wptr) {
-        auto window = static_cast<window_t*>(wptr);
-        window->destroy();
+        auto win = static_cast<window_t*>(wptr);
+        win->destroy();
         tty::clear();
 
         kstd::putk("press 'A' to rotate cube in left direction\n");
@@ -475,8 +475,8 @@ static void tui(int32_t argc, char **argv) noexcept
     };
 
     auto reject_on_click = [](void *wptr) {
-        auto window = static_cast<window_t*>(wptr);
-        window->destroy();
+        auto win = static_cast<window_t*>(wptr);
+        win->destroy();
     };
 
     window.add_button("< YES >", submit_on_click, &window, {100, 225});

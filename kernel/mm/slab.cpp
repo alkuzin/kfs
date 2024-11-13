@@ -81,13 +81,12 @@ void init(void) noexcept
     caches[0].create("kmalloc-8", 8, 0);
 }
 
-void cache_t::create(const char *name, size_t size, uint32_t flags) noexcept
+void cache_t::create(const char *name, size_t size, u8 flags) noexcept
 {
-    // initializing cache structure
     list          = {nullptr, nullptr, 0};
     freelist      = {nullptr, nullptr, 0};
-    objsize       = roundup_pow_of_two(size);
-    gfporder      = kstd::ceil(kstd::log2(objsize));
+    objsize       = static_cast<u32>(roundup_pow_of_two(size));
+    gfporder      = static_cast<u32>(kstd::ceil(kstd::log2(objsize)));
     objnum        = PAGE_SIZE >> gfporder;
     flags         = flags;
     kstd::strncpy(this->name, name, CACHE_NAMELEN);

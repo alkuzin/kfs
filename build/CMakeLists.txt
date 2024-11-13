@@ -114,6 +114,8 @@ set(CXXFLAGS
     "-Wall"                 # Enable all compiler's warning messages
     "-Wextra"               # Enable additional warning messages not covered by -Wall
     "-Werror"               # Treat all warnings as errors
+    "-Wpedantic"            # Enforce strict compliance with the C and C++ standards
+    "-Wconversion"          # Warns about implicit conversions that may alter the value of a variable
     "-g"                    # Generate debug information
     "-std=c++23"            # Use the C++23 standard
     "-m32"                  # Generate 32-bit code

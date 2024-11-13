@@ -34,6 +34,10 @@ inline const char *NIL {"(nil)"};
 inline const auto FLAG_PREFIX  {1};
 inline const auto FLAG_PADDING {2};
 
+inline const auto MAX_INT_BUF_SIZE   {12};
+inline const auto MAX_UINT_BUF_SIZE  {11};
+inline const auto MAX_HEX_BUF_SIZE   {11};
+
 struct handler_t
 {
 	char	*buffer;
@@ -136,7 +140,7 @@ void handler_t::append(char ch) noexcept
 
 inline bool handler_t::get_flag(uint8_t pos) const noexcept
 {
-	return (flags >> pos) & 0x1;
+    	return (flags >> pos) & 0x1;
 }
 
 inline void handler_t::set_flag(uint8_t pos) noexcept
@@ -167,9 +171,9 @@ inline char dtoh(int32_t v, bool is_upper = false) noexcept
 	char a = (is_upper) ? 'A' : 'a';
 
 	if (v >= 0 && v < 10)
-		return '0' + v;
+		return static_cast<char>('0' + v);
 	else
-		return a + v - 10;
+		return static_cast<char>(a + v - 10);
 }
 
 void handler_t::append_pointer(void) noexcept
@@ -239,11 +243,11 @@ size_t itoa_len(int32_t n) noexcept
 
 void handler_t::append_integer(void) noexcept
 {
-	int32_t n 	  = va_arg(args, int32_t);
+	int32_t n     = va_arg(args, int32_t);
 	size_t i      = itoa_len(n);
 	size_t length = i;
 
-	char int_buffer[length];
+	char int_buffer[MAX_INT_BUF_SIZE];
 	i--;
 
 	if (n < 0) {
@@ -252,13 +256,13 @@ void handler_t::append_integer(void) noexcept
 	}
 
 	while (i) {
-		int_buffer[i] = (n % 10) + '0';
+		int_buffer[i] = static_cast<char>((n % 10) + '0');
 		n /= 10;
 		i--;
 	}
 
 	if (int_buffer[0] != '-')
-		int_buffer[0] = (n % 10) + '0';
+		int_buffer[0] = static_cast<char>((n % 10) + '0');
 
 	int_buffer[length] = '\0';
 
@@ -291,21 +295,21 @@ size_t utoa_len(uint32_t n) noexcept
 
 void handler_t::append_uinteger(void) noexcept
 {
-	uint32_t n 	  = va_arg(args, uint32_t);
+	uint32_t n    = va_arg(args, uint32_t);
 	size_t i      = utoa_len(n);
 	size_t length = i;
 
-	char uint_buffer[i];
+	char uint_buffer[MAX_UINT_BUF_SIZE];
 
 	i--;
 
 	while (i) {
-		uint_buffer[i] = (n % 10) + '0';
+		uint_buffer[i] = static_cast<char>((n % 10) + '0');
 		n /= 10;
 		i--;
 	}
 
-	uint_buffer[0]      = (n % 10) + '0';
+	uint_buffer[0]      = static_cast<char>((n % 10) + '0');
 	uint_buffer[length] = '\0';
 
 	i = 0;
@@ -401,7 +405,7 @@ void handler_t::handle_argument(char type) noexcept
 	default:
 		// handle padding
 		if (get_flag(FLAG_PADDING) && kstd::isdigit(type))
-			num = type - '0';
+			num = static_cast<u8>(type - '0');
 		else
 			append(type);
 

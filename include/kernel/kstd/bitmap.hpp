@@ -44,8 +44,8 @@ struct bitmap_t
     /**
      * @brief Initialize bitmap.
      *
-     * @param [in] data - given data pointer to set.
-     * @param [in] size - given size of data.
+     * @param [in] ptr - given data pointer to set.
+     * @param [in] n - given size of data.
      */
     inline void init(T *data = nullptr, size_t size = 0) noexcept;
 

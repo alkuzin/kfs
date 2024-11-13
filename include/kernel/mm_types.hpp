@@ -53,7 +53,7 @@ enum PG : uint8_t {
  */
 constexpr inline phys_addr_t PFN_PHYS(size_t pfn) noexcept
 {
-    return pfn << PAGE_SHIFT;
+    return static_cast<phys_addr_t>(pfn << PAGE_SHIFT);
 }
 
 /**

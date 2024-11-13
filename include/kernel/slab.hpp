@@ -75,7 +75,7 @@ public:
      * @param [in] size - given size of cache objects.
      * @param [in] flags - given allocation flags.
      */
-    void create(const char *name, size_t size, uint32_t flags) noexcept;
+    void create(const char *name, size_t size, uint8_t flags) noexcept;
 
     /**
      * @brief Allocate a single object from the cache.

@@ -62,20 +62,20 @@ static void handle_leaf1(details_t& details) noexcept
     auto ext_model   = ((cpu_info.eax >> 16) & 0x0F);
     auto ext_family  = ((cpu_info.eax >> 20) & 0xFF);
 
-    details.stepping = stepping;
-    details.type     = type;
+    details.stepping = static_cast<u8>(stepping);
+    details.type     = static_cast<u8>(type);
 
     // set actual processor model
     if (family == 6 || family == 15)
-        details.model = (ext_model << 4) + model;
+        details.model = static_cast<u8>((ext_model << 4) + model);
     else
-        details.model = model;
+        details.model = static_cast<u8>(model);
 
     // set actual processor family
-    details.family = family;
+    details.family = static_cast<u8>(family);
 
     if (family == 15)
-        details.family += ext_family;
+        details.family += static_cast<u8>(ext_family);
 }
 
 /**
