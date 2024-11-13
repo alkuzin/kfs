@@ -18,7 +18,7 @@
 
 /**
  * @file  types.hpp
- * @brief Provides definitions for various data types used in kernel programming.
+ * @brief Provides definitions for various data types used in kernel.
  *
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
  * @date   24.09.2024
@@ -31,47 +31,47 @@
 namespace kernel {
 
 // unsigned types
-using uint64_t = unsigned long long;
-using uint32_t = unsigned int;
-using uint16_t = unsigned short;
-using uint8_t  = unsigned char;
+using u64 = unsigned long long;
+using u32 = unsigned int;
+using u16 = unsigned short;
+using u8  = unsigned char;
 
 // signed types
-using int64_t = long long;
-using int32_t = int;
-using int16_t = short;
-using int8_t  = char;
+using s64 = long long;
+using s32 = int;
+using s16 = short;
+using s8  = char;
 
 // floating point types
-using float64_t = double;
-using float32_t = float;
+using f64 = double;
+using f32 = float;
 
-using size_t  = uint64_t;
-using ssize_t = int64_t;
+using usize = u64;
+using ssize = s64;
 
-using phys_addr_t = uint32_t;
-using virt_addr_t = uint32_t;
+using phys_addr_t = u32;
+using virt_addr_t = u32;
 
 // process identificator
-using pid_t = int32_t;
+using pid_t = s32;
 
 // representing time with millisecond precision
-using ktime_t  = uint32_t;
+using ktime_t = u32;
 
 /** @brief KB literal.*/
-constexpr inline size_t operator"" _KB(size_t n) noexcept
+constexpr inline usize operator"" _KB(usize n) noexcept
 {
     return n << 10;
 }
 
 /** @brief MB literal.*/
-constexpr inline size_t operator"" _MB(size_t n) noexcept
+constexpr inline usize operator"" _MB(usize n) noexcept
 {
     return n << 20;
 }
 
 /** @brief GB literal.*/
-constexpr inline size_t operator"" _GB(size_t n) noexcept
+constexpr inline usize operator"" _GB(usize n) noexcept
 {
     return n << 30;
 }

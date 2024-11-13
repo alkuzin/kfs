@@ -25,17 +25,17 @@ namespace arch {
 namespace x86 {
 namespace gdt {
 
-inline const uint32_t ENTRY_BASE           {0x00000000};
-inline const uint32_t ENTRY_LIMIT          {0xFFFFFFFF};
-inline const uint8_t  ENTRY_FLAGS          {0xCF}; // 32-bit protected mode segment
+inline const u32 ENTRY_BASE           {0x00000000};
+inline const u32 ENTRY_LIMIT          {0xFFFFFFFF};
+inline const u8  ENTRY_FLAGS          {0xCF}; // 32-bit protected mode segment
 
 // Access byte:
-inline const uint8_t KERNEL_ACCESS_CODE    {0x9A};
-inline const uint8_t KERNEL_ACCESS_DATA    {0x92};
-inline const uint8_t KERNEL_ACCESS_STACK   {0x97};
-inline const uint8_t USER_ACCESS_CODE      {0xFA};
-inline const uint8_t USER_ACCESS_DATA      {0xF2};
-inline const uint8_t USER_ACCESS_STACK     {0xF7};
+inline const u8 KERNEL_ACCESS_CODE    {0x9A};
+inline const u8 KERNEL_ACCESS_DATA    {0x92};
+inline const u8 KERNEL_ACCESS_STACK   {0x97};
+inline const u8 USER_ACCESS_CODE      {0xFA};
+inline const u8 USER_ACCESS_DATA      {0xF2};
+inline const u8 USER_ACCESS_STACK     {0xF7};
 
 inline const auto ENTRIES {7};
 
@@ -51,7 +51,7 @@ ptr_t   *gdt_ptr = reinterpret_cast<ptr_t*>(GDT_BASE);
  * @param [in] access - given segment access byte.
  * @param [in] flags - given segment flags.
  */
-constexpr void set_entry(uint32_t eno, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags) noexcept
+constexpr void set_entry(u32 eno, u32 base, u32 limit, u8 access, u8 flags) noexcept
 {
     GDT[eno].base_low  = (base & 0xFFFF);           // get first 2 bytes
     GDT[eno].base_mid  = ((base >> 0x10) & 0xFF);   // get third byte
@@ -68,7 +68,7 @@ constexpr void set_entry(uint32_t eno, uint32_t base, uint32_t limit, uint8_t ac
  * @param [in] ptr - new GDT pointer to update.
  *
  */
-asmlinkage void gdt_flush(uint32_t ptr);
+asmlinkage void gdt_flush(u32 ptr);
 
 void init(void) noexcept
 {
@@ -87,10 +87,10 @@ void init(void) noexcept
 
     // set GDT pointer:
     gdt_ptr->size   = sizeof(GDT) - 1;
-    gdt_ptr->offset = reinterpret_cast<uint32_t>(&GDT);
+    gdt_ptr->offset = reinterpret_cast<u32>(&GDT);
 
     // update GDT:
-    gdt_flush(reinterpret_cast<uint32_t>(gdt_ptr));
+    gdt_flush(reinterpret_cast<u32>(gdt_ptr));
 }
 
 } // namespace gdt

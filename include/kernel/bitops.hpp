@@ -40,7 +40,7 @@ inline const auto BITS_PER_BYTE {8};
  * @param [in] n - given number of bits.
  * @return number of bytes needed for containing @a n bits.
  */
-constexpr inline size_t BITS_TO_BYTES(size_t n) noexcept
+constexpr inline usize BITS_TO_BYTES(usize n) noexcept
 {
     // assuming that a byte contains 8 bits
     return (n + 7) >> 0x3;
@@ -52,7 +52,7 @@ constexpr inline size_t BITS_TO_BYTES(size_t n) noexcept
  * @param [in] n - given number of bytes.
  * @return number of bits in @a n bytes.
  */
-constexpr inline size_t BYTES_TO_BITS(size_t n) noexcept
+constexpr inline usize BYTES_TO_BITS(usize n) noexcept
 {
     // assuming that a byte contains 8 bits
     return n << 0x3;
@@ -65,7 +65,7 @@ constexpr inline size_t BYTES_TO_BITS(size_t n) noexcept
  * @return number of bits in value.
  */
 template <typename T>
-constexpr inline size_t BITS_PER_TYPE = BYTES_TO_BITS(sizeof(T));
+constexpr inline usize BITS_PER_TYPE = BYTES_TO_BITS(sizeof(T));
 
 /**
  * @brief Set the specific bit of given value.
@@ -74,7 +74,7 @@ constexpr inline size_t BITS_PER_TYPE = BYTES_TO_BITS(sizeof(T));
  * @param [in] pos - given bit position to set.
  */
 template <typename T>
-constexpr inline void set_bit(T& value, int32_t pos) noexcept
+constexpr inline void set_bit(T& value, s32 pos) noexcept
 {
     value |= pos;
 }
@@ -86,7 +86,7 @@ constexpr inline void set_bit(T& value, int32_t pos) noexcept
  * @param [in] pos - given bit position to clear.
  */
 template <typename T>
-constexpr inline void clear_bit(T& value, int32_t pos) noexcept
+constexpr inline void clear_bit(T& value, s32 pos) noexcept
 {
     value &= ~pos;
 }
@@ -98,7 +98,7 @@ constexpr inline void clear_bit(T& value, int32_t pos) noexcept
  * @param [in] pos - given bit position to test.
  */
 template <typename T>
-constexpr inline bool test_bit(T& value, int32_t pos) noexcept
+constexpr inline bool test_bit(T& value, s32 pos) noexcept
 {
     return (value & pos);
 }

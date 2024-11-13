@@ -61,7 +61,7 @@ void free_split(char **result) noexcept;
 template <typename T>
 T stou(const char *str) noexcept
 {
-    int32_t index = 0;
+    s32 index = 0;
     T result      = 0;
     auto size     = kstd::strlen(str);
 
@@ -75,7 +75,7 @@ T stou(const char *str) noexcept
         return 0;
     }
 
-    uint32_t digit {0};
+    u32 digit {0};
     char ch {0};
 
     // parse the string
@@ -102,7 +102,7 @@ T stou(const char *str) noexcept
  * @param [in] str - given string to convert.
  * @return hex representation of string.
  */
-uint32_t stoh(const char *str) noexcept;
+u32 stoh(const char *str) noexcept;
 
 } // namespace kstd
 } // namespace kernel

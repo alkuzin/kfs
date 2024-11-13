@@ -32,8 +32,8 @@ using namespace driver;
 inline const auto SHELL_BUFFER_SIZE {128};
 static char shell_buffer[SHELL_BUFFER_SIZE];
 
-static int32_t x_pos {0};
-static int32_t y_pos {0};
+static s32 x_pos {0};
+static s32 y_pos {0};
 
 /** @brief Display kernel shell prompt.*/
 static inline void display_prompt(void) noexcept
@@ -47,7 +47,7 @@ static inline void display_prompt(void) noexcept
 /** @brief Custom TAB key handler.*/
 static bool tab_handler(void) noexcept
 {
-    int32_t len         = kstd::strlen(shell_buffer);
+    s32 len         = kstd::strlen(shell_buffer);
     const char *command = get_suitable_cmd(shell_buffer, len);
 
     if (command) {
@@ -55,7 +55,7 @@ static bool tab_handler(void) noexcept
         kstd::strncpy(shell_buffer, command, SHELL_BUFFER_SIZE);
 
         // clearing input
-        for (int32_t i = 0; i < len; i++)
+        for (s32 i = 0; i < len; i++)
             kstd::putchar('\b');
 
         // printing full command
@@ -70,7 +70,7 @@ static bool tab_handler(void) noexcept
         return true;
     }
 
-    for (int32_t i = 0; i < tty::TAB_WIDTH; i++)
+    for (s32 i = 0; i < tty::TAB_WIDTH; i++)
         kstd::putchar(' ');
 
     return false;
@@ -78,10 +78,10 @@ static bool tab_handler(void) noexcept
 
 static bool clear_input(void) noexcept
 {
-    int32_t len = kstd::strlen(shell_buffer);
+    s32 len = kstd::strlen(shell_buffer);
 
     // clearing input & shell buffer
-    for (int32_t i = 0; i < len; i++) {
+    for (s32 i = 0; i < len; i++) {
         shell_buffer[i] = 0;
         kstd::putchar('\b');
     }

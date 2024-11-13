@@ -34,13 +34,13 @@ namespace kernel {
 namespace rtc {
 
 struct rtc_time_t {
-    int32_t sec;    // seconds (0-59)
-    int32_t min;    // minutes (0-59)
-    int32_t hour;   // hours (0–23/1–12 (highest bit set if pm))
-    int32_t mday;   // day of the month (1-31)
-    int32_t mon;    // month (1-12)
-    int32_t year;   // year since 1900
-    int32_t wday;   // day of the week (1-7, sunday = 1)
+    s32 sec;    // seconds (0-59)
+    s32 min;    // minutes (0-59)
+    s32 hour;   // hours (0–23/1–12 (highest bit set if pm))
+    s32 mday;   // day of the month (1-31)
+    s32 mon;    // month (1-12)
+    s32 year;   // year since 1900
+    s32 wday;   // day of the week (1-7, sunday = 1)
 };
 
 /** @brief Initialize real-time clock.*/

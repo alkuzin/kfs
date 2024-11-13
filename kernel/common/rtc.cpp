@@ -25,13 +25,13 @@
 namespace kernel {
 namespace rtc {
 
-inline const uint8_t RTC_PORT_INDEX     {0x70}; // RTC index port
-inline const uint8_t RTC_PORT_DATA      {0x71}; // RTC data port
-inline const uint8_t RTC_REGISTER_A     {0x8A}; // RTC status register A
-inline const uint8_t RTC_REGISTER_B     {0x8B}; // RTC status register B
-inline const uint8_t RTC_VALUE          {0x20}; // value to write to register A
+inline const u8 RTC_PORT_INDEX     {0x70}; // RTC index port
+inline const u8 RTC_PORT_DATA      {0x71}; // RTC data port
+inline const u8 RTC_REGISTER_A     {0x8A}; // RTC status register A
+inline const u8 RTC_REGISTER_B     {0x8B}; // RTC status register B
+inline const u8 RTC_VALUE          {0x20}; // value to write to register A
 
-enum class REG : uint8_t {
+enum class REG : u8 {
     SEC     = 0x00, // seconds       (0–59)
     MIN     = 0x02, // minutes       (0–59)
     HOUR    = 0x04, // hours         (0–23/1–12 (highest bit set if pm))
@@ -55,7 +55,7 @@ static void clock_handler(irq::int_regs_t *regs) noexcept
     (void)regs;                             // unused
     cli();                                  // disable interrupts
     outb(RTC_PORT_INDEX, RTC_REGISTER_B);   // disable non-maskable-interrupt
-    uint8_t prev = inb(RTC_PORT_DATA);      // read the value of register B
+    u8 prev = inb(RTC_PORT_DATA);      // read the value of register B
     outb(RTC_PORT_INDEX, RTC_REGISTER_B);   // set index again
     outb(RTC_PORT_DATA, (prev | 0x40));     // turn on bit 6 of register B
     sti();                                  // enable interrupts
@@ -77,7 +77,7 @@ void init(void) noexcept
  * @param [in] bcd - given value in BCD format.
  * @return human-readable format.
  */
-static inline int32_t from_bcd(uint8_t bcd) noexcept
+static inline s32 from_bcd(u8 bcd) noexcept
 {
     return ((bcd & 0xF0) >> 1) + ((bcd & 0xF0) >> 3) + (bcd & 0xf);
 }
@@ -88,9 +88,9 @@ static inline int32_t from_bcd(uint8_t bcd) noexcept
  * @param [in] reg - given RTC register.
  * @return RTC date value human-readable format.
  */
-static inline uint8_t get_register(REG reg) noexcept
+static inline u8 get_register(REG reg) noexcept
 {
-    outb(RTC_PORT_INDEX, static_cast<uint32_t>(reg));
+    outb(RTC_PORT_INDEX, static_cast<u32>(reg));
     return static_cast<u8>(from_bcd(inb(RTC_PORT_DATA)));
 }
 

@@ -35,33 +35,33 @@ namespace arch {
 namespace x86 {
 namespace gdt {
 
-inline const uint32_t GDT_BASE {0x00000800}; // GDT pointer address
+inline const u32 GDT_BASE {0x00000800}; // GDT pointer address
 
 // GDT segment offsets
-inline const uint8_t NULL_SEGMENT           {0x00};
-inline const uint8_t KERNEL_CODE_SEGMENT    {0x08};
-inline const uint8_t KERNEL_DATA_SEGMENT    {0x10};
-inline const uint8_t KERNEL_STACK_SEGMENT   {0x18};
-inline const uint8_t USER_CODE_SEGMENT      {0x20};
-inline const uint8_t USER_DATA_SEGMENT      {0x28};
-inline const uint8_t USER_STACK_SEGMENT     {0x30};
+inline const u8 NULL_SEGMENT           {0x00};
+inline const u8 KERNEL_CODE_SEGMENT    {0x08};
+inline const u8 KERNEL_DATA_SEGMENT    {0x10};
+inline const u8 KERNEL_STACK_SEGMENT   {0x18};
+inline const u8 USER_CODE_SEGMENT      {0x20};
+inline const u8 USER_DATA_SEGMENT      {0x28};
+inline const u8 USER_STACK_SEGMENT     {0x30};
 
 /** @brief GDT segment structure in 32-bit mode.*/
 struct entry_t
 {
-    uint16_t limit;       // maximum addressable unit.
-    uint16_t base_low;    // linear address where the segment begins.
-    uint8_t  base_mid;    // linear address where the segment begins.
-    uint8_t  access;      // privileges of segment.
-    uint8_t  flags;       // segment mode
-    uint8_t  base_high;   // linear address where the segment begins.
+    u16 limit;       // maximum addressable unit.
+    u16 base_low;    // linear address where the segment begins.
+    u8  base_mid;    // linear address where the segment begins.
+    u8  access;      // privileges of segment.
+    u8  flags;       // segment mode
+    u8  base_high;   // linear address where the segment begins.
 } __attribute__((packed));
 
 /** @brief GDT pointer.*/
 struct ptr_t
 {
-   uint16_t size;     // GDT size - 1
-   uint32_t offset;   // linear address of GDT.
+   u16 size;     // GDT size - 1
+   u32 offset;   // linear address of GDT.
 } __attribute__((packed));
 
 /** @brief Initialize Global Descriptor Table.*/

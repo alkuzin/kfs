@@ -46,7 +46,7 @@ inline const auto LOG_DEBUG_MSG   {"DEBUG"};
  * @param [in] fmt - given format string.
  * @return buffer shift.
  */
-static int32_t print_log(const char *fmt) noexcept
+static s32 print_log(const char *fmt) noexcept
 {
     auto type = LOG_DEFAULT;
 
@@ -95,10 +95,10 @@ void printk(const char *fmt, ...) noexcept
     kstd::vsnprintk(buffer, BUF_SIZE, fmt + shift, args);
     va_end(args);
 
-	kstd::putk(buffer);
+    kstd::putk(buffer);
 
     // clean buffer
-    for (size_t i = 0; buffer[i] && i < BUF_SIZE; i++)
+    for (usize i = 0; buffer[i] && i < BUF_SIZE; i++)
         buffer[i] = 0;
 }
 
@@ -110,10 +110,10 @@ void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept
     kstd::vsnprintk(buffer, BUF_SIZE, fmt, args);
     va_end(args);
 
-	kstd::putk(buffer, fg, bg);
+    kstd::putk(buffer, fg, bg);
 
     // clean buffer
-    for (size_t i = 0; buffer[i] && i < BUF_SIZE; i++)
+    for (usize i = 0; buffer[i] && i < BUF_SIZE; i++)
         buffer[i] = 0;
 }
 

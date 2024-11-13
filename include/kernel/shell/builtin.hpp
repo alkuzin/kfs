@@ -33,13 +33,13 @@
 namespace kernel {
 namespace shell {
 
-using command_t = void (*)(int32_t, char **);
+using command_t = void (*)(s32, char **);
 
 struct builtin_t {
     const char *name;   // command name
     const char *descr;  // short description
     char      **argv;   // shell arguments
-    int32_t     argc;   // number of shell arguments
+    s32         argc;   // number of shell arguments
     command_t   func;   // command entry point
 };
 
@@ -58,7 +58,7 @@ void exec(const char *cmd) noexcept;
  * @return first suitable shell command - in case of success.
  * @return nullptr - otherwise.
  */
-const char *get_suitable_cmd(const char *str, int32_t len) noexcept;
+const char *get_suitable_cmd(const char *str, s32 len) noexcept;
 
 } // namespace shell
 } // namespace kernel

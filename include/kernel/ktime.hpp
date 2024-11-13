@@ -33,10 +33,10 @@
 namespace kernel {
 namespace ktime {
 
-inline const uint32_t UNIX_BASE_YEAR    {1900};
-inline const uint32_t UNIX_EPOCH_YEAR   {1970};
+inline const u32 UNIX_BASE_YEAR    {1900};
+inline const u32 UNIX_EPOCH_YEAR   {1970};
 
-enum class UTC : int32_t {
+enum class UTC : s32 {
     ABI         = -12,  // UTC-12: Baker Island, USA
     NST         = -11,  // UTC-11: Pago Pago, American Samoa
     HST         = -10,  // UTC-10: Honolulu, Hawaii, USA
@@ -65,15 +65,15 @@ enum class UTC : int32_t {
 };
 
 struct tm {
-    int32_t tm_sec;     // seconds (0-60)
-    int32_t tm_min;     // minutes (0-59)
-    int32_t tm_hour;    // hours (0-23)
-    int32_t tm_mday;    // day of the month (1-31)
-    int32_t tm_mon;     // month (0-11)
-    int32_t tm_year;    // year since 1900
-    int32_t tm_wday;    // day of the week (sunday = 0)
-    int32_t tm_yday;    // day of the year (0-365; 1 Jan = 0)
-    int32_t tm_isdst;   // daylight saving time flag
+    s32 tm_sec;     // seconds (0-60)
+    s32 tm_min;     // minutes (0-59)
+    s32 tm_hour;    // hours (0-23)
+    s32 tm_mday;    // day of the month (1-31)
+    s32 tm_mon;     // month (0-11)
+    s32 tm_year;    // year since 1900
+    s32 tm_wday;    // day of the week (sunday = 0)
+    s32 tm_yday;    // day of the year (0-365; 1 Jan = 0)
+    s32 tm_isdst;   // daylight saving time flag
 };
 
 /**
@@ -111,7 +111,7 @@ void set_utc(UTC offset) noexcept;
  *
  * @return UTC offset.
  */
-int32_t get_utc(void) noexcept;
+s32 get_utc(void) noexcept;
 
 /**
  * @brief Get number of milliseconds since boot.

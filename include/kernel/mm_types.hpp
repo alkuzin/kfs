@@ -34,13 +34,13 @@ namespace kernel {
 namespace core {
 namespace memory {
 
-inline const size_t     PAGE_SIZE   {4_KB};
+inline const usize     PAGE_SIZE   {4_KB};
 inline const bool       PAGE_FREE   {0};
 inline const bool       PAGE_USED   {1};
-inline const uint8_t    PAGE_SHIFT  {0xC};
+inline const u8    PAGE_SHIFT  {0xC};
 
 // page flags enumeration
-enum PG : uint8_t {
+enum PG : u8 {
     RESERVED = 0b10000000,   // empty pages or pages that do not even exist
     SLAB     = 0b01000000    // page frame is included in a slab
 };
@@ -51,7 +51,7 @@ enum PG : uint8_t {
  * @param [in] pfn - given page frame number.
  * @return physical address.
  */
-constexpr inline phys_addr_t PFN_PHYS(size_t pfn) noexcept
+constexpr inline phys_addr_t PFN_PHYS(usize pfn) noexcept
 {
     return static_cast<phys_addr_t>(pfn << PAGE_SHIFT);
 }
@@ -62,17 +62,17 @@ constexpr inline phys_addr_t PFN_PHYS(size_t pfn) noexcept
  * @param [in] addr - given page physical address.
  * @return page frame number.
  */
-constexpr inline size_t PHYS_PFN(phys_addr_t addr) noexcept
+constexpr inline usize PHYS_PFN(phys_addr_t addr) noexcept
 {
     return addr >> PAGE_SHIFT;
 }
 
 struct page_t
 {
-    kmem::cache_t *cache; // memory allocator cache (only if PG::SLAB is set)
-    kmem::slab_t  *slab;  // memory allocator slab (only if PG::SLAB is set)
-    size_t         pfn;   // page frame number (position in bitmap/mem map)
-    uint8_t        flags; // page status
+    kmem::cache_t *cache;   // memory allocator cache (only if PG::SLAB is set)
+    kmem::slab_t  *slab;    // memory allocator slab (only if PG::SLAB is set)
+    usize         pfn;      // page frame number (position in bitmap/mem map)
+    u8            flags;    // page status
 
     /**
      * @brief Get page memory address.

@@ -42,8 +42,8 @@ struct button_t {
     rgb_t    bg;        // background color
     action_t on_click;  // function to execute on button click
     point_t  begin;       // begin point of button
-    int32_t  width;
-    int32_t  height;
+    s32  width;
+    s32  height;
     button_t *prev;     // previous button in list
     button_t *next;     // next button in list
     void     *arg;
@@ -53,16 +53,16 @@ struct frame_t {
     point_t begin;          // begin point of frame
     rgb_t   fg;             // foreground color
     rgb_t   bg;             // background color
-    int32_t begin_x_pos;    // x-position of the cursor
-    int32_t begin_y_pos;    // y-position of the cursor
-    int32_t x_pos;          // x-position of the cursor
-    int32_t y_pos;          // y-position of the cursor
-    int32_t width;          // output width
-    int32_t height;         // output height
-    int32_t prev_x_pos;     // previous x-position of the cursor
-    int32_t prev_y_pos;     // previous y-position of the cursor
-    int32_t prev_width;     // previous output width
-    int32_t prev_height;    // previous output height
+    s32 begin_x_pos;    // x-position of the cursor
+    s32 begin_y_pos;    // y-position of the cursor
+    s32 x_pos;          // x-position of the cursor
+    s32 y_pos;          // y-position of the cursor
+    s32 width;          // output width
+    s32 height;         // output height
+    s32 prev_x_pos;     // previous x-position of the cursor
+    s32 prev_y_pos;     // previous y-position of the cursor
+    s32 prev_width;     // previous output width
+    s32 prev_height;    // previous output height
     button_t *buttons;      // list of buttons connected to the frame
     button_t *last;         // last button in buttons list
 
@@ -80,8 +80,8 @@ struct frame_t {
     void reset(void) noexcept;
 };
 
-inline const uint8_t WINDOW_TITLE_SIZE      {32};
-inline const uint8_t WINDOW_CONTENT_SIZE    {255};
+inline const u8 WINDOW_TITLE_SIZE      {32};
+inline const u8 WINDOW_CONTENT_SIZE    {255};
 
 struct window_t {
     char    content[WINDOW_CONTENT_SIZE];

@@ -63,7 +63,7 @@ void frame_t::reset(void) noexcept
     tty::terminal.height       = prev_height;
 }
 
-inline const uint8_t FRAME_PADDING {25};
+inline const u8 FRAME_PADDING {25};
 
 void frame_t::init(point_t begin) noexcept
 {

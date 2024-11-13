@@ -39,7 +39,7 @@ namespace debug {
  * @param [in] addr - given memory address.
  * @param [in] size - given number of bytes to dump.
  */
-void kdump(phys_addr_t addr, size_t size) noexcept;
+void kdump(phys_addr_t addr, usize size) noexcept;
 
 } // namespace debug
 } // namespace kernel

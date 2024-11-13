@@ -29,41 +29,41 @@ namespace kernel {
 namespace driver {
 namespace keyboard {
 
-inline const uint32_t UNKNOWN = 0xFFFFFFFF;
-inline const uint32_t ESC     = 0xFFFFFFFF - 1;
-inline const uint32_t CTRL    = 0xFFFFFFFF - 2;
-inline const uint32_t LSHFT   = 0xFFFFFFFF - 3;
-inline const uint32_t RSHFT   = 0xFFFFFFFF - 4;
-inline const uint32_t ALT     = 0xFFFFFFFF - 5;
-inline const uint32_t F1      = 0xFFFFFFFF - 6;
-inline const uint32_t F2      = 0xFFFFFFFF - 7;
-inline const uint32_t F3      = 0xFFFFFFFF - 8;
-inline const uint32_t F4      = 0xFFFFFFFF - 9;
-inline const uint32_t F5      = 0xFFFFFFFF - 10;
-inline const uint32_t F6      = 0xFFFFFFFF - 11;
-inline const uint32_t F7      = 0xFFFFFFFF - 12;
-inline const uint32_t F8      = 0xFFFFFFFF - 13;
-inline const uint32_t F9      = 0xFFFFFFFF - 14;
-inline const uint32_t F10     = 0xFFFFFFFF - 15;
-inline const uint32_t F11     = 0xFFFFFFFF - 16;
-inline const uint32_t F12     = 0xFFFFFFFF - 17;
-inline const uint32_t SCRLCK  = 0xFFFFFFFF - 18;
-inline const uint32_t HOME    = 0xFFFFFFFF - 19;
-inline const uint32_t UP      = 0xFFFFFFFF - 20;
-inline const uint32_t LEFT    = 0xFFFFFFFF - 21;
-inline const uint32_t RIGHT   = 0xFFFFFFFF - 22;
-inline const uint32_t DOWN    = 0xFFFFFFFF - 23;
-inline const uint32_t PGUP    = 0xFFFFFFFF - 24;
-inline const uint32_t PGDOWN  = 0xFFFFFFFF - 25;
-inline const uint32_t END     = 0xFFFFFFFF - 26;
-inline const uint32_t INS     = 0xFFFFFFFF - 27;
-inline const uint32_t DEL     = 0xFFFFFFFF - 28;
-inline const uint32_t CAPS    = 0xFFFFFFFF - 29;
-inline const uint32_t NONE    = 0xFFFFFFFF - 30;
-inline const uint32_t ALTGR   = 0xFFFFFFFF - 31;
-inline const uint32_t NUMLCK  = 0xFFFFFFFF - 32;
+inline const u32 UNKNOWN = 0xFFFFFFFF;
+inline const u32 ESC     = 0xFFFFFFFF - 1;
+inline const u32 CTRL    = 0xFFFFFFFF - 2;
+inline const u32 LSHFT   = 0xFFFFFFFF - 3;
+inline const u32 RSHFT   = 0xFFFFFFFF - 4;
+inline const u32 ALT     = 0xFFFFFFFF - 5;
+inline const u32 F1      = 0xFFFFFFFF - 6;
+inline const u32 F2      = 0xFFFFFFFF - 7;
+inline const u32 F3      = 0xFFFFFFFF - 8;
+inline const u32 F4      = 0xFFFFFFFF - 9;
+inline const u32 F5      = 0xFFFFFFFF - 10;
+inline const u32 F6      = 0xFFFFFFFF - 11;
+inline const u32 F7      = 0xFFFFFFFF - 12;
+inline const u32 F8      = 0xFFFFFFFF - 13;
+inline const u32 F9      = 0xFFFFFFFF - 14;
+inline const u32 F10     = 0xFFFFFFFF - 15;
+inline const u32 F11     = 0xFFFFFFFF - 16;
+inline const u32 F12     = 0xFFFFFFFF - 17;
+inline const u32 SCRLCK  = 0xFFFFFFFF - 18;
+inline const u32 HOME    = 0xFFFFFFFF - 19;
+inline const u32 UP      = 0xFFFFFFFF - 20;
+inline const u32 LEFT    = 0xFFFFFFFF - 21;
+inline const u32 RIGHT   = 0xFFFFFFFF - 22;
+inline const u32 DOWN    = 0xFFFFFFFF - 23;
+inline const u32 PGUP    = 0xFFFFFFFF - 24;
+inline const u32 PGDOWN  = 0xFFFFFFFF - 25;
+inline const u32 END     = 0xFFFFFFFF - 26;
+inline const u32 INS     = 0xFFFFFFFF - 27;
+inline const u32 DEL     = 0xFFFFFFFF - 28;
+inline const u32 CAPS    = 0xFFFFFFFF - 29;
+inline const u32 NONE    = 0xFFFFFFFF - 30;
+inline const u32 ALTGR   = 0xFFFFFFFF - 31;
+inline const u32 NUMLCK  = 0xFFFFFFFF - 32;
 
-const uint32_t lowercase[128] = {
+const u32 lowercase[128] = {
 UNKNOWN,ESC,'1','2','3','4','5','6','7','8', '9','0','-','=','\b','\t','q','w',
 'e','r','t','y','u','i','o','p','[',']','\n',CTRL, 'a','s','d','f','g','h','j',
 'k','l',';','\'','`',LSHFT,'\\','z','x','c','v','b','n', 'm',',','.','/',RSHFT,
@@ -76,7 +76,7 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
 UNKNOWN,UNKNOWN,UNKNOWN
 };
 
-const uint32_t uppercase[128] = {
+const u32 uppercase[128] = {
 UNKNOWN,ESC,'!','@','#','$','%','^','&','*', '(',')','_','+','\b','\t','Q','W',
 'E','R','T','Y','U','I','O','P','{','}','\n',CTRL, 'A','S','D','F','G','H','J',
 'K','L',':','"','~',LSHFT,'|','Z','X','C','V','B','N', 'M','<','>','?',RSHFT,
@@ -93,8 +93,8 @@ using namespace arch::x86;
 
 static key_handler ctrl_handler[128] {nullptr};
 
-static volatile uint8_t scan_code   {0};
-static volatile uint8_t press       {0};
+static volatile u8 scan_code   {0};
+static volatile u8 press       {0};
 
 static bool is_caps      = false;
 static bool is_caps_lock = false;
@@ -109,7 +109,7 @@ KEY getch(void) noexcept
 
 void set_ctrl_handler(KEY key, key_handler handler) noexcept
 {
-    auto pos = static_cast<int32_t>(key);
+    auto pos = static_cast<s32>(key);
     ctrl_handler[pos] = handler;
 }
 
@@ -118,9 +118,9 @@ void set_ctrl_handler(KEY key, key_handler handler) noexcept
  *
  * @param [in] key - given key to handle.
  */
-static void handle_ctrl(int32_t key) noexcept
+static void handle_ctrl(s32 key) noexcept
 {
-    auto pos = static_cast<int32_t>(key);
+    auto pos = static_cast<s32>(key);
     if (pos <= 0 || pos >= 128)
         panic(PANIC_ERR "%s\n", "incorrect key");
 
@@ -134,7 +134,7 @@ static void handle_ctrl(int32_t key) noexcept
     is_ctrl = false;
 }
 
-uint8_t getchar(void) noexcept
+u8 getchar(void) noexcept
 {
     while((inb(0x64) & 0x01) == 0)
         continue;
@@ -158,7 +158,7 @@ uint8_t getchar(void) noexcept
         default:
             if(!press && !is_ctrl) {
                 bool    is_upper = (is_caps || is_caps_lock);
-                uint8_t cc {0};
+                u8 cc {0};
 
                 if(is_upper && (lowercase[scan_code] != UNKNOWN))
                     cc = static_cast<u8>(uppercase[scan_code]);
@@ -183,19 +183,19 @@ void set_tab_handler(key_handler handler) noexcept
     tab_handler = handler;
 }
 
-static uint32_t pos {0};
+static u32 pos {0};
 
-uint32_t get_pos(void) noexcept
+u32 get_pos(void) noexcept
 {
     return pos;
 }
 
-void set_pos(uint32_t p) noexcept
+void set_pos(u32 p) noexcept
 {
     pos = p;
 }
 
-void get_line(char *buffer, size_t size) noexcept
+void get_line(char *buffer, usize size) noexcept
 {
     pos      = 0;
     char ch  = 0;

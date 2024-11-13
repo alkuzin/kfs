@@ -71,7 +71,7 @@ KEY getch(void) noexcept;
  *
  * @return Character read from the keyboard.
  */
-uint8_t getchar(void) noexcept;
+u8 getchar(void) noexcept;
 
 /**
  * @brief Get the line from user.
@@ -79,7 +79,7 @@ uint8_t getchar(void) noexcept;
  * @param [out] buffer - given buffer to store input.
  * @param [out] size - given size of buffer.
  */
-void get_line(char *buffer, size_t size) noexcept;
+void get_line(char *buffer, usize size) noexcept;
 
 using key_handler = bool(*)(void);
 
@@ -103,14 +103,14 @@ void set_ctrl_handler(KEY key, key_handler handler) noexcept;
  *
  * @param [in] p - given new position to set.
  */
-void set_pos(uint32_t p) noexcept;
+void set_pos(u32 p) noexcept;
 
 /**
  * @brief Get the get_line() position.
  *
  * @return get_line() position.
  */
-uint32_t get_pos(void) noexcept;
+u32 get_pos(void) noexcept;
 
 } // namespace keyboard
 } // namespace driver

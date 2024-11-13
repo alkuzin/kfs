@@ -33,7 +33,7 @@
 namespace kernel {
 
 // get free pages flags type for memory allocation functions
-using gfp_t = uint8_t;
+using gfp_t = u8;
 
 enum GFP : gfp_t {
     KERNEL = 0b00000001,    // for kernel-internal allocation

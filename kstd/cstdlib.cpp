@@ -36,7 +36,7 @@ char **split(const char *str, const char *delim, int *count) noexcept
         return nullptr;
 
     // count the number of tokens
-    int32_t token_count = 0;
+    s32 token_count = 0;
     char *token = strtok(str_copy, delim);
 
     while (token) {
@@ -58,7 +58,7 @@ char **split(const char *str, const char *delim, int *count) noexcept
     strncpy(str_copy, str, strlen(str));
 
     token         = strtok(str_copy, delim);
-    int32_t index = 0;
+    s32 index = 0;
 
     while (token) {
         if (strlen(token) > 0) {
@@ -94,7 +94,7 @@ void free_split(char **result) noexcept
     kfree(result);
 }
 
-uint32_t stoh(const char *str) noexcept
+u32 stoh(const char *str) noexcept
 {
     if (!str)
         panic(PANIC_ERR "%s\n", "empty string");
@@ -105,7 +105,7 @@ uint32_t stoh(const char *str) noexcept
     if (strncmp(str, "0x", 2) == 0 || strncmp(str, "0X", 2) == 0)
         i = 2;
 
-    uint32_t result = 0;
+    u32 result = 0;
     char c {0};
 
     // converting each character to its corresponding value

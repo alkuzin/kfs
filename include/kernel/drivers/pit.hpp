@@ -34,10 +34,10 @@ namespace kernel {
 namespace driver {
 namespace pit {
 
-inline const uint32_t PIT_FREQUENCY      {1193180};  // 1.193182 MHz
-inline const uint32_t FREQUENCY          {100};      // (ticking each 10 ms)
-inline const uint32_t MILLISEC_PER_SEC   {1000};
-inline const uint32_t MILLISEC_PER_TICK  {MILLISEC_PER_SEC / FREQUENCY};
+inline const u32 PIT_FREQUENCY      {1193180};  // 1.193182 MHz
+inline const u32 FREQUENCY          {100};      // (ticking each 10 ms)
+inline const u32 MILLISEC_PER_SEC   {1000};
+inline const u32 MILLISEC_PER_TICK  {MILLISEC_PER_SEC / FREQUENCY};
 
 /** @brief Initialize Programmable Interval Timer (PIT).*/
 void init(void) noexcept;
@@ -47,14 +47,14 @@ void init(void) noexcept;
  *
  * @return number of timer ticks.
  */
-uint32_t get_ticks(void) noexcept;
+u32 get_ticks(void) noexcept;
 
 /**
  * @brief Time delay in ms.
  *
  * @param [in] msec - given number of milliseconds to delay.
  */
-void delay(uint32_t msec) noexcept;
+void delay(u32 msec) noexcept;
 
 } // namespace pit
 } // namespace driver

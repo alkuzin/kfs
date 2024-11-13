@@ -27,12 +27,12 @@
 namespace kernel {
 namespace ktime {
 
-inline const int32_t SECONDS_PER_MINUTE    {60};
-inline const int32_t SECONDS_PER_HOUR      {3600};
-inline const int32_t SECONDS_PER_DAY       {86400};
-inline const int32_t DAYS_PER_YEAR         {365};
-inline const int32_t DAYS_PER_LEAP_YEAR    {366};
-inline const int32_t MONTHS_PER_YEAR       {12};
+inline const s32 SECONDS_PER_MINUTE    {60};
+inline const s32 SECONDS_PER_HOUR      {3600};
+inline const s32 SECONDS_PER_DAY       {86400};
+inline const s32 DAYS_PER_YEAR         {365};
+inline const s32 DAYS_PER_LEAP_YEAR    {366};
+inline const s32 MONTHS_PER_YEAR       {12};
 
 static const char *months[12] {
     "Jan", "Feb", "Mar", "Apr",
@@ -53,7 +53,7 @@ static const char *utc_offsets[25] {
 };
 
 static char timebuf[32];
-static int32_t utc {0};
+static s32 utc {0};
 
 static ktime_t boot_time {0};
 
@@ -65,7 +65,7 @@ static ktime_t boot_time {0};
  */
 static const char *get_utc_name(UTC offset) noexcept
 {
-    auto index = static_cast<int32_t>(offset) + 12;
+    auto index = static_cast<s32>(offset) + 12;
 
     if (index >= 0 && index < 25)
         return utc_offsets[index];
@@ -135,7 +135,7 @@ char *get_date(void) noexcept
  * @return true - if year is leap.
  * @return false - otherwise.
  */
-static inline bool is_leap_year(int32_t year) noexcept
+static inline bool is_leap_year(s32 year) noexcept
 {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
@@ -147,7 +147,7 @@ static inline bool is_leap_year(int32_t year) noexcept
  * @param [in] month - given month.
  * @return number of days in a month.
  */
-static int32_t days_in_month(int32_t year, int32_t month) noexcept
+static s32 days_in_month(s32 year, s32 month) noexcept
 {
     // handle February
     if (month == 1)
@@ -167,7 +167,7 @@ static int32_t days_in_month(int32_t year, int32_t month) noexcept
  * @param [in] year - given year.
  * @return number of days.
  */
-static inline int32_t days_in_year(int32_t year) noexcept
+static inline s32 days_in_year(s32 year) noexcept
 {
     return is_leap_year(year) ? DAYS_PER_LEAP_YEAR : DAYS_PER_YEAR;
 }
@@ -178,14 +178,14 @@ ktime_t mktime(const tm& ptm) noexcept
         panic("%s\n", "year must be >= 1970");
 
     // normalizing the time structure
-    int32_t year    = ptm.tm_year + UNIX_BASE_YEAR;
-    int32_t month   = ptm.tm_mon;
-    int32_t day     = ptm.tm_mday;
-    int32_t hour    = ptm.tm_hour;
-    int32_t minute  = ptm.tm_min;
-    int32_t second  = ptm.tm_sec;
+    s32 year    = ptm.tm_year + UNIX_BASE_YEAR;
+    s32 month   = ptm.tm_mon;
+    s32 day     = ptm.tm_mday;
+    s32 hour    = ptm.tm_hour;
+    s32 minute  = ptm.tm_min;
+    s32 second  = ptm.tm_sec;
 
-    uint32_t total_days = 0;
+    u32 total_days = 0;
 
     // adding days for the complete years
     for (int y = UNIX_EPOCH_YEAR; y < year; ++y)
@@ -209,9 +209,9 @@ ktime_t mktime(const tm& ptm) noexcept
 
 void gmtime(ktime_t timer, tm& result) noexcept
 {
-    uint32_t seconds          = timer;
-    int32_t total_days        = seconds / SECONDS_PER_DAY;
-    int32_t remaining_seconds = seconds % SECONDS_PER_DAY;
+    u32 seconds          = timer;
+    s32 total_days        = seconds / SECONDS_PER_DAY;
+    s32 remaining_seconds = seconds % SECONDS_PER_DAY;
 
     result.tm_hour    = remaining_seconds / SECONDS_PER_HOUR;
     remaining_seconds %= SECONDS_PER_HOUR;
@@ -220,7 +220,7 @@ void gmtime(ktime_t timer, tm& result) noexcept
 
     // calculating the current year
     result.tm_year = UNIX_EPOCH_YEAR;
-    int32_t days   = 0;
+    s32 days   = 0;
 
     for (;;) {
         days = days_in_year(result.tm_year);
@@ -249,8 +249,8 @@ void gmtime(ktime_t timer, tm& result) noexcept
     result.tm_year -= UNIX_BASE_YEAR; // adjusting year and month for struct tm
 
     // Zeller's Congruence algorithm to calculate day of the week
-    int32_t century         = result.tm_year / 100;
-    int32_t year_of_century = result.tm_year % 100;
+    s32 century         = result.tm_year / 100;
+    s32 year_of_century = result.tm_year % 100;
 
     auto part1       = (year_of_century + (year_of_century / 4));
     auto part2       = ((century / 4) - (2 * century));
@@ -267,10 +267,10 @@ void gmtime(ktime_t timer, tm& result) noexcept
 
 void set_utc(UTC offset) noexcept
 {
-    utc = static_cast<int32_t>(offset);
+    utc = static_cast<s32>(offset);
 }
 
-int32_t get_utc(void) noexcept
+s32 get_utc(void) noexcept
 {
     return utc;
 }

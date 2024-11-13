@@ -78,7 +78,7 @@ void panic(const char *fmt, ...) noexcept
     va_end(args);
 
     printk(KERN_EMERG "%s", "panic: ");
-	kstd::putk(buffer);
+    kstd::putk(buffer);
 
     if (mem_dump) {
         using namespace arch::x86;
@@ -94,7 +94,7 @@ void panic(const char *fmt, ...) noexcept
         core::khalt();
 
     // clean buffer
-    for (size_t i = 0; buffer[i] && i < BUF_SIZE; i++)
+    for (usize i = 0; buffer[i] && i < BUF_SIZE; i++)
         buffer[i] = 0;
 }
 

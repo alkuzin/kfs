@@ -28,7 +28,7 @@ static fb_t framebuffer {};
 
 void init(const multiboot_t& mboot) noexcept
 {
-    framebuffer.addr   = reinterpret_cast<uint32_t*>(mboot.framebuffer_addr);
+    framebuffer.addr   = reinterpret_cast<u32*>(mboot.framebuffer_addr);
     framebuffer.pitch  = mboot.framebuffer_pitch;
     framebuffer.width  = mboot.framebuffer_width;
     framebuffer.height = mboot.framebuffer_height;
@@ -40,7 +40,7 @@ fb_t get_framebuffer(void) noexcept
     return framebuffer;
 }
 
-void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept
+void draw_pixel(u32 x, u32 y, gfx::rgb_t color) noexcept
 {
     if (x < framebuffer.width && y < framebuffer.height)
         framebuffer.addr[y * framebuffer.width + x] = color;
@@ -48,18 +48,18 @@ void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept
 
 void fill_screen(gfx::rgb_t color) noexcept
 {
-    for (uint32_t y = 0; y < framebuffer.height; y++) {
-        for (uint32_t x = 0; x < framebuffer.width; x++)
+    for (u32 y = 0; y < framebuffer.height; y++) {
+        for (u32 x = 0; x < framebuffer.width; x++)
             draw_pixel(x, y, color);
     }
 }
 
-void draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept
+void draw_char(u8 c, s32 x, s32 y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept
 {
-    static constexpr uint8_t mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
-    int32_t cx, cy;
+    static constexpr u8 mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
+    s32 cx, cy;
 
-    uint8_t *glyph = static_cast<uint8_t*>(gfx::font) + int32_t(c) * 16;
+    u8 *glyph = static_cast<u8*>(gfx::font) + s32(c) * 16;
 
     for (cy = 0; cy < FONT_CHAR_HEIGHT; cy++) {
         for (cx = 0; cx < FONT_CHAR_WIDTH; cx++) {

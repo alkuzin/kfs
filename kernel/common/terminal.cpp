@@ -30,7 +30,7 @@ using namespace driver::vesa;
 
 void terminal_t::init(void) noexcept
 {
-	fb 			= get_framebuffer();
+        fb 			= get_framebuffer();
     fg    		= gfx::color::white;
     bg    		= gfx::color::black;
     begin_x_pos	= 0;
@@ -44,17 +44,17 @@ void terminal_t::init(void) noexcept
 /** @brief Scroll screen.*/
 static void scroll(void) noexcept
 {
-	uint32_t size		  = terminal.fb.height * terminal.fb.pitch;
-	uint32_t *framebuffer = terminal.fb.addr;
-	uint32_t pos {0};
+        u32 size         = terminal.fb.height * terminal.fb.pitch;
+        u32 *framebuffer = terminal.fb.addr;
+        u32 pos {0};
 
-    for (uint32_t i = 0; i < size; i++) {
-		pos 		   = i + terminal.fb.width * FONT_CHAR_HEIGHT;
+    for (u32 i = 0; i < size; i++) {
+                pos 		   = i + terminal.fb.width * FONT_CHAR_HEIGHT;
         framebuffer[i] = framebuffer[pos];
-	}
+        }
 
-	pos = size - terminal.fb.width * FONT_CHAR_HEIGHT;
-	kstd::memset(&framebuffer[pos], 0, size - pos);
+        pos = size - terminal.fb.width * FONT_CHAR_HEIGHT;
+        kstd::memset(&framebuffer[pos], 0, size - pos);
 }
 
 void clear(void) noexcept
@@ -66,48 +66,48 @@ void clear(void) noexcept
 
 void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept
 {
-	if(terminal.x_pos >= terminal.begin_x_pos + int32_t(terminal.width)) {
-		terminal.x_pos = terminal.begin_x_pos;
-		terminal.y_pos += FONT_CHAR_HEIGHT;
-	}
+        if(terminal.x_pos >= terminal.begin_x_pos + s32(terminal.width)) {
+                terminal.x_pos = terminal.begin_x_pos;
+                terminal.y_pos += FONT_CHAR_HEIGHT;
+        }
 
-	switch(c) {
-		case '\n':
-			terminal.y_pos += FONT_CHAR_HEIGHT;
-			terminal.x_pos = terminal.begin_x_pos;
-			break;
+        switch(c) {
+                case '\n':
+                        terminal.y_pos += FONT_CHAR_HEIGHT;
+                        terminal.x_pos = terminal.begin_x_pos;
+                        break;
 
-		case '\t':
-			for (int32_t i = 0; i < TAB_WIDTH; i++) {
-            	draw_char(' ', terminal.x_pos, terminal.y_pos,
-				fg, bg, true);
-				terminal.x_pos += FONT_CHAR_WIDTH;
-			}
-			break;
+                case '\t':
+                        for (s32 i = 0; i < TAB_WIDTH; i++) {
+                    draw_char(' ', terminal.x_pos, terminal.y_pos,
+                                fg, bg, true);
+                                terminal.x_pos += FONT_CHAR_WIDTH;
+                        }
+                        break;
 
-		case '\b':
+                case '\b':
             terminal.x_pos -= FONT_CHAR_WIDTH;
 
             if(!terminal.x_pos && terminal.y_pos) {
-			    terminal.y_pos -= FONT_CHAR_HEIGHT;
+                            terminal.y_pos -= FONT_CHAR_HEIGHT;
                 terminal.x_pos = terminal.width;
             }
 
             draw_char(' ', terminal.x_pos, terminal.y_pos, fg, bg, true);
-			break;
+                        break;
 
-		default:
+                default:
             if(kstd::isprint(c)) {
                 draw_char(c, terminal.x_pos, terminal.y_pos,
-				fg, bg, true);
-			    terminal.x_pos += FONT_CHAR_WIDTH;
+                                fg, bg, true);
+                            terminal.x_pos += FONT_CHAR_WIDTH;
             }
-			break;
-	};
+                        break;
+        };
 
-	if (terminal.y_pos >= int32_t(terminal.fb.height)) {
-		int32_t tmp				= (terminal.y_pos - terminal.fb.height);
-        int32_t rows_to_scroll	= tmp / FONT_CHAR_HEIGHT + 1;
+        if (terminal.y_pos >= s32(terminal.fb.height)) {
+                s32 tmp				= (terminal.y_pos - terminal.fb.height);
+        s32 rows_to_scroll	= tmp / FONT_CHAR_HEIGHT + 1;
         scroll();
         terminal.y_pos -= rows_to_scroll * FONT_CHAR_HEIGHT;
     }

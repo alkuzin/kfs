@@ -36,11 +36,11 @@ namespace driver {
 namespace vesa {
 
 struct fb_t {
-    uint32_t *addr;    // framebuffer address
-    uint32_t  pitch;   // number of bytes in a single row of the framebuffer
-    uint32_t  width;   // y-resolution
-    uint32_t  height;  // x-resolution
-    uint8_t   bpp;     // bytes per pixel
+    u32 *addr;    // framebuffer address
+    u32  pitch;   // number of bytes in a single row of the framebuffer
+    u32  width;   // y-resolution
+    u32  height;  // x-resolution
+    u8   bpp;     // bytes per pixel
 };
 
 /**
@@ -64,7 +64,7 @@ fb_t get_framebuffer(void) noexcept;
  * @param [in] y - given pixel y-position.
  * @param [in] color - given pixel RGB color.
  */
-void draw_pixel(uint32_t x, uint32_t y, gfx::rgb_t color) noexcept;
+void draw_pixel(u32 x, u32 y, gfx::rgb_t color) noexcept;
 
 /**
  * @brief Fill screen with specific color.
@@ -83,7 +83,7 @@ void fill_screen(gfx::rgb_t color) noexcept;
  * @param [in] bg - given background color.
  * @param [in] is_bg_on - given param determine whether to display the @a bg.
  */
-void draw_char(uint8_t c, int32_t x, int32_t y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept;
+void draw_char(u8 c, s32 x, s32 y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept;
 
 } // namespace vesa
 } // namespace driver

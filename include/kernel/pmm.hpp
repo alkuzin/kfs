@@ -52,7 +52,7 @@ void init(const multiboot_t& mboot) noexcept;
  * @return allocated page pointer - in case of success.
  * @return nullptr - in case of errors.
  */
-page_t *alloc_pages(gfp_t mask, uint32_t order) noexcept;
+page_t *alloc_pages(gfp_t mask, u32 order) noexcept;
 
 /**
  * @brief Get the zeroed page.
@@ -69,7 +69,7 @@ page_t *get_zeroed_page(gfp_t mask) noexcept;
  * @param [in] addr - given first page address.
  * @param [in] order - given power of two (freeing 2^order pages).
  */
-void free_pages(phys_addr_t addr, uint32_t order) noexcept;
+void free_pages(phys_addr_t addr, u32 order) noexcept;
 
 /**
  * @brief Get the page struct.

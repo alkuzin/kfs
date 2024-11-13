@@ -42,7 +42,7 @@ namespace kstd {
  * @param [in] fmt - given format string.
  * @param [in] args - given variable list of arguments.
  */
-void snprintk(char *buf, size_t size, const char *fmt, ...) noexcept;
+void snprintk(char *buf, usize size, const char *fmt, ...) noexcept;
 
 /**
  * @brief Formats and prints data to buffer.
@@ -52,7 +52,7 @@ void snprintk(char *buf, size_t size, const char *fmt, ...) noexcept;
  * @param [in] fmt - given format string.
  * @param [in] args - given variable list of arguments.
  */
-void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept;
+void vsnprintk(char *buf, usize size, const char *fmt, va_list args) noexcept;
 
 /**
  * @brief Print character to screen.
@@ -61,7 +61,7 @@ void vsnprintk(char *buf, size_t size, const char *fmt, va_list args) noexcept;
  */
 inline void putchar(char c) noexcept
 {
-	tty::putc(c, tty::terminal.fg, tty::terminal.bg);
+    tty::putc(c, tty::terminal.fg, tty::terminal.bg);
 }
 
 /**
@@ -73,7 +73,7 @@ inline void putchar(char c) noexcept
  */
 inline void putk(const char *str, gfx::rgb_t fg = tty::terminal.fg, gfx::rgb_t bg = tty::terminal.bg) noexcept
 {
-    uint32_t i = 0;
+    u32 i = 0;
 
     while (str[i]) {
         tty::putc(str[i], fg, bg);

@@ -35,22 +35,22 @@
 namespace kernel {
 namespace shell {
 
-inline const uint8_t BUILTINS_COUNT {14};
+inline const u8 BUILTINS_COUNT {14};
 
-static void help(int32_t argc, char **argv) noexcept;
-static void clear(int32_t argc, char **argv) noexcept;
-static void uname(int32_t argc, char **argv) noexcept;
-static void date(int32_t argc, char **argv) noexcept;
-static void lscpu(int32_t argc, char **argv) noexcept;
-static void lsmem(int32_t argc, char **argv) noexcept;
-static void gdt(int32_t argc, char **argv) noexcept;
-static void ticks(int32_t argc, char **argv) noexcept;
-static void reboot(int32_t argc, char **argv) noexcept;
-static void shutdown(int32_t argc, char **argv) noexcept;
-static void tui(int32_t argc, char **argv) noexcept;
-static void interrupt(int32_t argc, char **argv) noexcept;
-static void uptime(int32_t argc, char **argv) noexcept;
-static void dump(int32_t argc, char **argv) noexcept;
+static void help(s32 argc, char **argv) noexcept;
+static void clear(s32 argc, char **argv) noexcept;
+static void uname(s32 argc, char **argv) noexcept;
+static void date(s32 argc, char **argv) noexcept;
+static void lscpu(s32 argc, char **argv) noexcept;
+static void lsmem(s32 argc, char **argv) noexcept;
+static void gdt(s32 argc, char **argv) noexcept;
+static void ticks(s32 argc, char **argv) noexcept;
+static void reboot(s32 argc, char **argv) noexcept;
+static void shutdown(s32 argc, char **argv) noexcept;
+static void tui(s32 argc, char **argv) noexcept;
+static void interrupt(s32 argc, char **argv) noexcept;
+static void uptime(s32 argc, char **argv) noexcept;
+static void dump(s32 argc, char **argv) noexcept;
 
 static builtin_t builtins[BUILTINS_COUNT] {
     {"help",  "show list of available commands", nullptr, 0, help},
@@ -72,12 +72,12 @@ static builtin_t builtins[BUILTINS_COUNT] {
 void exec(const char *cmd) noexcept
 {
     const char *target {nullptr};
-    int32_t len  {0};
+    s32 len  {0};
 
     char **argv  {nullptr};
-    int32_t argc {0};
+    s32 argc {0};
 
-    for (int32_t i = 0; i < BUILTINS_COUNT; i++) {
+    for (s32 i = 0; i < BUILTINS_COUNT; i++) {
         target = builtins[i].name;
         len    = kstd::strlen(target);
 
@@ -93,14 +93,14 @@ void exec(const char *cmd) noexcept
     printk("sh: %s: command not found \n", cmd);
 }
 
-const char *get_suitable_cmd(const char *str, int32_t len) noexcept
+const char *get_suitable_cmd(const char *str, s32 len) noexcept
 {
     // warning: for large number of shell commands it is better to use
     // algorithm based on the search tree (with search complexity O(log N))
     // in order to get suitable command instead of this
     // (with search complexity O(N))
 
-    for (int32_t i = 0; i < BUILTINS_COUNT; i++) {
+    for (s32 i = 0; i < BUILTINS_COUNT; i++) {
         // TODO: handle few similar commands
         if (kstd::strncmp(builtins[i].name, str, len) == 0)
             return builtins[i].name;
@@ -111,20 +111,20 @@ const char *get_suitable_cmd(const char *str, int32_t len) noexcept
 
 // Builtins -------------------------------------------------------------------
 
-static void help(int32_t argc, char **argv) noexcept
+static void help(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
     builtin_t *cmd {nullptr};
-    int32_t    len {0};
+    s32    len {0};
 
-    for (uint8_t i = 0; i < BUILTINS_COUNT; i++) {
+    for (u8 i = 0; i < BUILTINS_COUNT; i++) {
         cmd = &builtins[i];
         len = kstd::strlen(cmd->name);
 
         kstd::putk(builtins[i].name);
 
-        for (int32_t j = 0; j < 16 - len; j++)
+        for (s32 j = 0; j < 16 - len; j++)
             kstd::putchar(' ');
 
         kstd::putk(builtins[i].descr);
@@ -132,20 +132,20 @@ static void help(int32_t argc, char **argv) noexcept
     }
 }
 
-static void clear(int32_t argc, char **argv) noexcept
+static void clear(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
     tty::clear();
 }
 
-static void uname(int32_t argc, char **argv) noexcept
+static void uname(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
     // display general kernel info
-    uint32_t mode = arch::x86::mode();
-    uint32_t ring = arch::x86::ring();
+    u32 mode = arch::x86::mode();
+    u32 ring = arch::x86::ring();
 
     printk(
         "kernel name:      |  %s\n"
@@ -173,14 +173,14 @@ static void uname(int32_t argc, char **argv) noexcept
     );
 }
 
-static void date(int32_t argc, char **argv) noexcept
+static void date(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
     printk("%s\n", ktime::get_date());
 }
 
-static void lscpu(int32_t argc, char **argv) noexcept
+static void lscpu(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
@@ -199,14 +199,14 @@ static void lscpu(int32_t argc, char **argv) noexcept
     printk("CPU model:      %u\n", details.model);
 }
 
-static void lsmem(int32_t argc, char **argv) noexcept
+static void lsmem(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
     core::memory::display_memory();
 }
 
-static void gdt(int32_t argc, char **argv) noexcept
+static void gdt(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
@@ -234,13 +234,13 @@ static void gdt(int32_t argc, char **argv) noexcept
     #pragma GCC diagnostic pop
 }
 
-static void ticks(int32_t argc, char **argv) noexcept
+static void ticks(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
     printk("PIT ticks: %u\n", driver::pit::get_ticks());
 }
 
-static void reboot(int32_t argc, char **argv) noexcept
+static void reboot(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
@@ -249,7 +249,7 @@ static void reboot(int32_t argc, char **argv) noexcept
     arch::x86::halt();              // halt CPU
 }
 
-static void shutdown(int32_t argc, char **argv) noexcept
+static void shutdown(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
@@ -260,9 +260,9 @@ static void shutdown(int32_t argc, char **argv) noexcept
 // Rotating 3D cube demo ----------------------------------------------------
 
 struct vertice_t {
-    float32_t x;
-    float32_t y;
-    float32_t z;
+    f32 x;
+    f32 y;
+    f32 z;
 };
 
 inline const vertice_t cube_vertices[8] {
@@ -276,14 +276,14 @@ inline const vertice_t cube_vertices[8] {
     {-1.0f,  1.0f,  1.0f}
 };
 
-inline const int32_t cube_edges[12][2] {
+inline const s32 cube_edges[12][2] {
     {0, 1}, {1, 2}, {2, 3}, {3, 0},
     {4, 5}, {5, 6}, {6, 7}, {7, 4},
     {0, 4}, {1, 5}, {2, 6}, {3, 7}
 };
 
 // shift from upper-left corner of the screen
-inline const int32_t SCREEN_SHIFT {300};
+inline const s32 SCREEN_SHIFT {300};
 
 /**
  * @brief Project 3D points to 2D.
@@ -292,7 +292,7 @@ inline const int32_t SCREEN_SHIFT {300};
  * @param [out] point - given point that holds projected x & y positions.
  * @param [in] angle - given rotation angle.
  */
-static void project(const vertice_t& vert, gfx::point_t& point, float32_t angle) noexcept
+static void project(const vertice_t& vert, gfx::point_t& point, f32 angle) noexcept
 {
     f32 scale     = 200.0f; // scale factor for projection
     f32 z_offset  = 3.0f;   // distance from the viewer
@@ -307,8 +307,8 @@ static void project(const vertice_t& vert, gfx::point_t& point, float32_t angle)
     auto center_x = scale * rotated_x / (rotated_z + z_offset);
     auto center_y = scale * vert.y / (rotated_z + z_offset);
 
-    point.x = static_cast<int32_t>(center_x) + 160;
-    point.y = static_cast<int32_t>(center_y) + 120;
+    point.x = static_cast<s32>(center_x) + 160;
+    point.y = static_cast<s32>(center_y) + 120;
 }
 
 /**
@@ -316,10 +316,10 @@ static void project(const vertice_t& vert, gfx::point_t& point, float32_t angle)
  *
  * @param [in] angle - given cube rotation angle.
  */
-static void draw_cube(float32_t angle, gfx::rgb_t color) noexcept
+static void draw_cube(f32 angle, gfx::rgb_t color) noexcept
 {
     gfx::point_t p1, p2;
-    int32_t      v1, v2;
+    s32      v1, v2;
 
     for (int i = 0; i < 12; i++) {
         v1 = cube_edges[i][0];
@@ -342,9 +342,9 @@ static void draw_cube(float32_t angle, gfx::rgb_t color) noexcept
  */
 static gfx::rgb_t get_next_color(gfx::rgb_t color) noexcept
 {
-    uint8_t r = (color >> 16) & 0xFF;
-    uint8_t g = (color >> 8) & 0xFF;
-    uint8_t b = color & 0xFF;
+    u8 r = (color >> 16) & 0xFF;
+    u8 g = (color >> 8) & 0xFF;
+    u8 b = color & 0xFF;
 
     if (r == 255 && g < 255 && b == 0)
         g+=3;
@@ -370,7 +370,7 @@ static gfx::rgb_t get_next_color(gfx::rgb_t color) noexcept
  * @param [in] angle - given cube rotation angle.
  * @param [in] color - given cube color.
  */
-static void interation(float32_t angle, gfx::rgb_t *color) noexcept
+static void interation(f32 angle, gfx::rgb_t *color) noexcept
 {
     using namespace driver;
     gfx::rgb_t new_color;
@@ -380,11 +380,11 @@ static void interation(float32_t angle, gfx::rgb_t *color) noexcept
     tty::terminal.y_pos = tty::terminal.begin_y_pos;
 
     // clearing the screen
-    auto shift  = static_cast<uint32_t>(SCREEN_SHIFT);
+    auto shift  = static_cast<u32>(SCREEN_SHIFT);
     auto bg_col = tty::terminal.bg;
 
-    for (uint32_t y = 0; y < shift; y++) {
-        for (uint32_t x = 0; x < shift; x++)
+    for (u32 y = 0; y < shift; y++) {
+        for (u32 x = 0; x < shift; x++)
             vesa::draw_pixel(x + SCREEN_SHIFT, y + SCREEN_SHIFT - 50, bg_col);
     }
 
@@ -398,8 +398,8 @@ static void interation(float32_t angle, gfx::rgb_t *color) noexcept
 static void round_cube(void) noexcept
 {
     using namespace driver;
-    float32_t angle           = 0.0f;
-    float32_t angle_increment = 0.05f; // Increment angle for rotation
+    f32 angle           = 0.0f;
+    f32 angle_increment = 0.05f; // Increment angle for rotation
 
     gfx::rgb_t color = 0xFF0000; // red color
     keyboard::KEY key;
@@ -414,7 +414,7 @@ static void round_cube(void) noexcept
 
             // at some point the drawing of the cube becomes incorrect
             // so that code preventing this case
-            if (static_cast<int32_t>(angle) <= 0)
+            if (static_cast<s32>(angle) <= 0)
                 angle = 32;
 
             interation(angle, &color);
@@ -426,7 +426,7 @@ static void round_cube(void) noexcept
 
             // at some point the drawing of the cube becomes incorrect
             // so that code preventing this case
-            if (static_cast<int32_t>(angle) >= 32)
+            if (static_cast<s32>(angle) >= 32)
                 angle = 0;
 
             interation(angle, &color);
@@ -443,7 +443,7 @@ static void round_cube(void) noexcept
 
 // --------------------------------------------------------------------------
 
-static void tui(int32_t argc, char **argv) noexcept
+static void tui(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
@@ -484,13 +484,13 @@ static void tui(int32_t argc, char **argv) noexcept
     window.show();
 }
 
-static void interrupt(int32_t argc, char **argv) noexcept
+static void interrupt(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
     __asm__ volatile ("int $0");
 }
 
-static void uptime(int32_t argc, char **argv) noexcept
+static void uptime(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
     ktime_t boot_time = ktime::get_boot_time();
@@ -510,7 +510,7 @@ static void uptime(int32_t argc, char **argv) noexcept
     printk("%u milliseconds\n", diff_time % 1000);
 }
 
-static void dump(int32_t argc, char **argv) noexcept
+static void dump(s32 argc, char **argv) noexcept
 {
     if (argc == 1 || argc > 3) {
         printk("dump: %s\n", "incorrect number of arguments");
@@ -525,7 +525,7 @@ static void dump(int32_t argc, char **argv) noexcept
     }
     else if (argc == 3) {
         phys_addr_t addr = kstd::stoh(argv[1]);
-        uint32_t lines   = kstd::stou<uint32_t>(argv[2]);
+        u32 lines   = kstd::stou<u32>(argv[2]);
         debug::kdump(addr, lines);
     }
 }

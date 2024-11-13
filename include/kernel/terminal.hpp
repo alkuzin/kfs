@@ -33,18 +33,18 @@
 namespace kernel {
 namespace tty {
 
-inline const int32_t TAB_WIDTH {4};
+inline const s32 TAB_WIDTH {4};
 
 struct terminal_t {
-	driver::vesa::fb_t fb;      // VESA framebuffer
+    driver::vesa::fb_t fb;      // VESA framebuffer
     gfx::rgb_t  fg;             // foreground color
     gfx::rgb_t  bg;             // background color
-    int32_t     begin_x_pos;    // x-position of the cursor
-    int32_t     begin_y_pos;    // y-position of the cursor
-    int32_t     x_pos;          // x-position of the cursor
-    int32_t     y_pos;          // y-position of the cursor
-    int32_t     width;          // output width
-    int32_t     height;         // output height
+    s32     begin_x_pos;    // x-position of the cursor
+    s32     begin_y_pos;    // y-position of the cursor
+    s32     x_pos;          // x-position of the cursor
+    s32     y_pos;          // y-position of the cursor
+    s32     width;          // output width
+    s32     height;         // output height
 
     /** @brief Initialize terminal.*/
     void init(void) noexcept;

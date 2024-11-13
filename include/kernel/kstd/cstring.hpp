@@ -45,7 +45,7 @@ namespace kstd {
  * @param [in] n - given number of buffer bytes to fill.
  * @return filled buffer pointer.
  */
-void *memset(void *s, int32_t c, size_t n) noexcept;
+void *memset(void *s, s32 c, usize n) noexcept;
 
 /**
  * @brief Copies n bytes from memory area src to memory area dest.
@@ -55,7 +55,7 @@ void *memset(void *s, int32_t c, size_t n) noexcept;
  * @param [in] n - given number of bytes to copy.
  * @return destination buffer pointer.
  */
-void *memcpy(void *dest, const void *src, size_t n) noexcept;
+void *memcpy(void *dest, const void *src, usize n) noexcept;
 
 /**
  * @brief Compares the two strings s1 and s2.
@@ -67,7 +67,7 @@ void *memcpy(void *dest, const void *src, size_t n) noexcept;
  * @return a negative value if s1 is less than s2;
  * @return a positive value if s1 is greater than s2.
  */
-int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept;
+s32 strncmp(const char *s1, const char *s2, usize n) noexcept;
 
 /**
  * @brief Copy a string with truncation.
@@ -77,7 +77,7 @@ int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept;
  * @param [in] size - given size to copy.
  * @return number of copied string characters.
  */
-size_t strncpy(char *dest, const char *src, size_t size) noexcept;
+usize strncpy(char *dest, const char *src, usize size) noexcept;
 
 /**
  * @brief Get string length.
@@ -85,7 +85,7 @@ size_t strncpy(char *dest, const char *src, size_t size) noexcept;
  * @param [in] str - given null terminated string.
  * @return str length.
  */
-int32_t strlen(const char *str) noexcept;
+s32 strlen(const char *str) noexcept;
 
 /**
  * @brief Get string duplicate.

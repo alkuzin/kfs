@@ -30,8 +30,8 @@ namespace arch {
 namespace x86 {
 namespace idt {
 
-inline const int32_t IDT_SIZE       {256};
-inline const uint8_t INTERRUPT_GATE {0x8E};
+inline const s32 IDT_SIZE       {256};
+inline const u8  INTERRUPT_GATE {0x8E};
 
 entry_t IDT[IDT_SIZE];
 ptr_t   idt_ptr;
@@ -44,7 +44,7 @@ ptr_t   idt_ptr;
  * @param [in] selector - given point to a valid code segment in GDT.
  * @param [in] flags - given gate type & other control bits.
  */
-void set_gate(uint8_t num, uint32_t offset, uint16_t selector, uint8_t flags) noexcept
+void set_gate(u8 num, u32 offset, u16 selector, u8 flags) noexcept
 {
     IDT[num].offset_low  = (offset & 0xFFFF);
     IDT[num].selector    = selector;
@@ -59,7 +59,7 @@ void set_gate(uint8_t num, uint32_t offset, uint16_t selector, uint8_t flags) no
  * @param [in] num - given IDT number.
  * @param [in] offset - given entry point of the interrupt function.
  */
-inline void set_int_function(uint8_t num, uint32_t offset) noexcept
+inline void set_int_function(u8 num, u32 offset) noexcept
 {
     set_gate(num, offset, gdt::KERNEL_CODE_SEGMENT, INTERRUPT_GATE);
 }

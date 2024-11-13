@@ -45,7 +45,7 @@ inline void halt(void) noexcept
  *
  * @return current privilege level.
  */
-inline uint8_t ring(void) noexcept
+inline u8 ring(void) noexcept
 {
     return get_register(REG::CS) & 0x3;
 }
@@ -55,9 +55,9 @@ inline uint8_t ring(void) noexcept
  *
  * @return mode in bits.
  */
-inline uint32_t mode(void) noexcept
+inline u32 mode(void) noexcept
 {
-    uint16_t cs = static_cast<uint16_t>(get_register(REG::CS));
+    u16 cs = static_cast<u16>(get_register(REG::CS));
 
     if (cs & 0x0000FFFF)
         return 32;

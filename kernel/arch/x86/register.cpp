@@ -24,9 +24,9 @@ namespace arch {
 namespace x86 {
 
 // TODO: add debug function that prints all registers
-uint32_t get_register(REG reg) noexcept
+u32 get_register(REG reg) noexcept
 {
-    uint32_t value = 0;
+    u32 value = 0;
 
     switch (reg) {
     case REG::ESP:
@@ -96,7 +96,7 @@ uint32_t get_register(REG reg) noexcept
     return value;
 }
 
-void set_register(REG reg, uint32_t value) noexcept
+void set_register(REG reg, u32 value) noexcept
 {
     switch (reg) {
     case REG::ESP:

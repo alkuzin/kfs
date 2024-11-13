@@ -31,7 +31,7 @@ namespace debug {
  * @param [in] ch - given byte to convert.
  * @return character to print.
  */
-static inline char to_print(uint8_t ch)
+static inline char to_print(u8 ch)
 {
     return (ch > 31 && ch < 127)? ch : '.';
 }
@@ -42,21 +42,21 @@ inline const auto PTR_COLOR         {gfx::color::green};
 inline const auto BG_COLOR          {tty::terminal.bg};
 
 
-void kdump(phys_addr_t addr, size_t size) noexcept
+void kdump(phys_addr_t addr, usize size) noexcept
 {
     char    line[BYTES_PER_LINE + 1];
-    uint8_t bytes[BYTES_PER_LINE];
+    u8 bytes[BYTES_PER_LINE];
 
-    uint8_t *stack_ptr = reinterpret_cast<uint8_t*>(addr);
-    uint8_t byte       = 0;
-    size_t  byte_pos   = 0;
-    size_t  rows       = 0;
+    u8 *stack_ptr = reinterpret_cast<u8*>(addr);
+    u8 byte       = 0;
+    usize  byte_pos   = 0;
+    usize  rows       = 0;
 
-    for (size_t k = 0; k < (size / BYTES_PER_LINE) + 1; k++) {
+    for (usize k = 0; k < (size / BYTES_PER_LINE) + 1; k++) {
         kstd::memset(line, ' ', BYTES_PER_LINE);
         kstd::memset(bytes, ' ', BYTES_PER_LINE);
 
-        for (size_t i = 0; i < BYTES_PER_LINE; i++) {
+        for (usize i = 0; i < BYTES_PER_LINE; i++) {
             byte     = stack_ptr[byte_pos];
             line[i]  = to_print(byte);
             bytes[i] = byte;
@@ -69,7 +69,7 @@ void kdump(phys_addr_t addr, size_t size) noexcept
         printk("%s", ">  ");
 
         // print first half of 8 bytes in hexadecimal format
-        for (size_t i = 0; i < BYTES_PER_LINE >> 1; i++) {
+        for (usize i = 0; i < BYTES_PER_LINE >> 1; i++) {
             if (bytes[i] == 0x00)
                 cprintk(FG_COLOR, BG_COLOR, "%02x ", bytes[i]);
             else
@@ -79,7 +79,7 @@ void kdump(phys_addr_t addr, size_t size) noexcept
         kstd::putchar(' ');
 
         // print second half of 8 bytes in hexadecimal format
-        for (size_t i = BYTES_PER_LINE >> 1; i < BYTES_PER_LINE; i++) {
+        for (usize i = BYTES_PER_LINE >> 1; i < BYTES_PER_LINE; i++) {
             if (bytes[i] == 0x00)
                 cprintk(FG_COLOR, BG_COLOR, "%02x ", bytes[i]);
             else

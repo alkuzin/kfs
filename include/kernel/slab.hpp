@@ -34,7 +34,7 @@
 namespace kernel {
 namespace kmem {
 
-inline const uint32_t CACHE_NAMELEN {16};
+inline const u32 CACHE_NAMELEN {16};
 
 struct slab_t
 {
@@ -42,7 +42,7 @@ struct slab_t
     slab_t   *prev;    // previous slab
     void     *s_mem;   // starting address of the first object
     void     *free;    // starting address of the first free object
-    uint32_t  inuse;   // number of active objects in the slab
+    u32  inuse;   // number of active objects in the slab
     bool      is_free; // checks if this slab is not used by cache
 };
 
@@ -50,17 +50,17 @@ struct slab_list_t
 {
     slab_t *next_free; // starting address of the next free slab
     slab_t *head;      // list head pointer
-    size_t  size;      // number of elements
+    usize  size;      // number of elements
 };
 
 struct cache_t
 {
     slab_list_t list;                // list of partial and full slabs
     slab_list_t freelist;            // list of free slabs
-    uint32_t    gfporder;            // size of slab in pages (2^gfporder)
-    uint32_t    objsize;             // object size
-    uint32_t    objnum;              // number of objects in each slab
-    uint8_t     flags;               // cache flags
+    u32    gfporder;            // size of slab in pages (2^gfporder)
+    u32    objsize;             // object size
+    u32    objnum;              // number of objects in each slab
+    u8     flags;               // cache flags
     char        name[CACHE_NAMELEN]; // cache name
 
 private:
@@ -75,7 +75,7 @@ public:
      * @param [in] size - given size of cache objects.
      * @param [in] flags - given allocation flags.
      */
-    void create(const char *name, size_t size, uint8_t flags) noexcept;
+    void create(const char *name, usize size, u8 flags) noexcept;
 
     /**
      * @brief Allocate a single object from the cache.
@@ -83,7 +83,7 @@ public:
      * @param [in] flags - given allocation flags.
      * @return allocated object pointer.
      */
-    void *alloc(uint8_t flags) noexcept;
+    void *alloc(u8 flags) noexcept;
 
     /**
      * @brief Free a single slab.
@@ -113,7 +113,7 @@ void init(void) noexcept;
  * @return pointer to the allocated memory in case of success.
  * @return nullptr in case of failure.
  */
-void *kmalloc(size_t size, gfp_t flags) noexcept;
+void *kmalloc(usize size, gfp_t flags) noexcept;
 
 /**
  * @brief Free pointer allocated by kmalloc().
@@ -128,7 +128,7 @@ void kfree(const void *objp) noexcept;
  * @param [in] objp - given object pointer.
  * @return size in bytes.
  */
-size_t ksize(const void *objp) noexcept;
+usize ksize(const void *objp) noexcept;
 
 } // namespace kernel
 

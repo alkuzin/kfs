@@ -40,9 +40,9 @@ namespace x86 {
  * @param [in] port - given port from which the data will be read.
  * @return the byte of data read from the port.
  */
-inline uint8_t inb(uint16_t port) noexcept
+inline u8 inb(u16 port) noexcept
 {
-    uint8_t rv = 0;
+    u8 rv = 0;
     __asm__ volatile("inb %1, %0" : "=a" (rv) : "dN" (port));
     return rv;
 }
@@ -53,7 +53,7 @@ inline uint8_t inb(uint16_t port) noexcept
  * @param [in] port -given port to which the data will be written.
  * @param [in] data - given data byte to be written to the port.
  */
-inline void outb(uint16_t port, uint8_t data) noexcept
+inline void outb(u16 port, u8 data) noexcept
 {
     __asm__ volatile("outb %1, %0" : : "dN" (port), "a" (data));
 }
@@ -64,7 +64,7 @@ inline void outb(uint16_t port, uint8_t data) noexcept
  * @param [in] port -given port to which the data will be written.
  * @param [in] data - given data byte to be written to the port.
  */
-inline void outw(uint16_t port, uint16_t data) noexcept
+inline void outw(u16 port, u16 data) noexcept
 {
     __asm__ volatile("outw %0, %1" : : "a"(data), "Nd"(port));
 }

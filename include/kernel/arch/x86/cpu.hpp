@@ -50,30 +50,30 @@ inline const char *byte_order {"Little Endian"};
 #endif
 
 struct info_t {
-    uint32_t eax;
-    uint32_t ebx;
-    uint32_t ecx;
-    uint32_t edx;
+    u32 eax;
+    u32 ebx;
+    u32 ecx;
+    u32 edx;
 };
 
-enum class TYPE : uint8_t {
+enum class TYPE : u8 {
     OEM  = 0x0,  // Original Equipment Manufacturer processor
     IOP  = 0x1,  // Intel Overdrive Processor
     DUAL = 0x2,  // dual processor (Intel P5 Pentium processors only)
     RESV = 0x3   // reserved value
 };
 
-inline const uint8_t VENDOR_ID_SIZE {13};
-inline const uint8_t BRAND_SIZE     {49};
+inline const u8 VENDOR_ID_SIZE {13};
+inline const u8 BRAND_SIZE     {49};
 
 struct details_t {
     char     vendor[VENDOR_ID_SIZE];
     char     brand[BRAND_SIZE];
-    uint32_t high_param;        // highest function parameter (max leaf number)
-    uint8_t  stepping;          // product revision number
-    uint8_t  model;             // process model
-    uint8_t  family;            // process family
-    uint8_t  type;              // process type
+    u32 high_param;        // highest function parameter (max leaf number)
+    u8  stepping;          // product revision number
+    u8  model;             // process model
+    u8  family;            // process family
+    u8  type;              // process type
 };
 
 /**
@@ -82,7 +82,7 @@ struct details_t {
  * @param [in] leaf - given category of CPU information to gather.
  * @param [out] info - given CPU registers struct.
  */
-inline void cpuid(uint32_t leaf, info_t& info) noexcept
+inline void cpuid(u32 leaf, info_t& info) noexcept
 {
     __asm__ __volatile__ (
         "cpuid"

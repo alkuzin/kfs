@@ -30,14 +30,14 @@ namespace memory {
 struct phys_mman_t
 {
     const multiboot_info_t  *mboot;
-    kstd::bitmap_t<uint32_t> bitmap;  // physical memory map
+    kstd::bitmap_t<u32> bitmap;  // physical memory map
     page_t *mem_map;
-    size_t mem_map_size;
-    size_t mem_total;                 // total physical memory
-    size_t mem_available;             // total available memory
-    size_t max_pages;                 // total number of pages
-    size_t used_pages;
-    size_t free_pages;
+    usize mem_map_size;
+    usize mem_total;                 // total physical memory
+    usize mem_available;             // total available memory
+    usize max_pages;                 // total number of pages
+    usize used_pages;
+    usize free_pages;
 };
 
 static phys_mman_t pmm {};
@@ -46,7 +46,7 @@ static phys_mman_t pmm {};
 static void detect_memory(void) noexcept
 {
     multiboot_entry_t *mmmt;
-    size_t i = 0;
+    usize i = 0;
 
     while (i < pmm.mboot->mmap_length) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(pmm.mboot->mmap_addr + i);
@@ -65,10 +65,10 @@ static void detect_memory(void) noexcept
  * @param [in] addr - given base address of the region.
  * @param [in] size - given size of the region in bytes.
  */
-static void mark_as_free(phys_addr_t addr, size_t size) noexcept
+static void mark_as_free(phys_addr_t addr, usize size) noexcept
 {
-    size_t pos = PHYS_PFN(addr);
-    size_t n   = size >> PAGE_SHIFT;
+    usize pos = PHYS_PFN(addr);
+    usize n   = size >> PAGE_SHIFT;
 
     while (n > 0) {
         pmm.bitmap.unset(pos);
@@ -84,10 +84,10 @@ static void mark_as_free(phys_addr_t addr, size_t size) noexcept
  * @param [in] addr - given base address of the region.
  * @param [in] size - given size of the region in bytes.
  */
-static void mark_as_used(phys_addr_t addr, size_t size) noexcept
+static void mark_as_used(phys_addr_t addr, usize size) noexcept
 {
-    size_t pos = PHYS_PFN(addr);
-    size_t n   = size >> PAGE_SHIFT;
+    usize pos = PHYS_PFN(addr);
+    usize n   = size >> PAGE_SHIFT;
 
     while (n > 0) {
         pmm.bitmap.set(pos);
@@ -102,7 +102,7 @@ static void mark_as_used(phys_addr_t addr, size_t size) noexcept
 static void free_available_memory(void) noexcept
 {
     multiboot_entry_t *mmmt;
-    size_t i = 0;
+    usize i = 0;
 
     while (i < pmm.mboot->mmap_length) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(pmm.mboot->mmap_addr + i);
@@ -119,7 +119,7 @@ static void free_available_memory(void) noexcept
  *
  * @param [in] n - given page number.
  */
-static inline void reserve_page(size_t n) noexcept
+static inline void reserve_page(usize n) noexcept
 {
     pmm.bitmap.set(n);
     pmm.mem_map[n].pfn = PG::RESERVED;
@@ -153,7 +153,7 @@ void init(const multiboot_t& mboot) noexcept
     kstd::memset(pmm.mem_map, 0, pmm.mem_map_size);
 
     // setting page frame numbers
-    for (size_t i = 0; i < pmm.max_pages; i++) {
+    for (usize i = 0; i < pmm.max_pages; i++) {
         pmm.mem_map[i].cache = nullptr;
         pmm.mem_map[i].slab  = nullptr;
         pmm.mem_map[i].flags = 0;
@@ -192,20 +192,20 @@ void init(const multiboot_t& mboot) noexcept
  * @return page position in bitmap - in case of success.
  * @return 0 - in case of error.
  */
-static size_t get_free_pages(gfp_t mask, uint32_t order) noexcept
+static usize get_free_pages(gfp_t mask, u32 order) noexcept
 {
-    size_t pos, k;
+    usize pos, k;
 
     if (!(mask & GFP::KERNEL))
         return 0;
 
-    uint32_t n = 1 << order; // find 2^order free pages
+    u32 n = 1 << order; // find 2^order free pages
 
-    for (size_t i = 0; i < pmm.bitmap.capacity(); i++) {
+    for (usize i = 0; i < pmm.bitmap.capacity(); i++) {
         // skip groups of used pages
         if (pmm.bitmap.data[i] != 0xFFFFFFFF) {
             // handle each group
-            for (size_t j = 0; j < pmm.bitmap.bits_per_element(); j++) {
+            for (usize j = 0; j < pmm.bitmap.bits_per_element(); j++) {
                 pos = 32 * i + j;
 
                 // skip until free page
@@ -233,15 +233,15 @@ static size_t get_free_pages(gfp_t mask, uint32_t order) noexcept
     return 0;
 }
 
-page_t *alloc_pages(gfp_t mask, uint32_t order) noexcept
+page_t *alloc_pages(gfp_t mask, u32 order) noexcept
 {
-    uint32_t n = 1 << order; // allocate 2^order pages
+    u32 n = 1 << order; // allocate 2^order pages
 
     // not enough of free blocks
     if((pmm.max_pages - pmm.used_pages) <= n)
         return nullptr;
 
-    size_t start_pos = get_free_pages(mask, order);
+    usize start_pos = get_free_pages(mask, order);
 
     if (!start_pos)
         return nullptr;
@@ -253,7 +253,7 @@ page_t *alloc_pages(gfp_t mask, uint32_t order) noexcept
     }
 
     // set n pages as used
-    for (size_t i = 0; i < n; i++)
+    for (usize i = 0; i < n; i++)
         pmm.bitmap.set(start_pos + i);
 
     pmm.used_pages += n;
@@ -267,18 +267,18 @@ page_t *get_zeroed_page(gfp_t mask) noexcept
     return page;
 }
 
-void free_pages(phys_addr_t addr, uint32_t order) noexcept
+void free_pages(phys_addr_t addr, u32 order) noexcept
 {
-    size_t pos = PFN_PHYS(addr);
+    usize pos = PFN_PHYS(addr);
 
     // handle freeing first page
     if (!pos)
         panic("%s\n", "it is forbidden to free the first page");
 
-    uint32_t n = 1 << order; // free 2^order pages
+    u32 n = 1 << order; // free 2^order pages
 
     // set n pages as free
-    for (size_t i = 0; i < n; i++)
+    for (usize i = 0; i < n; i++)
         pmm.bitmap.unset(pos + i);
 
     pmm.used_pages -= n;
@@ -286,7 +286,7 @@ void free_pages(phys_addr_t addr, uint32_t order) noexcept
 
 page_t *get_page(phys_addr_t addr) noexcept
 {
-    size_t pfn = PHYS_PFN(addr);
+    usize pfn = PHYS_PFN(addr);
     return &pmm.mem_map[pfn];
 }
 
@@ -304,7 +304,7 @@ static const char *mem_types[5] = {
  * @param [in] type - given memory area type.
  * @return memory area type string representation.
  */
-static inline const char *get_mem_type(int32_t type) noexcept
+static inline const char *get_mem_type(s32 type) noexcept
 {
     if (type < 0 || type >= 5)
         return "undefined";
@@ -315,7 +315,7 @@ static inline const char *get_mem_type(int32_t type) noexcept
 void display_memory(void) noexcept
 {
     multiboot_entry_t *mmmt {nullptr};
-    size_t i = 0;
+    usize i = 0;
 
     while (i < pmm.mboot->mmap_length) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(pmm.mboot->mmap_addr + i);

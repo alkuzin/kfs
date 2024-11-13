@@ -33,7 +33,7 @@
 namespace kernel {
 namespace gfx {
 
-using rgb_t = uint32_t;
+using rgb_t = u32;
 
 namespace color {
 

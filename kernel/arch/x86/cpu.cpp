@@ -39,9 +39,9 @@ static void handle_leaf0(details_t& details) noexcept
     cpuid(0, cpu_info);
 
     // set vendor ID
-    *(reinterpret_cast<uint32_t*>(&details.vendor[0])) = cpu_info.ebx;
-    *(reinterpret_cast<uint32_t*>(&details.vendor[4])) = cpu_info.edx;
-    *(reinterpret_cast<uint32_t*>(&details.vendor[8])) = cpu_info.ecx;
+    *(reinterpret_cast<u32*>(&details.vendor[0])) = cpu_info.ebx;
+    *(reinterpret_cast<u32*>(&details.vendor[4])) = cpu_info.edx;
+    *(reinterpret_cast<u32*>(&details.vendor[8])) = cpu_info.ecx;
 
     details.high_param = cpu_info.eax;
 }

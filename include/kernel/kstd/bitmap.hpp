@@ -38,8 +38,8 @@ template <typename T>
 struct bitmap_t
 {
     T*     data;  // bitmap data pointer
-    size_t size;  // size of data in bytes
-    size_t bits;  // total number of bits in data
+    usize size;  // size of data in bytes
+    usize bits;  // total number of bits in data
 
     /**
      * @brief Initialize bitmap.
@@ -47,7 +47,7 @@ struct bitmap_t
      * @param [in] ptr - given data pointer to set.
      * @param [in] n - given size of data.
      */
-    inline void init(T *data = nullptr, size_t size = 0) noexcept;
+    inline void init(T *data = nullptr, usize size = 0) noexcept;
 
     /**
      * @brief Get bit value.
@@ -56,7 +56,7 @@ struct bitmap_t
      * @return true if bit = 1.
      * @return false if bit = 0.
      */
-    inline bool get(size_t pos) const noexcept;
+    inline bool get(usize pos) const noexcept;
 
     /**
      * @brief Set specific bit.
@@ -64,7 +64,7 @@ struct bitmap_t
      * @param [in] pos - given position of bit.
      * @param [in] value - given bit value to set.
      */
-    inline void set(size_t pos) noexcept;
+    inline void set(usize pos) noexcept;
 
     /**
      * @brief Unset specific bit.
@@ -72,25 +72,25 @@ struct bitmap_t
      * @param [in] pos - given position of bit.
      * @param [in] value - given bit value to unset.
      */
-    inline void unset(size_t pos) noexcept;
+    inline void unset(usize pos) noexcept;
 
     /**
      * @brief Get bits per element.
      *
      * @return bits per element.
      */
-    inline size_t bits_per_element(void) const noexcept;
+    inline usize bits_per_element(void) const noexcept;
 
     /**
      * @brief Get number of elements.
      *
      * @return number of elements.
      */
-    inline size_t capacity(void) const noexcept;
+    inline usize capacity(void) const noexcept;
 };
 
 template <typename T>
-inline void bitmap_t<T>::init(T *data, size_t size) noexcept
+inline void bitmap_t<T>::init(T *data, usize size) noexcept
 {
     this->data = data;
     this->size = size;
@@ -98,31 +98,31 @@ inline void bitmap_t<T>::init(T *data, size_t size) noexcept
 }
 
 template <typename T>
-inline bool bitmap_t<T>::get(size_t pos) const noexcept
+inline bool bitmap_t<T>::get(usize pos) const noexcept
 {
     return data[pos / BITS_PER_TYPE<T>] & (0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
-inline void bitmap_t<T>::set(size_t pos) noexcept
+inline void bitmap_t<T>::set(usize pos) noexcept
 {
     data[pos / BITS_PER_TYPE<T>] |= (0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
-inline void bitmap_t<T>::unset(size_t pos) noexcept
+inline void bitmap_t<T>::unset(usize pos) noexcept
 {
     data[pos / BITS_PER_TYPE<T>] &= ~(0x1 << (pos % BITS_PER_TYPE<T>));
 }
 
 template <typename T>
-inline size_t bitmap_t<T>::bits_per_element(void) const noexcept
+inline usize bitmap_t<T>::bits_per_element(void) const noexcept
 {
     return BITS_PER_TYPE<T>;
 }
 
 template <typename T>
-inline size_t bitmap_t<T>::capacity(void) const noexcept
+inline usize bitmap_t<T>::capacity(void) const noexcept
 {
     return (bits + BITS_PER_TYPE<T> - 1) / BITS_PER_TYPE<T>;
 }

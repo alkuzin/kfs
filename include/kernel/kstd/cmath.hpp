@@ -36,10 +36,10 @@ namespace kstd {
 // Math Constants ---------------------------------------------------------
 
 /** @brief The mathematical constant e (Euler's number).*/
-constexpr inline float64_t M_E      {2.7182818284590452354};
+constexpr inline f64 M_E      {2.7182818284590452354};
 
 /** @brief The mathematical constant Pi divided by 2.*/
-constexpr inline float64_t M_PI_2   {1.57079632679489661923};
+constexpr inline f64 M_PI_2   {1.57079632679489661923};
 
 /** @brief Represents a NaN (Not-a-Number) value.*/
 const auto NAN {(0.0f / 0.0f)};
@@ -52,7 +52,7 @@ const auto NAN {(0.0f / 0.0f)};
  * @param [in] x - given value.
  * @return natural logarithm of x.
  */
-constexpr float64_t log(float64_t x) noexcept
+constexpr f64 log(f64 x) noexcept
 {
     if(x <= 0)
         return NAN;
@@ -63,10 +63,10 @@ constexpr float64_t log(float64_t x) noexcept
     if(x == M_E)
         return 1;
 
-    int32_t i        = 1;
-    float64_t result = 0;
-    float64_t term   = (x - 1) / (x + 1);
-    float64_t square = term * term;
+    s32 i        = 1;
+    f64 result = 0;
+    f64 term   = (x - 1) / (x + 1);
+    f64 square = term * term;
 
     while(i <= 60000) {
         result += term / i;
@@ -84,7 +84,7 @@ constexpr float64_t log(float64_t x) noexcept
  * @param [in] x - given value.
  * @return base-2 logarithm of @a x.
  */
-constexpr inline float64_t log2(float64_t x) noexcept
+constexpr inline f64 log2(f64 x) noexcept
 {
     return log(x) / log(2.0);
 }
@@ -97,9 +97,9 @@ constexpr inline float64_t log2(float64_t x) noexcept
  * @param [in] x - given value to ceil.
  * @return ceil value of @a x.
  */
-constexpr inline float64_t ceil(float64_t x) noexcept
+constexpr inline f64 ceil(f64 x) noexcept
 {
-    int32_t int_part = static_cast<int32_t>(x);
+    s32 int_part = static_cast<s32>(x);
 
     if (x == int_part)
         return x;
@@ -131,13 +131,13 @@ constexpr inline T abs(T x) noexcept
  * @param [in] x - given value.
  * @return sine of @a x.
  */
-constexpr float64_t sin(float64_t x) noexcept
+constexpr f64 sin(f64 x) noexcept
 {
-    float64_t cur  = x;
-    float64_t acc  = 1;
-    float64_t fact = 1;
-    float64_t pow  = x;
-    int32_t i      = 1;
+    f64 cur  = x;
+    f64 acc  = 1;
+    f64 fact = 1;
+    f64 pow  = x;
+    s32 i      = 1;
 
     while (kstd::abs(acc) > 1e-8 && i < 100) {
         fact *= ((2 * i) * (2 * i + 1));
@@ -156,7 +156,7 @@ constexpr float64_t sin(float64_t x) noexcept
  * @param [in] x - given value.
  * @return cosine of @a x.
  */
-constexpr inline float64_t cos(float64_t x) noexcept
+constexpr inline f64 cos(f64 x) noexcept
 {
     return sin(x + M_PI_2);
 }

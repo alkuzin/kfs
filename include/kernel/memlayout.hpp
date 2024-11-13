@@ -29,20 +29,20 @@
 
 #include <kernel/types.hpp>
 
-extern kernel::uint32_t kernel_phys_start;
-extern kernel::uint32_t kernel_phys_end;
+extern kernel::u32 kernel_phys_start;
+extern kernel::u32 kernel_phys_end;
 
 namespace kernel {
 namespace core {
 namespace memory {
 
-inline const auto      KERNEL_START_PADDR {phys_addr_t(&kernel_phys_start)};
-inline const auto      KERNEL_END_PADDR   {phys_addr_t(&kernel_phys_end)};
-inline const uint32_t *KERNEL_START_PTR   {reinterpret_cast<uint32_t*>(KERNEL_START_PADDR)};
-inline const uint32_t *KERNEL_END_PTR     {reinterpret_cast<uint32_t*>(KERNEL_END_PADDR)};
+inline const auto KERNEL_START_PADDR {phys_addr_t(&kernel_phys_start)};
+inline const auto KERNEL_END_PADDR   {phys_addr_t(&kernel_phys_end)};
+inline const u32 *KERNEL_START_PTR   {reinterpret_cast<u32*>(KERNEL_START_PADDR)};
+inline const u32 *KERNEL_END_PTR     {reinterpret_cast<u32*>(KERNEL_END_PADDR)};
 
-inline const phys_addr_t MEM_START_PADDR    {0x00000};
-inline const uint32_t    STACK_SIZE         {64_KB};
+inline const phys_addr_t MEM_START_PADDR {0x00000};
+inline const u32         STACK_SIZE      {64_KB};
 
 #define KERNEL_SIZE ((KERNEL_END_PADDR) - (KERNEL_START_PADDR))
 

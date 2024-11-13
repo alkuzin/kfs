@@ -30,11 +30,11 @@ using namespace kernel::core::memory;
 namespace kernel {
 namespace kmem {
 
-inline const uint8_t SLAB_PAGES_ORDER {0};  // 2^order pages to allocate
-inline const uint8_t CACHES_SIZE      {9};
+inline const u8 SLAB_PAGES_ORDER {0};  // 2^order pages to allocate
+inline const u8 CACHES_SIZE      {9};
 
 static cache_t     caches[CACHES_SIZE]; // array of predefined caches
-inline size_t      slab_pos = 0;        // current free slab position
+inline usize      slab_pos = 0;        // current free slab position
 inline slab_list_t slabs;               // allocated slabs list
 
 
@@ -52,7 +52,7 @@ void init(void) noexcept
     void *page_ptr = nullptr;
     page_t *page   = nullptr;
 
-    for (size_t i = 0; i < slabs.size; i++) {
+    for (usize i = 0; i < slabs.size; i++) {
         page     = get_zeroed_page(GFP::KERNEL);
         page_ptr = page->addr();
 
@@ -81,7 +81,7 @@ void init(void) noexcept
     caches[0].create("kmalloc-8", 8, 0);
 }
 
-void cache_t::create(const char *name, size_t size, u8 flags) noexcept
+void cache_t::create(const char *name, usize size, u8 flags) noexcept
 {
     list          = {nullptr, nullptr, 0};
     freelist      = {nullptr, nullptr, 0};
@@ -92,7 +92,7 @@ void cache_t::create(const char *name, size_t size, u8 flags) noexcept
     kstd::strncpy(this->name, name, CACHE_NAMELEN);
 }
 
-void *cache_t::alloc(uint8_t flags) noexcept
+void *cache_t::alloc(u8 flags) noexcept
 {
     (void)flags;    // TODO: handle SLAB_KERNEL
 
@@ -111,7 +111,7 @@ void *cache_t::alloc(uint8_t flags) noexcept
 
     // update slab info
     slab->inuse++;
-    slab->free = reinterpret_cast<uint8_t*>(slab->free) + objsize;
+    slab->free = reinterpret_cast<u8*>(slab->free) + objsize;
 
     return ptr;
 }
@@ -176,7 +176,7 @@ void cache_t::alloc_slab(void) noexcept
 
 void cache_t::free_slab(slab_t *slab) noexcept
 {
-    slab->free = reinterpret_cast<uint8_t*>(slab->free) - objsize;
+    slab->free = reinterpret_cast<u8*>(slab->free) - objsize;
 
     if (slab->inuse > 0)
         slab->inuse--;
@@ -219,7 +219,7 @@ void cache_t::free(void *objp) noexcept
     // slab object to be freed is one of the closest allocated ones
     slab_t *slab = list.next_free;
 
-    for (size_t i = list.size; i > 0; i--) {
+    for (usize i = list.size; i > 0; i--) {
         if (phys_addr_t(slab->s_mem) == page_addr) {
             free_slab(slab);
             is_free = true;
@@ -240,7 +240,7 @@ void cache_t::free(void *objp) noexcept
  *
  * @param [in] size - given size of memory block to allocate.
  */
-constexpr inline int32_t get_cache_index(size_t size) noexcept
+constexpr inline s32 get_cache_index(usize size) noexcept
 {
     auto rounded = roundup_pow_of_two(size);
     auto index   = 0;
@@ -253,7 +253,7 @@ constexpr inline int32_t get_cache_index(size_t size) noexcept
     return index;
 }
 
-void *kmalloc(size_t size, gfp_t flags) noexcept
+void *kmalloc(usize size, gfp_t flags) noexcept
 {
     // handle incorrect size
     if (size > 2_KB) {
@@ -286,7 +286,7 @@ void kfree(const void *objp) noexcept
     page->cache->free_slab(page->slab);
 }
 
-size_t ksize(const void *objp) noexcept
+usize ksize(const void *objp) noexcept
 {
     // handle nullptr
     if (!objp)

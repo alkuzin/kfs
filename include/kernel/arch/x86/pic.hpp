@@ -36,20 +36,20 @@ namespace x86 {
 namespace pic {
 
 // 8259 PIC input/output ports:
-inline const uint8_t MASTER_PIC_CMD             {0x20};
-inline const uint8_t MASTER_PIC_DATA            {0x21};
-inline const uint8_t SLAVE_PIC_CMD              {0xA0};
-inline const uint8_t SLAVE_PIC_DATA             {0xA1};
+inline const u8 MASTER_PIC_CMD             {0x20};
+inline const u8 MASTER_PIC_DATA            {0x21};
+inline const u8 SLAVE_PIC_CMD              {0xA0};
+inline const u8 SLAVE_PIC_DATA             {0xA1};
 
 // PIC configurations:
-inline const uint8_t PIC_INIT_CMD               {0x11};
-inline const uint8_t MASTER_PIC_VECTOR_OFFSET   {0x20};
-inline const uint8_t SLAVE_PIC_VECTOR_OFFSET    {0x28};
-inline const uint8_t MASTER_PIC_CASCADE         {0x04};
-inline const uint8_t SLAVE_PIC_CASCADE          {0x02};
-inline const uint8_t PIC_8086_MODE              {0x01};
-inline const uint8_t ALL_INTERRUPTS_ENABLED     {0x00};
-inline const uint8_t END_OF_INTERRUPT           {0x20};
+inline const u8 PIC_INIT_CMD               {0x11};
+inline const u8 MASTER_PIC_VECTOR_OFFSET   {0x20};
+inline const u8 SLAVE_PIC_VECTOR_OFFSET    {0x28};
+inline const u8 MASTER_PIC_CASCADE         {0x04};
+inline const u8 SLAVE_PIC_CASCADE          {0x02};
+inline const u8 PIC_8086_MODE              {0x01};
+inline const u8 ALL_INTERRUPTS_ENABLED     {0x00};
+inline const u8 END_OF_INTERRUPT           {0x20};
 
 /** @brief Initialize Programmable Interrupt Controller (PIC).*/
 void init(void) noexcept;

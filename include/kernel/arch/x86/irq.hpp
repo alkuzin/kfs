@@ -33,7 +33,7 @@
 
 namespace kernel {
 
-enum IRQ : int32_t {
+enum IRQ : s32 {
     TIMER    = 0,
     KEYBOARD = 1,
     CLOCK    = 8
@@ -45,23 +45,23 @@ namespace irq {
 
 /** @brief Structure representing interrupt register state.*/
 struct int_regs_t {
-    uint32_t cr2;         // control register 2
-    uint32_t ds;          // data segment
-    uint32_t edi;         // destination index
-    uint32_t esi;         // source index
-    uint32_t ebp;         // base pointer
-    uint32_t esp;         // stack pointer
-    uint32_t ebx;         // base register
-    uint32_t edx;         // data register
-    uint32_t ecx;         // counter register
-    uint32_t eax;         // accumulator register
-    uint32_t int_no;      // interrupt number
-    uint32_t err_code;    // error code
-    uint32_t eip;         // instruction pointer
-    uint32_t cs;          // code segment
-    uint32_t eflags;      // flags register
-    uint32_t useresp;     // user stack pointer
-    uint32_t ss;          // stack segment
+    u32 cr2;         // control register 2
+    u32 ds;          // data segment
+    u32 edi;         // destination index
+    u32 esi;         // source index
+    u32 ebp;         // base pointer
+    u32 esp;         // stack pointer
+    u32 ebx;         // base register
+    u32 edx;         // data register
+    u32 ecx;         // counter register
+    u32 eax;         // accumulator register
+    u32 int_no;      // interrupt number
+    u32 err_code;    // error code
+    u32 eip;         // instruction pointer
+    u32 cs;          // code segment
+    u32 eflags;      // flags register
+    u32 useresp;     // user stack pointer
+    u32 ss;          // stack segment
 } __attribute__((packed));
 
 // Interrupt requests handler function alias
@@ -73,14 +73,14 @@ using handler_t = void (*)(int_regs_t*);
  * @param [in] irq - given IRQ number.
  * @param [in] handler - given pointer to IRQ handler function.
  */
-void request(int32_t irq, irq::handler_t handler) noexcept;
+void request(s32 irq, irq::handler_t handler) noexcept;
 
 /**
  * @brief Uninstall handler for IRQ.
  *
  * @param [in] irq - given IRQ number.
  */
-void free(int32_t irq) noexcept;
+void free(s32 irq) noexcept;
 
 /**
  * @brief ISR handler function.

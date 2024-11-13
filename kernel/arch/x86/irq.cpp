@@ -67,13 +67,13 @@ inline const char *exception_msgs[]
 // handlers that are designed to respond to hardware interrupts
 static handler_t routines[16] = {nullptr};
 
-void request(int32_t irq, handler_t handler) noexcept
+void request(s32 irq, handler_t handler) noexcept
 {
     routines[irq] = handler;
     sti();
 }
 
-void free(int32_t irq) noexcept
+void free(s32 irq) noexcept
 {
     routines[irq] = 0;
 }

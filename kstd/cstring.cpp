@@ -23,10 +23,10 @@
 namespace kernel {
 namespace kstd {
 
-void *memset(void *s, int32_t c, size_t n) noexcept
+void *memset(void *s, s32 c, usize n) noexcept
 {
-    uint8_t *src = static_cast<uint8_t*>(s);
-    uint8_t cc   = static_cast<uint8_t>(c);
+    u8 *src = static_cast<u8*>(s);
+    u8 cc   = static_cast<u8>(c);
 
     while (n--)
         *src++ = cc;
@@ -34,20 +34,20 @@ void *memset(void *s, int32_t c, size_t n) noexcept
     return s;
 }
 
-void *memcpy(void *dest, const void *src, size_t n) noexcept
+void *memcpy(void *dest, const void *src, usize n) noexcept
 {
-    const uint8_t *csrc {nullptr};
-    uint8_t *cdest {nullptr};
-    int32_t i = 0;
+    const u8 *csrc {nullptr};
+    u8 *cdest {nullptr};
+    s32 i = 0;
 
     if (n == 0)
         return dest;
 
-    cdest = reinterpret_cast<uint8_t*>(dest);
-    csrc  = reinterpret_cast<const uint8_t*>(src);
+    cdest = reinterpret_cast<u8*>(dest);
+    csrc  = reinterpret_cast<const u8*>(src);
     i     = 0;
 
-   	while(csrc[i] && n > 0) {
+       while(csrc[i] && n > 0) {
         cdest[i] = csrc[i];
         n--;
         i++;
@@ -56,9 +56,9 @@ void *memcpy(void *dest, const void *src, size_t n) noexcept
     return dest;
 }
 
-int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept
+s32 strncmp(const char *s1, const char *s2, usize n) noexcept
 {
-    size_t i = 0;
+    usize i = 0;
 
     while((i < n) && (s1[i] || s2[i])) {
         if(s1[i] != s2[i])
@@ -69,9 +69,9 @@ int32_t strncmp(const char *s1, const char *s2, size_t n) noexcept
     return 0;
 }
 
-size_t strncpy(char *dest, const char *src, size_t size) noexcept
+usize strncpy(char *dest, const char *src, usize size) noexcept
 {
-    size_t i = 0;
+    usize i = 0;
 
     while(src[i] && i < size) {
         dest[i] = src[i];
@@ -82,9 +82,9 @@ size_t strncpy(char *dest, const char *src, size_t size) noexcept
     return i;
 }
 
-int32_t strlen(const char *str) noexcept
+s32 strlen(const char *str) noexcept
 {
-    int32_t i = 0;
+    s32 i = 0;
 
     while(str[i])
         i++;
@@ -97,7 +97,7 @@ char *strdup(const char* str) noexcept
     if (!str)
         return nullptr;
 
-    size_t len = kstd::strlen(str);
+    usize len = kstd::strlen(str);
 
     auto size     = (len + 1) * sizeof(char);
     char* new_str = static_cast<char*>(kmalloc(size, GFP::KERNEL));
@@ -105,7 +105,7 @@ char *strdup(const char* str) noexcept
     if (!new_str)
         return nullptr;
 
-    for (size_t i = 0; i < len; i++)
+    for (usize i = 0; i < len; i++)
         new_str[i] = str[i];
 
     new_str[len] = '\0';

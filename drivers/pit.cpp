@@ -28,11 +28,11 @@ namespace pit {
 
 using namespace arch::x86;
 
-inline const uint8_t  PIT_DATA_PORT_0    {0x40};     // channel 0 data port
-inline const uint8_t  PIT_RATE_GEN_MODE  {0x36};     // rate generator mode
-inline const uint8_t  PIT_MODE_REG       {0x43};     // mode/command register
+inline const u8  PIT_DATA_PORT_0    {0x40};     // channel 0 data port
+inline const u8  PIT_RATE_GEN_MODE  {0x36};     // rate generator mode
+inline const u8  PIT_MODE_REG       {0x43};     // mode/command register
 
-static volatile uint32_t ticks {0};
+static volatile u32 ticks {0};
 
 /**
  * @brief Handle interrupts.
@@ -47,7 +47,7 @@ static void timer_handler(irq::int_regs_t *regs) noexcept
 
 void init(void) noexcept
 {
-    constexpr uint32_t divisor = PIT_FREQUENCY / FREQUENCY;
+    constexpr u32 divisor = PIT_FREQUENCY / FREQUENCY;
 
     irq::request(IRQ::TIMER, timer_handler);
 
@@ -56,14 +56,14 @@ void init(void) noexcept
     outb(PIT_DATA_PORT_0, divisor >> 8);
 }
 
-uint32_t get_ticks(void) noexcept
+u32 get_ticks(void) noexcept
 {
     return ticks;
 }
 
-void delay(uint32_t msec) noexcept
+void delay(u32 msec) noexcept
 {
-    uint32_t target_ticks = get_ticks() + (msec / MILLISEC_PER_TICK);
+    u32 target_ticks = get_ticks() + (msec / MILLISEC_PER_TICK);
 
     // waiting until the target tick count is reached
     while (get_ticks() < target_ticks)

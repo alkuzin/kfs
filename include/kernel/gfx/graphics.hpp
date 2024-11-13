@@ -34,8 +34,8 @@ namespace kernel {
 namespace gfx {
 
 struct point_t {
-    int32_t x;
-    int32_t y;
+    s32 x;
+    s32 y;
 
     /**
      * @brief Operator + overloading for point + value.
@@ -43,7 +43,7 @@ struct point_t {
      * @param [in] val - given value.
      * @return new point.
      */
-    point_t operator+(const int32_t val) const noexcept;
+    point_t operator+(const s32 val) const noexcept;
 
     /**
      * @brief Operator - overloading for point - value.
@@ -51,7 +51,7 @@ struct point_t {
      * @param [in] val - given value.
      * @return new point.
      */
-    point_t operator-(const int32_t val) const noexcept;
+    point_t operator-(const s32 val) const noexcept;
 };
 
 /**
@@ -71,7 +71,7 @@ void draw_line(point_t p1, point_t p2, rgb_t color) noexcept;
  * @param [in] height - given rectangle height.
  * @param [in] color - given color to fill with.
  */
-void fill_rectangle(point_t p, int32_t width, int32_t height, rgb_t color) noexcept;
+void fill_rectangle(point_t p, s32 width, s32 height, rgb_t color) noexcept;
 
 /**
  * @brief Draw rectangle on the screen.
@@ -81,7 +81,7 @@ void fill_rectangle(point_t p, int32_t width, int32_t height, rgb_t color) noexc
  * @param [in] height - given rectangle height.
  * @param [in] color - given rectangle color.
  */
-void draw_rectangle(point_t p, int32_t width, int32_t height, rgb_t color) noexcept;
+void draw_rectangle(point_t p, s32 width, s32 height, rgb_t color) noexcept;
 
 } // namespace gfx
 } // namespace kernel
