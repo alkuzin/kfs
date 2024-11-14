@@ -136,8 +136,8 @@ void init(const multiboot_t& mboot) noexcept
     detect_memory();
     pmm.max_pages = pmm.mem_total >> PAGE_SHIFT;
 
-    /** @warning There is an issue with overwriting global variables
-     * with bitmap data, so I added additional offset to prevent that.*/
+    /** In order to prevent overwriting stack with bitmap data,
+     *  bitmap will start right after the kernel stack.*/
     auto bitmap_addr = const_cast<phys_addr_t*>(KERNEL_END_PTR) + STACK_SIZE;
     auto bitmap_size = BITS_TO_BYTES(pmm.max_pages);
 
@@ -328,7 +328,12 @@ void display_memory(void) noexcept
         i += sizeof(multiboot_entry_t);
     }
 
-    printk("\nMemory page size:   %u KB\n", PAGE_SIZE);
+    printk("\nKernel phys start:    <%#08X>\n", KERNEL_START_PADDR);
+    printk("Kernel phys end:      <%#08X>\n", KERNEL_END_PADDR);
+    printk("Kernel virt start:    <%#08X>\n", KERNEL_START_VADDR);
+    printk("Kernel virt end:      <%#08X>\n\n", KERNEL_END_VADDR);
+
+    printk("Memory page size:   %u KB\n", PAGE_SIZE);
     printk("Total memory:       %u KB\n", pmm.mem_total >> 0xA);
     printk("Used memory:        %u KB\n", (pmm.used_pages * PAGE_SIZE) >> 0xA);
 }

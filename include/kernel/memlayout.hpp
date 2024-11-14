@@ -31,6 +31,8 @@
 
 extern kernel::u32 kernel_phys_start;
 extern kernel::u32 kernel_phys_end;
+extern kernel::u32 kernel_virt_start;
+extern kernel::u32 kernel_virt_end;
 
 namespace kernel {
 namespace core {
@@ -38,11 +40,12 @@ namespace memory {
 
 inline const auto KERNEL_START_PADDR {phys_addr_t(&kernel_phys_start)};
 inline const auto KERNEL_END_PADDR   {phys_addr_t(&kernel_phys_end)};
-inline const u32 *KERNEL_START_PTR   {reinterpret_cast<u32*>(KERNEL_START_PADDR)};
+inline const auto KERNEL_START_VADDR {virt_addr_t(&kernel_virt_start)};
+inline const auto KERNEL_END_VADDR   {virt_addr_t(&kernel_virt_end)};
 inline const u32 *KERNEL_END_PTR     {reinterpret_cast<u32*>(KERNEL_END_PADDR)};
 
-inline const phys_addr_t MEM_START_PADDR {0x00000};
-inline const u32         STACK_SIZE      {64_KB};
+inline const auto MEM_START_PADDR    {0x00000};
+inline const auto STACK_SIZE         {64_KB};
 
 #define KERNEL_SIZE ((KERNEL_END_PADDR) - (KERNEL_START_PADDR))
 
