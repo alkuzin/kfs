@@ -24,15 +24,15 @@
  * @date   12.10.2024
  */
 
-#ifndef _KERNEL_ARCH_X86_PIC_HPP_
-#define _KERNEL_ARCH_X86_PIC_HPP_
+#ifndef _KERNEL_ARCH_I386_PIC_HPP_
+#define _KERNEL_ARCH_I386_PIC_HPP_
 
 #include <kernel/types.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 namespace pic {
 
 // 8259 PIC input/output ports:
@@ -55,8 +55,8 @@ inline const u8 END_OF_INTERRUPT           {0x20};
 void init(void) noexcept;
 
 } // namespace pic
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_X86_PIC_HPP_
+#endif // _KERNEL_ARCH_I386_PIC_HPP_

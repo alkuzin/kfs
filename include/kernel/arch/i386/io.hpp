@@ -24,15 +24,15 @@
  * @date   26.09.2024
  */
 
-#ifndef _KERNEL_ARCH_X86_IO_HPP_
-#define _KERNEL_ARCH_X86_IO_HPP_
+#ifndef _KERNEL_ARCH_I386_IO_HPP_
+#define _KERNEL_ARCH_I386_IO_HPP_
 
 #include <kernel/types.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 
 /**
  * @brief Receive a byte of data from a specified input/output port.
@@ -43,7 +43,7 @@ namespace x86 {
 inline u8 inb(u16 port) noexcept
 {
     u8 rv = 0;
-    __asm__ volatile("inb %1, %0" : "=a" (rv) : "dN" (port));
+    asm volatile("inb %1, %0" : "=a" (rv) : "dN" (port));
     return rv;
 }
 
@@ -55,7 +55,7 @@ inline u8 inb(u16 port) noexcept
  */
 inline void outb(u16 port, u8 data) noexcept
 {
-    __asm__ volatile("outb %1, %0" : : "dN" (port), "a" (data));
+    asm volatile("outb %1, %0" : : "dN" (port), "a" (data));
 }
 
 /**
@@ -66,11 +66,11 @@ inline void outb(u16 port, u8 data) noexcept
  */
 inline void outw(u16 port, u16 data) noexcept
 {
-    __asm__ volatile("outw %0, %1" : : "a"(data), "Nd"(port));
+    asm volatile("outw %0, %1" : : "a"(data), "Nd"(port));
 }
 
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_X86_IO_HPP_
+#endif // _KERNEL_ARCH_I386_IO_HPP_

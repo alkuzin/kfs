@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/x86/register.hpp>
+#include <kernel/arch/i386/register.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 
 // TODO: add debug function that prints all registers
 u32 get_register(REG reg) noexcept
@@ -30,63 +30,63 @@ u32 get_register(REG reg) noexcept
 
     switch (reg) {
     case REG::ESP:
-        __asm__ volatile ("mov %%esp, %0" : "=r"(value));
+        asm volatile("mov %%esp, %0" : "=r"(value));
         break;
 
     case REG::EBP:
-        __asm__ volatile ("mov %%ebp, %0" : "=r"(value));
+        asm volatile("mov %%ebp, %0" : "=r"(value));
         break;
 
     case REG::EBX:
-        __asm__ volatile ("mov %%ebx, %0" : "=r"(value));
+        asm volatile("mov %%ebx, %0" : "=r"(value));
         break;
 
     case REG::EDX:
-        __asm__ volatile ("mov %%edx, %0" : "=r"(value));
+        asm volatile("mov %%edx, %0" : "=r"(value));
         break;
 
     case REG::ECX:
-        __asm__ volatile ("mov %%ecx, %0" : "=r"(value));
+        asm volatile("mov %%ecx, %0" : "=r"(value));
         break;
 
     case REG::EAX:
-        __asm__ volatile ("mov %%eax, %0" : "=r"(value));
+        asm volatile("mov %%eax, %0" : "=r"(value));
         break;
 
     case REG::EIP:
-        __asm__ volatile ("call 1f \n\t1: pop %0" : "=r"(value));
+        asm volatile("call 1f \n\t1: pop %0" : "=r"(value));
         break;
 
     case REG::CS:
-        __asm__ volatile ("mov %%cs, %0" : "=r"(value));
+        asm volatile("mov %%cs, %0" : "=r"(value));
         break;
 
     case REG::EFLAGS:
-        __asm__ volatile ("pushfl\n\tpop %0" : "=r"(value));
+        asm volatile("pushfl\n\tpop %0" : "=r"(value));
         break;
 
     case REG::SS:
-        __asm__ volatile ("mov %%ss, %0" : "=r"(value));
+        asm volatile("mov %%ss, %0" : "=r"(value));
         break;
 
     case REG::DS:
-        __asm__ volatile ("mov %%ds, %0" : "=r"(value));
+        asm volatile("mov %%ds, %0" : "=r"(value));
         break;
 
     case REG::EDI:
-        __asm__ volatile ("mov %%edi, %0" : "=r"(value));
+        asm volatile("mov %%edi, %0" : "=r"(value));
         break;
 
     case REG::ESI:
-        __asm__ volatile ("mov %%esi, %0" : "=r"(value));
+        asm volatile("mov %%esi, %0" : "=r"(value));
         break;
 
     case REG::CR0:
-        __asm__ volatile ("mov %%cr0, %0" : "=r"(value));
+        asm volatile("mov %%cr0, %0" : "=r"(value));
         break;
 
     case REG::CR2:
-        __asm__ volatile ("mov %%cr2, %0" : "=r"(value));
+        asm volatile("mov %%cr2, %0" : "=r"(value));
         break;
 
     default:
@@ -100,27 +100,27 @@ void set_register(REG reg, u32 value) noexcept
 {
     switch (reg) {
     case REG::ESP:
-        __asm__ volatile ("mov %0, %%esp" : : "r"(value));
+        asm volatile("mov %0, %%esp" : : "r"(value));
         break;
 
     case REG::EBP:
-        __asm__ volatile ("mov %0, %%ebp" : : "r"(value));
+        asm volatile("mov %0, %%ebp" : : "r"(value));
         break;
 
     case REG::EBX:
-        __asm__ volatile ("mov %0, %%ebx" : : "r"(value));
+        asm volatile("mov %0, %%ebx" : : "r"(value));
         break;
 
     case REG::EDX:
-        __asm__ volatile ("mov %0, %%edx" : : "r"(value));
+        asm volatile("mov %0, %%edx" : : "r"(value));
         break;
 
     case REG::ECX:
-        __asm__ volatile ("mov %0, %%ecx" : : "r"(value));
+        asm volatile("mov %0, %%ecx" : : "r"(value));
         break;
 
     case REG::EAX:
-        __asm__ volatile ("mov %0, %%eax" : : "r"(value));
+        asm volatile("mov %0, %%eax" : : "r"(value));
         break;
 
     case REG::EIP:
@@ -130,35 +130,35 @@ void set_register(REG reg, u32 value) noexcept
         break;
 
     case REG::CS:
-        __asm__ volatile ("mov %0, %%cs" : : "r"(value));
+        asm volatile("mov %0, %%cs" : : "r"(value));
         break;
 
     case REG::EFLAGS:
-        __asm__ volatile ("push %0\n\tpopf" : : "r"(value));
+        asm volatile("push %0\n\tpopf" : : "r"(value));
         break;
 
     case REG::SS:
-        __asm__ volatile ("mov %0, %%ss" : : "r"(value));
+        asm volatile("mov %0, %%ss" : : "r"(value));
         break;
 
     case REG::DS:
-        __asm__ volatile ("mov %0, %%ds" : : "r"(value));
+        asm volatile("mov %0, %%ds" : : "r"(value));
         break;
 
     case REG::EDI:
-        __asm__ volatile ("mov %0, %%edi" : : "r"(value));
+        asm volatile("mov %0, %%edi" : : "r"(value));
         break;
 
     case REG::ESI:
-        __asm__ volatile ("mov %0, %%esi" : : "r"(value));
+        asm volatile("mov %0, %%esi" : : "r"(value));
         break;
 
     case REG::CR0:
-        __asm__ volatile ("mov %0, %%cr0" : : "r"(value));
+        asm volatile("mov %0, %%cr0" : : "r"(value));
         break;
 
     case REG::CR2:
-        __asm__ volatile ("mov %0, %%cr2" : : "r"(value));
+        asm volatile("mov %0, %%cr2" : : "r"(value));
         break;
 
     default:
@@ -166,6 +166,6 @@ void set_register(REG reg, u32 value) noexcept
     }
 }
 
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel

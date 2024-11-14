@@ -16,13 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/x86/gdt.hpp>
+#include <kernel/arch/i386/gdt.hpp>
 #include <kernel/linkage.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 namespace gdt {
 
 inline const u32 ENTRY_BASE           {0x00000000};
@@ -94,6 +94,6 @@ void init(void) noexcept
 }
 
 } // namespace gdt
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel

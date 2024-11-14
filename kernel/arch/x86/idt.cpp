@@ -16,18 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/x86/system.hpp>
-#include <kernel/arch/x86/idt.hpp>
-#include <kernel/arch/x86/irq.hpp>
-#include <kernel/arch/x86/gdt.hpp>
+#include <kernel/arch/i386/system.hpp>
+#include <kernel/arch/i386/idt.hpp>
+#include <kernel/arch/i386/irq.hpp>
+#include <kernel/arch/i386/gdt.hpp>
 #include <kernel/kstd/cstring.hpp>
-#include <kernel/arch/x86/pic.hpp>
+#include <kernel/arch/i386/pic.hpp>
 #include <kernel/panic.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 namespace idt {
 
 inline const s32 IDT_SIZE       {256};
@@ -146,6 +146,6 @@ void init(void) noexcept
 }
 
 } // namespace idt
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel

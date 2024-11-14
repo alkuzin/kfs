@@ -24,15 +24,15 @@
  * @date   12.10.2024
  */
 
-#ifndef _KERNEL_ARCH_X86_IDT_HPP_
-#define _KERNEL_ARCH_X86_IDT_HPP_
+#ifndef _KERNEL_ARCH_I386_IDT_HPP_
+#define _KERNEL_ARCH_I386_IDT_HPP_
 
 #include <kernel/types.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 namespace idt {
 
 /** @brief IDT gate descriptor structure in 32-bit mode.*/
@@ -56,8 +56,8 @@ struct ptr_t
 void init(void) noexcept;
 
 } // namespace idt
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_X86_IDT_HPP_
+#endif // _KERNEL_ARCH_I386_IDT_HPP_

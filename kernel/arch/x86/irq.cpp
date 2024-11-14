@@ -16,16 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/x86/system.hpp>
-#include <kernel/arch/x86/irq.hpp>
-#include <kernel/arch/x86/pic.hpp>
-#include <kernel/arch/x86/io.hpp>
+#include <kernel/arch/i386/system.hpp>
+#include <kernel/arch/i386/irq.hpp>
+#include <kernel/arch/i386/pic.hpp>
+#include <kernel/arch/i386/io.hpp>
 #include <kernel/panic.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 namespace irq {
 
 inline const char *exception_msgs[]
@@ -104,6 +104,6 @@ asmlinkage void isr_handler(int_regs_t *regs) noexcept
 }
 
 } // namespace irq
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel

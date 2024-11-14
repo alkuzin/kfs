@@ -24,15 +24,15 @@
  * @date   29.10.2024
  */
 
-#ifndef _KERNEL_ARCH_X86_CPU_HPP_
-#define _KERNEL_ARCH_X86_CPU_HPP_
+#ifndef _KERNEL_ARCH_I386_CPU_HPP_
+#define _KERNEL_ARCH_I386_CPU_HPP_
 
 #include <kernel/types.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 namespace cpu {
 
 // architecture
@@ -67,13 +67,13 @@ inline const u8 VENDOR_ID_SIZE {13};
 inline const u8 BRAND_SIZE     {49};
 
 struct details_t {
-    char     vendor[VENDOR_ID_SIZE];
-    char     brand[BRAND_SIZE];
-    u32 high_param;        // highest function parameter (max leaf number)
-    u8  stepping;          // product revision number
-    u8  model;             // process model
-    u8  family;            // process family
-    u8  type;              // process type
+    char vendor[VENDOR_ID_SIZE];
+    char brand[BRAND_SIZE];
+    u32  high_param;        // highest function parameter (max leaf number)
+    u8   stepping;          // product revision number
+    u8   model;             // process model
+    u8   family;            // process family
+    u8   type;              // process type
 };
 
 /**
@@ -84,7 +84,7 @@ struct details_t {
  */
 inline void cpuid(u32 leaf, info_t& info) noexcept
 {
-    __asm__ __volatile__ (
+    asm volatile(
         "cpuid"
         : "=a"(info.eax), "=b"(info.ebx), "=c"(info.ecx), "=d"(info.edx)
         : "a"(leaf)
@@ -114,8 +114,8 @@ const char *type_to_str(TYPE type) noexcept;
 const char *get_op_modes(void) noexcept;
 
 } // namespace cpu
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_X86_CPU_HPP_
+#endif // _KERNEL_ARCH_I386_CPU_HPP_

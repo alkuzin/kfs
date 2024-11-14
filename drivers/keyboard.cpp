@@ -17,11 +17,11 @@
  */
 
 #include <kernel/drivers/keyboard.hpp>
-#include <kernel/arch/x86/irq.hpp>
+#include <kernel/arch/i386/irq.hpp>
+#include <kernel/arch/i386/io.hpp>
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/kstd/cctype.hpp>
-#include <kernel/arch/x86/io.hpp>
 #include <kernel/panic.hpp>
 
 
@@ -89,7 +89,7 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
 UNKNOWN,UNKNOWN,UNKNOWN
 };
 
-using namespace arch::x86;
+using namespace arch::i386;
 
 static key_handler ctrl_handler[128] {nullptr};
 

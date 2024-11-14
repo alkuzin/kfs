@@ -27,16 +27,12 @@
 #ifndef _KERNEL_CONFIG_HPP_
 #define _KERNEL_CONFIG_HPP_
 
-#include <kernel/arch/x86/system.hpp>
-#include <kernel/kernel.hpp>
-#include <kernel/printk.hpp>
-
 
 namespace kernel {
 namespace info {
 
 inline const auto __kernel_name__                {"unknown"};
-inline const auto __kernel_arch__                {"x86"};
+inline const auto __kernel_arch__                {"i386"};
 inline const auto __kernel_author__              {"Alexander (@alkuzin)"};
 inline const auto __kernel_build_date__          {__DATE__};
 inline const auto __kernel_build_time__          {__TIME__};

@@ -24,20 +24,20 @@
  * @date   26.09.2024
  */
 
-#ifndef _KERNEL_ARCH_X86_SYSTEM_HPP_
-#define _KERNEL_ARCH_X86_SYSTEM_HPP_
+#ifndef _KERNEL_ARCH_I386_SYSTEM_HPP_
+#define _KERNEL_ARCH_I386_SYSTEM_HPP_
 
-#include <kernel/arch/x86/register.hpp>
+#include <kernel/arch/i386/register.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace x86 {
+namespace i386 {
 
 /** @brief Halt CPU.*/
 inline void halt(void) noexcept
 {
-    for (;;) __asm__ volatile("hlt");
+    for (;;) asm volatile("hlt");
 }
 
 /**
@@ -70,17 +70,17 @@ inline u32 mode(void) noexcept
 /** @brief Enable interrupts.*/
 inline void sti(void) noexcept
 {
-    __asm__ volatile ("sti");
+    asm volatile("sti");
 }
 
 /** @brief Disable interrupts.*/
 inline void cli(void) noexcept
 {
-    __asm__ volatile ("cli");
+    asm volatile("cli");
 }
 
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_X86_SYSTEM_HPP_
+#endif // _KERNEL_ARCH_I386_SYSTEM_HPP_

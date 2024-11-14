@@ -17,8 +17,8 @@
  */
 
 #include <kernel/drivers/keyboard.hpp>
-#include <kernel/arch/x86/gdt.hpp>
-#include <kernel/arch/x86/idt.hpp>
+#include <kernel/arch/i386/gdt.hpp>
+#include <kernel/arch/i386/idt.hpp>
 #include <kernel/drivers/pit.hpp>
 #include <kernel/shell/shell.hpp>
 #include <kernel/terminal.hpp>
@@ -54,10 +54,10 @@ static void kboot(u32 magic, const multiboot_t& mboot) noexcept
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
         panic("invalid magic number: %#X\n", magic);
 
-    arch::x86::gdt::init();
+    arch::i386::gdt::init();
     printk(KERN_OK "%s\n", "initialized GDT");
 
-    arch::x86::idt::init();
+    arch::i386::idt::init();
     printk(KERN_OK "%s\n", "initialized IDT");
 
     pit::init();

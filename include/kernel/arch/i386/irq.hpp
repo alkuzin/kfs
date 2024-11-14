@@ -24,8 +24,8 @@
  * @date   12.10.2024
  */
 
-#ifndef _KERNEL_ARCH_X86_IRQ_HPP_
-#define _KERNEL_ARCH_X86_IRQ_HPP_
+#ifndef _KERNEL_ARCH_I386_IRQ_HPP_
+#define _KERNEL_ARCH_I386_IRQ_HPP_
 
 #include <kernel/linkage.hpp>
 #include <kernel/types.hpp>
@@ -40,7 +40,7 @@ enum IRQ : s32 {
 };
 
 namespace arch {
-namespace x86 {
+namespace i386 {
 namespace irq {
 
 /** @brief Structure representing interrupt register state.*/
@@ -154,8 +154,8 @@ asmlinkage void irq13(void);
 asmlinkage void irq14(void);
 asmlinkage void irq15(void);
 
-} // namespace x86
+} // namespace i386
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_X86_IRQ_HPP_
+#endif // _KERNEL_ARCH_I386_IRQ_HPP_

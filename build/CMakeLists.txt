@@ -31,7 +31,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
 # Set paths
 set(BOOT_DIR                ${CMAKE_SOURCE_DIR}/../boot)
 set(KERNEL_DIR              ${CMAKE_SOURCE_DIR}/../kernel)
-set(KERNEL_ARCH_X86_DIR     ${KERNEL_DIR}/arch/x86)
+set(KERNEL_ARCH_I386_DIR     ${KERNEL_DIR}/arch/x86)
 set(KERNEL_SHELL_DIR        ${KERNEL_DIR}/shell)
 set(KERNEL_DEBUG_DIR        ${KERNEL_DIR}/debug)
 set(KERNEL_MM_DIR           ${KERNEL_DIR}/mm)
@@ -76,12 +76,12 @@ set(KERNEL_SOURCES
     "${KERNEL_COMMON_DIR}/rtc.cpp"
 
     # Kernel arch/x86 directory:
-    "${KERNEL_ARCH_X86_DIR}/register.cpp"
-    "${KERNEL_ARCH_X86_DIR}/gdt.cpp"
-    "${KERNEL_ARCH_X86_DIR}/idt.cpp"
-    "${KERNEL_ARCH_X86_DIR}/irq.cpp"
-    "${KERNEL_ARCH_X86_DIR}/pic.cpp"
-    "${KERNEL_ARCH_X86_DIR}/cpu.cpp"
+    "${KERNEL_ARCH_I386_DIR}/register.cpp"
+    "${KERNEL_ARCH_I386_DIR}/gdt.cpp"
+    "${KERNEL_ARCH_I386_DIR}/idt.cpp"
+    "${KERNEL_ARCH_I386_DIR}/irq.cpp"
+    "${KERNEL_ARCH_I386_DIR}/pic.cpp"
+    "${KERNEL_ARCH_I386_DIR}/cpu.cpp"
 
     # Kernel shell directory:
     "${KERNEL_SHELL_DIR}/builtin.cpp"
@@ -97,8 +97,8 @@ set(KERNEL_SOURCES
 
 # List of kernel assembly source files
 set(ASM_SOURCES
-    "${KERNEL_ARCH_X86_DIR}/gdt_flush.asm"
-    "${KERNEL_ARCH_X86_DIR}/idt_flush.asm"
+    "${KERNEL_ARCH_I386_DIR}/gdt_flush.asm"
+    "${KERNEL_ARCH_I386_DIR}/idt_flush.asm"
     "${BOOT_DIR}/boot.asm"
 )
 

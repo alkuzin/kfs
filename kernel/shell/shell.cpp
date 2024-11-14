@@ -16,10 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/x86/io.hpp>
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/shell/builtin.hpp>
 #include <kernel/kstd/cstring.hpp>
+#include <kernel/arch/i386/io.hpp>
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/shell/shell.hpp>
 
