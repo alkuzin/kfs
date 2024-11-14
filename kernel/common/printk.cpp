@@ -102,7 +102,7 @@ void printk(const char *fmt, ...) noexcept
         buffer[i] = 0;
 }
 
-void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept
+void cprintk(rgb_t fg, rgb_t bg, const char *fmt, ...) noexcept
 {
     va_list args;
 

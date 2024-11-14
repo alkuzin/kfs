@@ -36,9 +36,9 @@ namespace tty {
 inline const s32 TAB_WIDTH {4};
 
 struct terminal_t {
-    driver::vesa::fb_t fb;      // VESA framebuffer
-    gfx::rgb_t  fg;             // foreground color
-    gfx::rgb_t  bg;             // background color
+    driver::vesa::fb_t fb;  // VESA framebuffer
+    rgb_t   fg;             // foreground color
+    rgb_t   bg;             // background color
     s32     begin_x_pos;    // x-position of the cursor
     s32     begin_y_pos;    // y-position of the cursor
     s32     x_pos;          // x-position of the cursor
@@ -60,7 +60,7 @@ void clear(void) noexcept;
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept;
+void putc(char c, rgb_t fg, rgb_t bg) noexcept;
 
 extern terminal_t terminal;
 

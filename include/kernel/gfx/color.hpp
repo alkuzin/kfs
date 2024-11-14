@@ -31,10 +31,10 @@
 
 
 namespace kernel {
-namespace gfx {
 
 using rgb_t = u32;
 
+namespace gfx {
 namespace color {
 
 inline const rgb_t red      {0XFC3F42};
@@ -46,7 +46,6 @@ inline const rgb_t gray     {0x919191};
 inline const rgb_t yellow   {0xFCCD23};
 
 } // namespace color
-
 } // namespace gfx
 } // namespace kernel
 

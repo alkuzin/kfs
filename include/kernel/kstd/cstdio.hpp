@@ -71,7 +71,7 @@ inline void putchar(char c) noexcept
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-inline void putk(const char *str, gfx::rgb_t fg = tty::terminal.fg, gfx::rgb_t bg = tty::terminal.bg) noexcept
+inline void putk(const char *str, rgb_t fg = tty::terminal.fg, rgb_t bg = tty::terminal.bg) noexcept
 {
     u32 i = 0;
 

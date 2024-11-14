@@ -40,13 +40,13 @@ fb_t get_framebuffer(void) noexcept
     return framebuffer;
 }
 
-void draw_pixel(u32 x, u32 y, gfx::rgb_t color) noexcept
+void draw_pixel(u32 x, u32 y, rgb_t color) noexcept
 {
     if (x < framebuffer.width && y < framebuffer.height)
         framebuffer.addr[y * framebuffer.width + x] = color;
 }
 
-void fill_screen(gfx::rgb_t color) noexcept
+void fill_screen(rgb_t color) noexcept
 {
     for (u32 y = 0; y < framebuffer.height; y++) {
         for (u32 x = 0; x < framebuffer.width; x++)
@@ -54,7 +54,7 @@ void fill_screen(gfx::rgb_t color) noexcept
     }
 }
 
-void draw_char(u8 c, s32 x, s32 y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept
+void draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on) noexcept
 {
     static constexpr u8 mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
     s32 cx, cy;

@@ -64,7 +64,7 @@ void clear(void) noexcept
     fill_screen(terminal.bg);
 }
 
-void putc(char c, gfx::rgb_t fg, gfx::rgb_t bg) noexcept
+void putc(char c, rgb_t fg, rgb_t bg) noexcept
 {
         if(terminal.x_pos >= terminal.begin_x_pos + s32(terminal.width)) {
                 terminal.x_pos = terminal.begin_x_pos;

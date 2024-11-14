@@ -316,7 +316,7 @@ static void project(const vertice_t& vert, gfx::point_t& point, f32 angle) noexc
  *
  * @param [in] angle - given cube rotation angle.
  */
-static void draw_cube(f32 angle, gfx::rgb_t color) noexcept
+static void draw_cube(f32 angle, rgb_t color) noexcept
 {
     gfx::point_t p1, p2;
     s32      v1, v2;
@@ -340,7 +340,7 @@ static void draw_cube(f32 angle, gfx::rgb_t color) noexcept
  * @param [in] color - given color.
  * @return next color relative to the given one.
  */
-static gfx::rgb_t get_next_color(gfx::rgb_t color) noexcept
+static rgb_t get_next_color(rgb_t color) noexcept
 {
     u8 r = (color >> 16) & 0xFF;
     u8 g = (color >> 8) & 0xFF;
@@ -370,10 +370,10 @@ static gfx::rgb_t get_next_color(gfx::rgb_t color) noexcept
  * @param [in] angle - given cube rotation angle.
  * @param [in] color - given cube color.
  */
-static void interation(f32 angle, gfx::rgb_t *color) noexcept
+static void interation(f32 angle, rgb_t *color) noexcept
 {
     using namespace driver;
-    gfx::rgb_t new_color;
+    rgb_t new_color;
 
     // update terminal cursor position
     tty::terminal.x_pos = tty::terminal.begin_x_pos;
@@ -401,7 +401,7 @@ static void round_cube(void) noexcept
     f32 angle           = 0.0f;
     f32 angle_increment = 0.05f; // Increment angle for rotation
 
-    gfx::rgb_t color = 0xFF0000; // red color
+    rgb_t color = 0xFF0000; // red color
     keyboard::KEY key;
 
     for (;;) {

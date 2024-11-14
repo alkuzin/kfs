@@ -64,14 +64,14 @@ fb_t get_framebuffer(void) noexcept;
  * @param [in] y - given pixel y-position.
  * @param [in] color - given pixel RGB color.
  */
-void draw_pixel(u32 x, u32 y, gfx::rgb_t color) noexcept;
+void draw_pixel(u32 x, u32 y, rgb_t color) noexcept;
 
 /**
  * @brief Fill screen with specific color.
  *
  * @param [in] color - given RGB color.
  */
-void fill_screen(gfx::rgb_t color) noexcept;
+void fill_screen(rgb_t color) noexcept;
 
 /**
  * @brief Draw font character on the screen.
@@ -83,7 +83,7 @@ void fill_screen(gfx::rgb_t color) noexcept;
  * @param [in] bg - given background color.
  * @param [in] is_bg_on - given param determine whether to display the @a bg.
  */
-void draw_char(u8 c, s32 x, s32 y, gfx::rgb_t fg, gfx::rgb_t bg, bool is_bg_on) noexcept;
+void draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on) noexcept;
 
 } // namespace vesa
 } // namespace driver

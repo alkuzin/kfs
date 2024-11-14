@@ -56,7 +56,7 @@ void printk(const char *fmt, ...) noexcept;
  * @param [in] fmt - given format string.
  * @param [in] ... - given variable number of arguments.
  */
-void cprintk(gfx::rgb_t fg, gfx::rgb_t bg, const char *fmt, ...) noexcept;
+void cprintk(rgb_t fg, rgb_t bg, const char *fmt, ...) noexcept;
 
 } // namespace kernel
 
