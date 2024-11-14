@@ -40,123 +40,123 @@ inline const auto MAX_HEX_BUF_SIZE   {11};
 
 struct handler_t
 {
-        char	*buffer;
-        usize	 size;
-        va_list  args;
-        u8	 flags;
-        usize   pos;
-        u8  num;
+    char	*buffer;
+    usize	 size;
+    va_list  args;
+    u8	     flags;
+    usize    pos;
+    u8       num;
 
 private:
-        /**
-         * @brief Get the specific flag.
-         *
-         * @param [in] pos - given bit position.
-         * @return true if flag = 1.
-         * @return false if flag = 0.
-         */
-        inline bool get_flag(u8 pos) const noexcept;
+    /**
+     * @brief Get the specific flag.
+     *
+     * @param [in] pos - given bit position.
+     * @return true if flag = 1.
+     * @return false if flag = 0.
+     */
+    inline bool get_flag(u8 pos) const noexcept;
 
-        /**
-         * @brief Set the flag bit.
-         *
-         * @param [in] pos - given bit position.
-         */
-        inline void set_flag(u8 pos) noexcept;
+    /**
+     * @brief Set the flag bit.
+     *
+     * @param [in] pos - given bit position.
+     */
+    inline void set_flag(u8 pos) noexcept;
 
-        /**
-         * @brief Handle vsnprintk argument.
-         *
-         * @param [in] type - given type of argument to print.
-         */
-        void handle_argument(char type) noexcept;
+    /**
+     * @brief Handle vsnprintk argument.
+     *
+     * @param [in] type - given type of argument to print.
+     */
+    void handle_argument(char type) noexcept;
 
-        /**
-         * @brief Handle vsnprintk flag.
-         *
-         * @param [in] flag - given flag of argument to print.
-         */
-        void handle_flag(char flag) noexcept;
+    /**
+     * @brief Handle vsnprintk flag.
+     *
+     * @param [in] flag - given flag of argument to print.
+     */
+    void handle_flag(char flag) noexcept;
 
-        /** @brief Append string argument to buffer.*/
-        void append_string(void) noexcept;
+    /** @brief Append string argument to buffer.*/
+    void append_string(void) noexcept;
 
-        /** @brief Append pointer argument to buffer.*/
-        void append_pointer(void) noexcept;
+    /** @brief Append pointer argument to buffer.*/
+    void append_pointer(void) noexcept;
 
-        /** @brief Append integer argument to buffer.*/
-        void append_integer(void) noexcept;
+    /** @brief Append integer argument to buffer.*/
+    void append_integer(void) noexcept;
 
-        /** @brief Append unsigned integer argument to buffer.*/
-        void append_uinteger(void) noexcept;
+    /** @brief Append unsigned integer argument to buffer.*/
+    void append_uinteger(void) noexcept;
 
-        /**
-         * @brief Append hexadecimal argument to buffer.
-         *
-         * @param [in] is_upper - given flag to choice what type of digits to use.
-         */
-        void append_hex(bool is_upper) noexcept;
+    /**
+     * @brief Append hexadecimal argument to buffer.
+     *
+     * @param [in] is_upper - given flag to choice what type of digits to use.
+     */
+    void append_hex(bool is_upper) noexcept;
 
 public:
-        /**
-         * @brief Initialize vsnprintk handler.
-         *
-         * @param [in] buf - given buffer pointer.
-         * @param [in] size - given buffer size.
-         * @param [in] args - given variable number of arguments.
-         */
-        void init(char *buf, usize size, va_list args) noexcept;
+    /**
+     * @brief Initialize vsnprintk handler.
+     *
+     * @param [in] buf - given buffer pointer.
+     * @param [in] size - given buffer size.
+     * @param [in] args - given variable number of arguments.
+     */
+    void init(char *buf, usize size, va_list args) noexcept;
 
-        /**
-         * @brief Append character to buffer.
-         *
-         * @param [in] ch - given character to append.
-         */
-        void append(char ch) noexcept;
+    /**
+     * @brief Append character to buffer.
+     *
+     * @param [in] ch - given character to append.
+     */
+    void append(char ch) noexcept;
 
-        /**
-         * @brief Parse format string.
-         *
-         * @param fmt - given format string to parse.
-         */
-        void parse(const char *fmt) noexcept;
+    /**
+     * @brief Parse format string.
+     *
+     * @param fmt - given format string to parse.
+     */
+    void parse(const char *fmt) noexcept;
 };
 
 void handler_t::init(char *buf, usize size, va_list args) noexcept
 {
-        va_copy(this->args, args);
-        buffer 		= buf;
-        this->size 	= size;
-        flags		= 0;
-        pos			= 0;
-        num			= 0;
+    va_copy(this->args, args);
+    buffer 		= buf;
+    this->size 	= size;
+    flags		= 0;
+    pos			= 0;
+    num			= 0;
 }
 
 void handler_t::append(char ch) noexcept
 {
-        buffer[pos] = ch;
-        pos++;
+    buffer[pos] = ch;
+    pos++;
 }
 
 inline bool handler_t::get_flag(u8 pos) const noexcept
 {
-            return (flags >> pos) & 0x1;
+    return (flags >> pos) & 0x1;
 }
 
 inline void handler_t::set_flag(u8 pos) noexcept
 {
-        flags |= (1 << pos);
+    flags |= (1 << pos);
 }
 
 void handler_t::append_string(void) noexcept
 {
-        char *str = static_cast<char*>(va_arg(args, char*));
-        auto i    = 0;
+    char *str = static_cast<char*>(va_arg(args, char*));
+    auto i    = 0;
 
-        while(str[i]) {
-                append(str[i]);
-                i++;
-        }
+    while(str[i]) {
+        append(str[i]);
+        i++;
+    }
 }
 
 /**
@@ -168,51 +168,51 @@ void handler_t::append_string(void) noexcept
  */
 inline char dtoh(s32 v, bool is_upper = false) noexcept
 {
-        char a = (is_upper) ? 'A' : 'a';
+    char a = (is_upper) ? 'A' : 'a';
 
-        if (v >= 0 && v < 10)
-                return static_cast<char>('0' + v);
-        else
-                return static_cast<char>(a + v - 10);
+    if (v >= 0 && v < 10)
+        return static_cast<char>('0' + v);
+    else
+        return static_cast<char>(a + v - 10);
 }
 
 void handler_t::append_pointer(void) noexcept
 {
-        void *raw = reinterpret_cast<void*>(va_arg(args, u32));
+    void *raw = reinterpret_cast<void*>(va_arg(args, u32));
 
-        if(!raw) {
-                auto i = 0;
+    if(!raw) {
+        auto i = 0;
 
-                while(NIL[i]) {
-                        append(NIL[i]);
-                        i++;
-                }
+        while(NIL[i]) {
+            append(NIL[i]);
+            i++;
         }
-        else {
-                append('0');
-                append('x');
+    }
+    else {
+        append('0');
+        append('x');
 
-                auto ptr   = reinterpret_cast<u32>(raw);
-                s32 i  = (sizeof(ptr) << 3) - 4;
-                auto count = 0;
+        auto ptr   = reinterpret_cast<u32>(raw);
+        s32 i  = (sizeof(ptr) << 3) - 4;
+        auto count = 0;
 
-                if (num > 8)
-                        num = 8;
+        if (num > 8)
+            num = 8;
 
-                auto skip_count = 8 - num;
+        auto skip_count = 8 - num;
 
-                // skip first zeros
-                while(i >= 0 && skip_count && ((dtoh((ptr >> i) & 0xf) == '0'))) {
-                        skip_count--;
-                        i -= 4;
-                }
-
-                while(i >= 0) {
-                        append(dtoh((ptr >> i) & 0xf));
-                        i -= 4;
-                        count++;
-                }
+        // skip first zeros
+        while(i >= 0 && skip_count && ((dtoh((ptr >> i) & 0xf) == '0'))) {
+            skip_count--;
+            i -= 4;
         }
+
+        while(i >= 0) {
+            append(dtoh((ptr >> i) & 0xf));
+            i -= 4;
+            count++;
+        }
+    }
 }
 
 /**
@@ -223,53 +223,53 @@ void handler_t::append_pointer(void) noexcept
  */
 usize itoa_len(s32 n) noexcept
 {
-        usize len = 0;
+    usize len = 0;
 
-        if (n == 0)
-                return 1;
+    if (n == 0)
+        return 1;
 
-        if (n < 0) {
-                n = -n;
-                len++;
-        }
+    if (n < 0) {
+        n = -n;
+        len++;
+    }
 
-        while (n >= 1) {
-                len++;
-                n /= 10;
-        }
+    while (n >= 1) {
+        len++;
+        n /= 10;
+    }
 
-        return len;
+    return len;
 }
 
 void handler_t::append_integer(void) noexcept
 {
-        s32 n     = va_arg(args, s32);
-        usize i      = itoa_len(n);
-        usize length = i;
+    s32 n        = va_arg(args, s32);
+    usize i      = itoa_len(n);
+    usize length = i;
 
-        char int_buffer[MAX_INT_BUF_SIZE];
+    char int_buffer[MAX_INT_BUF_SIZE];
+    i--;
+
+    if (n < 0) {
+        int_buffer[0] = '-';
+        n = -n;
+    }
+
+    while (i) {
+        int_buffer[i] = static_cast<char>((n % 10) + '0');
+        n /= 10;
         i--;
+    }
 
-        if (n < 0) {
-                int_buffer[0] = '-';
-                n = -n;
-        }
+    if (int_buffer[0] != '-')
+        int_buffer[0] = static_cast<char>((n % 10) + '0');
 
-        while (i) {
-                int_buffer[i] = static_cast<char>((n % 10) + '0');
-                n /= 10;
-                i--;
-        }
+    int_buffer[length] = '\0';
 
-        if (int_buffer[0] != '-')
-                int_buffer[0] = static_cast<char>((n % 10) + '0');
-
-        int_buffer[length] = '\0';
-
-        while (int_buffer[i]) {
-                append(int_buffer[i]);
-                i++;
-        }
+    while (int_buffer[i]) {
+        append(int_buffer[i]);
+        i++;
+    }
 }
 
 /**
@@ -280,172 +280,170 @@ void handler_t::append_integer(void) noexcept
  */
 usize utoa_len(u32 n) noexcept
 {
-        usize len = 0;
+    usize len = 0;
 
-        if (n == 0)
-                return 1;
+    if (n == 0)
+        return 1;
 
-        while (n >= 1) {
-                len++;
-                n /= 10;
-        }
+    while (n >= 1) {
+        len++;
+        n /= 10;
+    }
 
-        return len;
+    return len;
 }
 
 void handler_t::append_uinteger(void) noexcept
 {
-        u32 n    = va_arg(args, u32);
-        usize i      = utoa_len(n);
-        usize length = i;
+    u32 n        = va_arg(args, u32);
+    usize i      = utoa_len(n);
+    usize length = i;
 
-        char uint_buffer[MAX_UINT_BUF_SIZE];
+    char uint_buffer[MAX_UINT_BUF_SIZE];
+    i--;
 
+    while (i) {
+        uint_buffer[i] = static_cast<char>((n % 10) + '0');
+        n /= 10;
         i--;
+    }
 
-        while (i) {
-                uint_buffer[i] = static_cast<char>((n % 10) + '0');
-                n /= 10;
-                i--;
-        }
+    uint_buffer[0]      = static_cast<char>((n % 10) + '0');
+    uint_buffer[length] = '\0';
 
-        uint_buffer[0]      = static_cast<char>((n % 10) + '0');
-        uint_buffer[length] = '\0';
+    i = 0;
 
-        i = 0;
-
-        while (uint_buffer[i]) {
-                append(uint_buffer[i]);
-                i++;
-        }
+    while (uint_buffer[i]) {
+        append(uint_buffer[i]);
+        i++;
+    }
 }
 
 void handler_t::append_hex(bool is_upper) noexcept
 {
-        u32 n = va_arg(args, u32);
-        s32 i  = (sizeof(n) << 3) - 4;
-        auto count = 0;
+    u32 n = va_arg(args, u32);
+    s32 i = (sizeof(n) << 3) - 4;
+    auto count = 0;
 
-        if(get_flag(FLAG_PREFIX)) {
-                append('0');
-                append('x');
-        }
+    if(get_flag(FLAG_PREFIX)) {
+        append('0');
+        append('x');
+    }
 
-        if (num > 8)
-                num = 8;
+    if (num > 8)
+        num = 8;
 
-        auto skip_count = 8 - num;
+    auto skip_count = 8 - num;
 
-        // skip first zeros
-        while(i >= 0 && skip_count && ((dtoh((n >> i) & 0xf, is_upper) == '0'))) {
-                skip_count--;
-                i -= 4;
-        }
+    // skip first zeros
+    while(i >= 0 && skip_count && ((dtoh((n >> i) & 0xf, is_upper) == '0'))) {
+        skip_count--;
+        i -= 4;
+    }
 
-        while(i >= 0) {
-                append(dtoh((n >> i) & 0xf, is_upper));
-                i -= 4;
-                count++;
-        }
+    while(i >= 0) {
+        append(dtoh((n >> i) & 0xf, is_upper));
+        i -= 4;
+        count++;
+    }
 }
 
 void handler_t::handle_flag(char flag) noexcept
 {
-        switch (flag) {
-        // handle output prefix
-        case '#':
-                set_flag(FLAG_PREFIX);
-                break;
+    switch (flag) {
+    // handle output prefix
+    case '#':
+        set_flag(FLAG_PREFIX);
+        break;
 
-        // handle padding
-        case '0':
-                set_flag(FLAG_PADDING);
-                break;
+    // handle padding
+    case '0':
+        set_flag(FLAG_PADDING);
+        break;
 
-        // handle incorrect flag
-        default:
-                handle_argument(flag);
-        }
+    // handle incorrect flag
+    default:
+        handle_argument(flag);
+    }
 }
 
 void handler_t::handle_argument(char type) noexcept
 {
-        switch (type) {
-        // handle character
-        case 'c':
-                append(static_cast<char>(va_arg(args, s32)));
-                break;
+    switch (type) {
+    // handle character
+    case 'c':
+        append(static_cast<char>(va_arg(args, s32)));
+        break;
 
-        // handle string
-        case 's':
-                append_string();
-                break;
+    // handle string
+    case 's':
+        append_string();
+        break;
 
-        // handle pointer
-        case 'p':
-                append_pointer();
-                break;
+    // handle pointer
+    case 'p':
+        append_pointer();
+        break;
 
-        // handle integer
-        case 'd': case 'i':
-                append_integer();
-                break;
+    // handle integer
+    case 'd': case 'i':
+        append_integer();
+        break;
 
-        // handle unsigned integer
-        case 'u':
-                append_uinteger();
-                break;
+    // handle unsigned integer
+    case 'u':
+        append_uinteger();
+        break;
 
-        // handle hexadecimal number
-        case 'x': case 'X':
-                append_hex(isupper(type));
-                break;
+    // handle hexadecimal number
+    case 'x': case 'X':
+        append_hex(isupper(type));
+        break;
 
-        // handle incorrect type
-        default:
-                // handle padding
-                if (get_flag(FLAG_PADDING) && kstd::isdigit(type))
-                        num = static_cast<u8>(type - '0');
-                else
-                        append(type);
-
-                break;
-        }
+    // handle incorrect type
+    default:
+        // handle padding
+        if (get_flag(FLAG_PADDING) && kstd::isdigit(type))
+            num = static_cast<u8>(type - '0');
+        else
+            append(type);
+        break;
+    }
 }
 
 void handler_t::parse(const char *fmt) noexcept
 {
-        usize i = 0;
-        char ch  = 0;
+    usize i = 0;
+    char ch = 0;
 
-        do {
-                ch = fmt[i];
+    do {
+        ch = fmt[i];
 
-                // handle '%' if it isn't the last one
-                if ((ch == '%') && (i < size - 1)) {
-                        ch = fmt[i + 1];
+        // handle '%' if it isn't the last one
+        if ((ch == '%') && (i < size - 1)) {
+            ch = fmt[i + 1];
 
-                        while (ch) {
+            while (ch) {
+                handle_flag(ch);
 
-                                handle_flag(ch);
-
-                                i++;
-                                ch = fmt[i + 1];
-
-                                // skip non-alphanumerical characters
-                                if (!kstd::isalnum(ch)) {
-                                        i++;
-                                        break;
-                                }
-                        }
-
-                        flags = 0x0;
-                        num   = 0;
-                }
-
-                append(ch);
                 i++;
-        } while (ch);
+                ch = fmt[i + 1];
+
+                // skip non-alphanumerical characters
+                if (!kstd::isalnum(ch)) {
+                    i++;
+                    break;
+                }
+            }
+
+            flags = 0x0;
+            num   = 0;
+        }
+
+        append(ch);
+        i++;
+
+    } while (ch);
 }
 
 static handler_t handler {};
@@ -455,7 +453,7 @@ void snprintk(char *buf, usize size, const char *fmt, ...) noexcept
     va_list args;
 
     va_start(args, fmt);
-        vsnprintk(buf, size, fmt, args);
+    vsnprintk(buf, size, fmt, args);
     va_end(args);
 }
 
