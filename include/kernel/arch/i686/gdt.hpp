@@ -24,15 +24,15 @@
  * @date   26.09.2024
  */
 
-#ifndef _KERNEL_ARCH_I386_GDT_HPP_
-#define _KERNEL_ARCH_I386_GDT_HPP_
+#ifndef _KERNEL_ARCH_I686_GDT_HPP_
+#define _KERNEL_ARCH_I686_GDT_HPP_
 
 #include <kernel/types.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace i386 {
+namespace i686 {
 namespace gdt {
 
 inline const u32 GDT_BASE {0x00000800}; // GDT pointer address
@@ -68,8 +68,8 @@ struct ptr_t
 void init(void) noexcept;
 
 } // namespace gdt
-} // namespace i386
+} // namespace i686
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_I386_GDT_HPP_
+#endif // _KERNEL_ARCH_I686_GDT_HPP_

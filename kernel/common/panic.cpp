@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/i386/register.hpp>
+#include <kernel/arch/i686/register.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/printk.hpp>
 #include <kernel/debug.hpp>
@@ -81,7 +81,7 @@ void panic(const char *fmt, ...) noexcept
     kstd::putk(buffer);
 
     if (mem_dump) {
-        using namespace arch::i386;
+        using namespace arch::i686;
 
         auto esp = get_register(REG::ESP);
         auto ebp = get_register(REG::EBP);

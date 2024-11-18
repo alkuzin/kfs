@@ -27,7 +27,7 @@
 #ifndef _KERNEL_CORE_HPP_
 #define _KERNEL_CORE_HPP_
 
-#include <kernel/arch/i386/system.hpp>
+#include <kernel/arch/i686/system.hpp>
 
 
 namespace kernel {
@@ -36,7 +36,7 @@ namespace core {
 /** @brief Halt CPU.*/
 inline void khalt(void) noexcept
 {
-    for (;;) arch::i386::halt();
+    for (;;) arch::i686::halt();
 }
 
 } // namespace core

@@ -19,7 +19,7 @@
 #include <kernel/drivers/keyboard.hpp>
 #include <kernel/shell/builtin.hpp>
 #include <kernel/kstd/cstring.hpp>
-#include <kernel/arch/i386/io.hpp>
+#include <kernel/arch/i686/io.hpp>
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/shell/shell.hpp>
 

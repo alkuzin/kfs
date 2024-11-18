@@ -17,8 +17,8 @@
  */
 
 #include <kernel/drivers/keyboard.hpp>
-#include <kernel/arch/i386/gdt.hpp>
-#include <kernel/arch/i386/idt.hpp>
+#include <kernel/arch/i686/gdt.hpp>
+#include <kernel/arch/i686/idt.hpp>
 #include <kernel/drivers/pit.hpp>
 #include <kernel/shell/shell.hpp>
 #include <kernel/terminal.hpp>
@@ -29,6 +29,7 @@
 #include <kernel/core.hpp>
 #include <kernel/slab.hpp>
 #include <kernel/pmm.hpp>
+#include <kernel/vmm.hpp>
 #include <kernel/rtc.hpp>
 
 
@@ -54,10 +55,10 @@ static void kboot(u32 magic, const multiboot_t& mboot) noexcept
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
         panic("invalid magic number: %#X\n", magic);
 
-    arch::i386::gdt::init();
+    arch::i686::gdt::init();
     printk(KERN_OK "%s\n", "initialized GDT");
 
-    arch::i386::idt::init();
+    arch::i686::idt::init();
     printk(KERN_OK "%s\n", "initialized IDT");
 
     pit::init();
@@ -70,6 +71,9 @@ static void kboot(u32 magic, const multiboot_t& mboot) noexcept
 
     core::memory::init(mboot);
     printk(KERN_OK "%s\n", "initialized physical memory manager");
+
+    // core::memory::vmm.init();
+    // printk(KERN_OK "%s\n", "initialized virtual memory manager");
 
     kmem::init();
     printk(KERN_OK "%s\n", "initialized kernel heap");

@@ -24,19 +24,19 @@
  * @date   29.10.2024
  */
 
-#ifndef _KERNEL_ARCH_I386_CPU_HPP_
-#define _KERNEL_ARCH_I386_CPU_HPP_
+#ifndef _KERNEL_ARCH_I686_CPU_HPP_
+#define _KERNEL_ARCH_I686_CPU_HPP_
 
 #include <kernel/types.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace i386 {
+namespace i686 {
 namespace cpu {
 
 // architecture
-#if __i386__
+#if __i686__
 inline const char *arch {"x86_32"};
 #elif __x86_64__
 inline const char *arch {"x86_64"};
@@ -114,8 +114,8 @@ const char *type_to_str(TYPE type) noexcept;
 const char *get_op_modes(void) noexcept;
 
 } // namespace cpu
-} // namespace i386
+} // namespace i686
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_I386_CPU_HPP_
+#endif // _KERNEL_ARCH_I686_CPU_HPP_

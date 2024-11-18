@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/i386/irq.hpp>
-#include <kernel/arch/i386/io.hpp>
+#include <kernel/arch/i686/irq.hpp>
+#include <kernel/arch/i686/io.hpp>
 #include <kernel/drivers/pit.hpp>
 #include <kernel/kstd/cstdio.hpp>
 
@@ -26,7 +26,7 @@ namespace kernel {
 namespace driver {
 namespace pit {
 
-using namespace arch::i386;
+using namespace arch::i686;
 
 inline const u8  PIT_DATA_PORT_0    {0x40};     // channel 0 data port
 inline const u8  PIT_RATE_GEN_MODE  {0x36};     // rate generator mode

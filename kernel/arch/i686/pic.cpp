@@ -16,13 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/i386/pic.hpp>
-#include <kernel/arch/i386/io.hpp>
+#include <kernel/arch/i686/pic.hpp>
+#include <kernel/arch/i686/io.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace i386 {
+namespace i686 {
 namespace pic {
 
 void init(void) noexcept
@@ -49,6 +49,6 @@ void init(void) noexcept
 }
 
 } // namespace pic
-} // namespace i386
+} // namespace i686
 } // namespace arch
 } // namespace kernel

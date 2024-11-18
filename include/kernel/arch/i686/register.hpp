@@ -18,21 +18,21 @@
 
 /**
  * @file  register.hpp
- * @brief Contains functions for managing i386 registers.
+ * @brief Contains functions for managing i686 registers.
  *
  * @author Alexander Kuzin (<a href="https://github.com/alkuzin">alkuzin</a>)
  * @date   09.10.2024
  */
 
-#ifndef _KERNEL_ARCH_I386_REGISTER_HPP_
-#define _KERNEL_ARCH_I386_REGISTER_HPP_
+#ifndef _KERNEL_ARCH_I686_REGISTER_HPP_
+#define _KERNEL_ARCH_I686_REGISTER_HPP_
 
 #include <kernel/types.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace i386 {
+namespace i686 {
 
 enum class REG {
     CR2,
@@ -68,8 +68,8 @@ u32 get_register(REG reg) noexcept;
  */
 void set_register(REG reg, u32 value) noexcept;
 
-} // namespace i386
+} // namespace i686
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_I386_REGISTER_HPP_
+#endif // _KERNEL_ARCH_I686_REGISTER_HPP_

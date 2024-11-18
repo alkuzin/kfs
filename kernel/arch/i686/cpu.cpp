@@ -16,15 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/i386/register.hpp>
-#include <kernel/arch/i386/cpu.hpp>
+#include <kernel/arch/i686/register.hpp>
+#include <kernel/arch/i686/cpu.hpp>
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/printk.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace i386 {
+namespace i686 {
 namespace cpu {
 
 static info_t cpu_info {};
@@ -137,6 +137,6 @@ const char *type_to_str(TYPE type) noexcept
 }
 
 } // namespace cpu
-} // namespace i386
+} // namespace i686
 } // namespace arch
 } // namespace kernel

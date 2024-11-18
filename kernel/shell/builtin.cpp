@@ -17,14 +17,14 @@
  */
 
 #include <kernel/drivers/keyboard.hpp>
-#include <kernel/arch/i386/system.hpp>
+#include <kernel/arch/i686/system.hpp>
 #include <kernel/shell/builtin.hpp>
-#include <kernel/arch/i386/gdt.hpp>
-#include <kernel/arch/i386/cpu.hpp>
+#include <kernel/arch/i686/gdt.hpp>
+#include <kernel/arch/i686/cpu.hpp>
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cstdlib.hpp>
 #include <kernel/drivers/pit.hpp>
-#include <kernel/arch/i386/io.hpp>
+#include <kernel/arch/i686/io.hpp>
 #include <kernel/kstd/cmath.hpp>
 #include <kernel/gfx/tui.hpp>
 #include <kernel/config.hpp>
@@ -147,8 +147,8 @@ static void uname(s32 argc, char **argv) noexcept
     (void)argc; (void)argv; // unused
 
     // display general kernel info
-    u32 mode = arch::i386::mode();
-    u32 ring = arch::i386::ring();
+    u32 mode = arch::i686::mode();
+    u32 ring = arch::i686::ring();
 
     printk(
         "kernel name:      |  %s\n"
@@ -187,7 +187,7 @@ static void lscpu(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
-    using namespace arch::i386;
+    using namespace arch::i686;
 
     cpu::details_t details {};
     cpu::get_details(details);
@@ -220,7 +220,7 @@ static void gdt(s32 argc, char **argv) noexcept
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Warray-bounds"
 
-    using namespace arch::i386;
+    using namespace arch::i686;
 
     gdt::ptr_t *gdt_ptr = reinterpret_cast<gdt::ptr_t*>(gdt::GDT_BASE);
 
@@ -247,17 +247,17 @@ static void reboot(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
-    arch::i386::cli();               // disable interrupts
-    arch::i386::outb(0x64, 0xFE);    // reset CPU
-    arch::i386::halt();              // halt CPU
+    arch::i686::cli();               // disable interrupts
+    arch::i686::outb(0x64, 0xFE);    // reset CPU
+    arch::i686::halt();              // halt CPU
 }
 
 static void shutdown(s32 argc, char **argv) noexcept
 {
     (void)argc; (void)argv; // unused
 
-    arch::i386::outw(0x0604, 0x2000); // for QEMU
-    arch::i386::outw(0x4004, 0x3400); // for VirtualBox
+    arch::i686::outw(0x0604, 0x2000); // for QEMU
+    arch::i686::outw(0x4004, 0x3400); // for VirtualBox
 }
 
 // Rotating 3D cube demo ----------------------------------------------------

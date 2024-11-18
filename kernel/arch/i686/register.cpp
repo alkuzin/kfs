@@ -16,12 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/i386/register.hpp>
+#include <kernel/arch/i686/register.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace i386 {
+namespace i686 {
 
 // TODO: add debug function that prints all registers
 u32 get_register(REG reg) noexcept
@@ -166,6 +166,6 @@ void set_register(REG reg, u32 value) noexcept
     }
 }
 
-} // namespace i386
+} // namespace i686
 } // namespace arch
 } // namespace kernel

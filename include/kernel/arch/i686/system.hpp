@@ -24,15 +24,15 @@
  * @date   26.09.2024
  */
 
-#ifndef _KERNEL_ARCH_I386_SYSTEM_HPP_
-#define _KERNEL_ARCH_I386_SYSTEM_HPP_
+#ifndef _KERNEL_ARCH_I686_SYSTEM_HPP_
+#define _KERNEL_ARCH_I686_SYSTEM_HPP_
 
-#include <kernel/arch/i386/register.hpp>
+#include <kernel/arch/i686/register.hpp>
 
 
 namespace kernel {
 namespace arch {
-namespace i386 {
+namespace i686 {
 
 /** @brief Halt CPU.*/
 inline void halt(void) noexcept
@@ -79,8 +79,33 @@ inline void cli(void) noexcept
     asm volatile("cli");
 }
 
-} // namespace i386
+/**
+ * @brief Enable paging.
+ *
+ * @param [in] page_directory - given page directory pointer.
+ */
+inline void enable_paging(void *page_directory) noexcept
+{
+    // asm volatile("mov %%eax, %%cr3" : : "a"(page_directory));
+    // asm volatile("mov %cr0, %eax; or $0x80000001, %eax; mov %eax, %cr0");
+
+    asm volatile(
+        "push %%eax;"
+        "mov %0, %%eax;"
+        "mov %%eax, %%cr3;"
+        "mov %%cr4, %%eax;"
+        "and $-0x00000010, %%eax;"
+        "mov %%eax, %%cr4;"
+        "mov %%cr0, %%eax;"
+        "or $0x80000000, %%eax;"
+        "mov %%eax, %%cr0;"
+        "pop %%eax;"
+        :: "r"(page_directory)
+    );
+}
+
+} // namespace i686
 } // namespace arch
 } // namespace kernel
 
-#endif // _KERNEL_ARCH_I386_SYSTEM_HPP_
+#endif // _KERNEL_ARCH_I686_SYSTEM_HPP_

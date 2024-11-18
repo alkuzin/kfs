@@ -16,22 +16,30 @@
 
 
 cmake_minimum_required(VERSION 3.20.0)
-# Set project name & programming languages
-project(KFS LANGUAGES CXX ASM)
 
-# Check if the compiler is g++
+# Setting project name
+project(KFS)
+
+# Checking if the compiler is g++
 if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message(FATAL_ERROR "This project requires g++ as the C++ compiler!")
 endif()
 
 set(CMAKE_CXX_STANDARD 23)          # Using C++23 standard
-set(CMAKE_CXX_STANDARD_REQUIRED ON) # Enforce the standard
-set(CMAKE_CXX_EXTENSIONS OFF)       # Disable compiler-specific extensions
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # Enforcing the standard
+set(CMAKE_CXX_EXTENSIONS OFF)       # Disabling compiler-specific extensions
 
-# Set paths
+
+# Setting cross-compiler & cross-assembler
+set(USER_HOME_DIR       $ENV{HOME})
+set(CROSS_COMPILER_DIR  ${USER_HOME_DIR}/opt/cross/bin/)
+set(CMAKE_CXX_COMPILER  ${CROSS_COMPILER_DIR}i686-elf-g++)
+set(ASSEMBLER           ${CROSS_COMPILER_DIR}i686-elf-as)
+
+# Setting paths
 set(BOOT_DIR                ${CMAKE_SOURCE_DIR}/../boot)
 set(KERNEL_DIR              ${CMAKE_SOURCE_DIR}/../kernel)
-set(KERNEL_ARCH_I386_DIR     ${KERNEL_DIR}/arch/x86)
+set(KERNEL_ARCH_I686_DIR    ${KERNEL_DIR}/arch/i686)
 set(KERNEL_SHELL_DIR        ${KERNEL_DIR}/shell)
 set(KERNEL_DEBUG_DIR        ${KERNEL_DIR}/debug)
 set(KERNEL_MM_DIR           ${KERNEL_DIR}/mm)
@@ -40,10 +48,9 @@ set(DRIVERS_DIR             ${CMAKE_SOURCE_DIR}/../drivers)
 set(GFX_DIR                 ${CMAKE_SOURCE_DIR}/../gfx)
 set(KSTD_DIR                ${CMAKE_SOURCE_DIR}/../kstd)
 set(INCLUDE_DIR             ${CMAKE_SOURCE_DIR}/../include)
+set(INCLUDE_DIRECTORIES     ${INCLUDE_DIR})
 
-set(INCLUDE_DIRECTORIES  ${INCLUDE_DIR})
-
-# List of kernel drivers source files
+# List of kernel graphics source files
 set(GFX_SOURCES
     "${GFX_DIR}/graphics.cpp"
     "${GFX_DIR}/font.cpp"
@@ -68,20 +75,20 @@ set(KSTD_SOURCES
 set(KERNEL_SOURCES
     "${KERNEL_DIR}/kernel.cpp"
 
-    # Kernel commond directory:
+    # Kernel common directory:
     "${KERNEL_COMMON_DIR}/terminal.cpp"
     "${KERNEL_COMMON_DIR}/printk.cpp"
     "${KERNEL_COMMON_DIR}/panic.cpp"
     "${KERNEL_COMMON_DIR}/ktime.cpp"
     "${KERNEL_COMMON_DIR}/rtc.cpp"
 
-    # Kernel arch/x86 directory:
-    "${KERNEL_ARCH_I386_DIR}/register.cpp"
-    "${KERNEL_ARCH_I386_DIR}/gdt.cpp"
-    "${KERNEL_ARCH_I386_DIR}/idt.cpp"
-    "${KERNEL_ARCH_I386_DIR}/irq.cpp"
-    "${KERNEL_ARCH_I386_DIR}/pic.cpp"
-    "${KERNEL_ARCH_I386_DIR}/cpu.cpp"
+    # Kernel arch/i686 directory:
+    "${KERNEL_ARCH_I686_DIR}/register.cpp"
+    "${KERNEL_ARCH_I686_DIR}/gdt.cpp"
+    "${KERNEL_ARCH_I686_DIR}/idt.cpp"
+    "${KERNEL_ARCH_I686_DIR}/irq.cpp"
+    "${KERNEL_ARCH_I686_DIR}/pic.cpp"
+    "${KERNEL_ARCH_I686_DIR}/cpu.cpp"
 
     # Kernel shell directory:
     "${KERNEL_SHELL_DIR}/builtin.cpp"
@@ -93,12 +100,13 @@ set(KERNEL_SOURCES
     # Kernel memory management directory:
     "${KERNEL_MM_DIR}/slab.cpp"
     "${KERNEL_MM_DIR}/pmm.cpp"
+    "${KERNEL_MM_DIR}/vmm.cpp"
 )
 
 # List of kernel assembly source files
 set(ASM_SOURCES
-    "${KERNEL_ARCH_I386_DIR}/gdt_flush.asm"
-    "${KERNEL_ARCH_I386_DIR}/idt_flush.asm"
+    "${KERNEL_ARCH_I686_DIR}/gdt_flush.asm"
+    "${KERNEL_ARCH_I686_DIR}/idt_flush.asm"
     "${BOOT_DIR}/boot.asm"
 )
 
@@ -150,7 +158,7 @@ foreach(ASM_FILE ${ASM_SOURCES})
 
     add_custom_command(
         OUTPUT ${OBJ_FILE}
-        COMMAND as ${ASMFLAGS} -o ${OBJ_FILE} ${ASM_FILE}
+        COMMAND ${ASSEMBLER} ${ASMFLAGS} -o ${OBJ_FILE} ${ASM_FILE}
         DEPENDS ${ASM_FILE}
     )
 endforeach()

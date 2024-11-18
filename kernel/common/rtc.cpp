@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <kernel/arch/i386/system.hpp>
-#include <kernel/arch/i386/irq.hpp>
-#include <kernel/arch/i386/io.hpp>
+#include <kernel/arch/i686/system.hpp>
+#include <kernel/arch/i686/irq.hpp>
+#include <kernel/arch/i686/io.hpp>
 #include <kernel/rtc.hpp>
 
 
@@ -42,7 +42,7 @@ enum class REG : u8 {
     CENTURY = 0x32  // century       (19–20)
 };
 
-using namespace arch::i386;
+using namespace arch::i686;
 
 /**
  * @brief Handle interrupts.
