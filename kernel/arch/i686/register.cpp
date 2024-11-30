@@ -89,6 +89,10 @@ u32 get_register(REG reg) noexcept
         asm volatile("mov %%cr2, %0" : "=r"(value));
         break;
 
+    case REG::CR3:
+        asm volatile("mov %%cr3, %0" : "=r"(value));
+        break;
+
     default:
         break;
     }
@@ -159,6 +163,10 @@ void set_register(REG reg, u32 value) noexcept
 
     case REG::CR2:
         asm volatile("mov %0, %%cr2" : : "r"(value));
+        break;
+
+    case REG::CR3:
+        asm volatile("mov %0, %%cr3" : : "r"(value));
         break;
 
     default:
