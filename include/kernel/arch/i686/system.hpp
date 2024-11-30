@@ -82,26 +82,15 @@ inline void cli(void) noexcept
 /**
  * @brief Enable paging.
  *
- * @param [in] page_directory - given page directory pointer.
+ * @param [in] pd - given page directory physical address.
  */
-inline void enable_paging(void *page_directory) noexcept
+inline void enable_paging(phys_addr_t pd) noexcept
 {
-    // asm volatile("mov %%eax, %%cr3" : : "a"(page_directory));
-    // asm volatile("mov %cr0, %eax; or $0x80000001, %eax; mov %eax, %cr0");
+    // update page directory
+    asm volatile("mov %%eax, %%cr3" : : "a"(pd));
 
-    asm volatile(
-        "push %%eax;"
-        "mov %0, %%eax;"
-        "mov %%eax, %%cr3;"
-        "mov %%cr4, %%eax;"
-        "and $-0x00000010, %%eax;"
-        "mov %%eax, %%cr4;"
-        "mov %%cr0, %%eax;"
-        "or $0x80000000, %%eax;"
-        "mov %%eax, %%cr0;"
-        "pop %%eax;"
-        :: "r"(page_directory)
-    );
+    // enable paging
+    asm volatile("mov %cr0, %eax; or $0x80000001, %eax; mov %eax, %cr0");
 }
 
 } // namespace i686

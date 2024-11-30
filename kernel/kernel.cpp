@@ -72,8 +72,8 @@ static void kboot(u32 magic, const multiboot_t& mboot) noexcept
     core::memory::init(mboot);
     printk(KERN_OK "%s\n", "initialized physical memory manager");
 
-    // core::memory::vmm.init();
-    // printk(KERN_OK "%s\n", "initialized virtual memory manager");
+    core::memory::vmm::init();
+    printk(KERN_OK "%s\n", "initialized virtual memory manager");
 
     kmem::init();
     printk(KERN_OK "%s\n", "initialized kernel heap");
@@ -89,7 +89,7 @@ static void kboot(u32 magic, const multiboot_t& mboot) noexcept
 asmlinkage void kmain(u32 magic, const multiboot_t& mboot) noexcept
 {
     kboot(magic, mboot);
-    core::khalt();
+    khalt();
 }
 
 } // namespace core

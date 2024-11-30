@@ -35,6 +35,7 @@ set(USER_HOME_DIR       $ENV{HOME})
 set(CROSS_COMPILER_DIR  ${USER_HOME_DIR}/opt/cross/bin/)
 set(CMAKE_CXX_COMPILER  ${CROSS_COMPILER_DIR}i686-elf-g++)
 set(ASSEMBLER           ${CROSS_COMPILER_DIR}i686-elf-as)
+set(LINKER              ${CROSS_COMPILER_DIR}i686-elf-ld)
 
 # Setting paths
 set(BOOT_DIR                ${CMAKE_SOURCE_DIR}/../boot)
@@ -187,7 +188,7 @@ target_link_libraries(kernel PRIVATE ${ASM_OBJECTS})
 
 # Set the linker to ld & link with custom linker script
 set_target_properties(${NAME} PROPERTIES LINK_FLAGS "${LDFLAGS} -T ${LINKER_SCRIPT}")
-set(CMAKE_CXX_LINK_EXECUTABLE "ld <LINK_FLAGS> -T${BOOT_DIR}/linker.ld -o <TARGET> <OBJECTS> ")
+set(CMAKE_CXX_LINK_EXECUTABLE "${LINKER} <LINK_FLAGS> -T${BOOT_DIR}/linker.ld -o <TARGET> <OBJECTS> ")
 target_link_options(kernel PRIVATE ${LDFLAGS})
 
 # Set project variables
