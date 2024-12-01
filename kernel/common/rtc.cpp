@@ -19,6 +19,7 @@
 #include <kernel/arch/i686/system.hpp>
 #include <kernel/arch/i686/irq.hpp>
 #include <kernel/arch/i686/io.hpp>
+#include <kernel/kernel.hpp>
 #include <kernel/rtc.hpp>
 
 
@@ -52,7 +53,8 @@ using namespace arch::i686;
 static void clock_handler(irq::int_regs_t *regs) noexcept
 {
     // Turn on the periodic interrupt with the default 1024 Hz rate
-    (void)regs;                             // unused
+    IGNORE_UNUSED(regs);
+
     cli();                                  // disable interrupts
     outb(RTC_PORT_INDEX, RTC_REGISTER_B);   // disable non-maskable-interrupt
     u8 prev = inb(RTC_PORT_DATA);      // read the value of register B

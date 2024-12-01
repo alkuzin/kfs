@@ -20,6 +20,7 @@
 #include <kernel/arch/i686/io.hpp>
 #include <kernel/drivers/pit.hpp>
 #include <kernel/kstd/cstdio.hpp>
+#include <kernel/kernel.hpp>
 
 
 namespace kernel {
@@ -41,7 +42,7 @@ static volatile u32 ticks {0};
  */
 static void timer_handler(irq::int_regs_t *regs) noexcept
 {
-    (void)regs; // unused
+    IGNORE_UNUSED(regs);
     ticks += 1;
 }
 

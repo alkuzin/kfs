@@ -22,6 +22,7 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cstdio.hpp>
 #include <kernel/kstd/cctype.hpp>
+#include <kernel/kernel.hpp>
 #include <kernel/panic.hpp>
 
 
@@ -249,7 +250,7 @@ void get_line(char *buffer, usize size) noexcept
 
 void keyboard_handler(irq::int_regs_t *regs) noexcept
 {
-    (void)regs; // unused
+    IGNORE_UNUSED(regs);
 
     scan_code = inb(0x60) & 0x7F; // get code of key that is pressed
     press     = inb(0x60) & 0x80; // is key is pressed down or released

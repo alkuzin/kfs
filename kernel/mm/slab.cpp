@@ -106,7 +106,7 @@ void cache_t::create(const char *name, usize size, u8 flags) noexcept
 
 void *cache_t::alloc(u8 flags) noexcept
 {
-    (void)flags;    // TODO: handle SLAB_KERNEL
+    IGNORE_UNUSED(flags);
 
     if (list.size == 0)
         alloc_slab();

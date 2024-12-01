@@ -33,6 +33,8 @@
 
 namespace kernel {
 
+#define IGNORE_UNUSED(x) ((void)x)
+
 /**
  * @brief Get the closest power of 2.
  *

@@ -27,6 +27,7 @@
 #include <kernel/arch/i686/io.hpp>
 #include <kernel/kstd/cmath.hpp>
 #include <kernel/gfx/tui.hpp>
+#include <kernel/kernel.hpp>
 #include <kernel/config.hpp>
 #include <kernel/printk.hpp>
 #include <kernel/kernel.hpp>
@@ -116,7 +117,8 @@ const char *get_suitable_cmd(const char *str, s32 len) noexcept
 
 static void help(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     builtin_t *cmd {nullptr};
     s32    len {0};
@@ -137,14 +139,16 @@ static void help(s32 argc, char **argv) noexcept
 
 static void clear(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     tty::clear();
 }
 
 static void uname(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     // display general kernel info
     u32 mode = arch::i686::mode();
@@ -178,14 +182,16 @@ static void uname(s32 argc, char **argv) noexcept
 
 static void date(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     printk("%s\n", ktime::get_date());
 }
 
 static void lscpu(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     using namespace arch::i686;
 
@@ -204,14 +210,16 @@ static void lscpu(s32 argc, char **argv) noexcept
 
 static void lsmem(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     core::memory::display_memory();
 }
 
 static void gdt(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     // while trying to get GDT info by using GDT pointer struct
     // that set at GDT_BASE <0x00000800> compiler show warnings
@@ -239,13 +247,16 @@ static void gdt(s32 argc, char **argv) noexcept
 
 static void ticks(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
+
     printk("PIT ticks: %u\n", driver::pit::get_ticks());
 }
 
 static void reboot(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     arch::i686::cli();               // disable interrupts
     arch::i686::outb(0x64, 0xFE);    // reset CPU
@@ -254,7 +265,8 @@ static void reboot(s32 argc, char **argv) noexcept
 
 static void shutdown(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     arch::i686::outw(0x0604, 0x2000); // for QEMU
     arch::i686::outw(0x4004, 0x3400); // for VirtualBox
@@ -448,7 +460,8 @@ static void round_cube(void) noexcept
 
 static void tui(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
 
     using namespace gfx::tui;
 
@@ -489,13 +502,17 @@ static void tui(s32 argc, char **argv) noexcept
 
 static void interrupt(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
+
     asm volatile("int $0");
 }
 
 static void uptime(s32 argc, char **argv) noexcept
 {
-    (void)argc; (void)argv; // unused
+    IGNORE_UNUSED(argc);
+    IGNORE_UNUSED(argv);
+
     ktime_t boot_time = ktime::get_boot_time();
     ktime_t cur_time  = ktime::clock();
     ktime_t diff_time = cur_time - boot_time;
