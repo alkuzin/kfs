@@ -20,6 +20,7 @@
 #include <kernel/kstd/cmath.hpp>
 #include <kernel/mm_types.hpp>
 #include <kernel/kernel.hpp>
+#include <kernel/printk.hpp>
 #include <kernel/panic.hpp>
 #include <kernel/slab.hpp>
 #include <kernel/pmm.hpp>
@@ -47,6 +48,9 @@ void init(void) noexcept
 
     slabs.head = reinterpret_cast<slab_t*>(pages);
     slabs.size = ((1 << SLAB_PAGES_ORDER) << PAGE_SHIFT) / sizeof(slab_t);
+
+    printk(KERN_INFO "SLAB allocator list head: <%08p>\n", slabs.head);
+    printk(KERN_INFO "total slabs: %u\n", slabs.size);
 
     // allocating pages for each slab objects
     void *page_ptr = nullptr;
@@ -79,6 +83,14 @@ void init(void) noexcept
     caches[2].create("kmalloc-32", 32, 0);
     caches[1].create("kmalloc-16", 16, 0);
     caches[0].create("kmalloc-8", 8, 0);
+
+    printk(KERN_INFO "total SLAB caches: %u\n", CACHES_SIZE);
+
+    for (usize i = 0; i < CACHES_SIZE; i++) {
+        printk(KERN_INFO "created cache: %s objsize: %u objnum: %u\n",
+            caches[i].name, caches[i].objsize, caches[i].objnum
+        );
+    }
 }
 
 void cache_t::create(const char *name, usize size, u8 flags) noexcept

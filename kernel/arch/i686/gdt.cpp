@@ -18,6 +18,7 @@
 
 #include <kernel/arch/i686/gdt.hpp>
 #include <kernel/linkage.hpp>
+#include <kernel/printk.hpp>
 
 
 namespace kernel {
@@ -91,6 +92,15 @@ void init(void) noexcept
 
     // update GDT:
     gdt_flush(reinterpret_cast<u32>(gdt_ptr));
+
+    printk(KERN_INFO "set %u GDT entries\n", ENTRIES);
+    printk(KERN_INFO "GDT pointer: <%08p> {size: %u, offset: %#08X}\n",
+    gdt_ptr, gdt_ptr->size, gdt_ptr->offset);
+
+    for (usize i = 0; i < ENTRIES; i++) {
+        printk(KERN_INFO "GDT entry %u:  Base: %#08X  Limit: %#08X  Access: %#08X  Flags: %#08X\n",
+        i, ENTRY_BASE, GDT[i].limit, GDT[i].access, GDT[i].flags);
+    }
 }
 
 } // namespace gdt

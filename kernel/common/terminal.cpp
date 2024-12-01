@@ -20,6 +20,7 @@
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/terminal.hpp>
 #include <kernel/gfx/font.hpp>
+#include <kernel/printk.hpp>
 
 
 namespace kernel {
@@ -39,6 +40,12 @@ void terminal_t::init(void) noexcept
     y_pos       = 0;
     width       = fb.width;
     height      = fb.height;
+
+    printk(KERN_INFO "VESA framebuffer address: <%08p>\n", fb);
+    printk(KERN_INFO "VESA framebuffer bytes per pixel: %u\n", fb.bpp);
+    printk(KERN_INFO "VESA framebuffer width: %u\n", fb.width);
+    printk(KERN_INFO "VESA framebuffer height: %u\n", fb.height);
+    printk(KERN_INFO "VESA framebuffer pitch: %u\n", fb.pitch);
 }
 
 /** @brief Scroll screen.*/

@@ -42,11 +42,35 @@ struct phys_mman_t
 
 static phys_mman_t pmm {};
 
+static const char *mem_types[5] = {
+    "available",        // available RAM to use
+    "reserved",         // reserved memory for kernel
+    "ACPI reclaimable", // memory that managed by ACPI
+    "NVS",              // non-volatile storage memory
+    "bad RAM"           // should not be used by the OS
+};
+
+/**
+ * @brief Get the memory area type string representation.
+ *
+ * @param [in] type - given memory area type.
+ * @return memory area type string representation.
+ */
+static inline const char *get_mem_type(s32 type) noexcept
+{
+    if (type < 0 || type >= 5)
+        return "undefined";
+    else
+        return mem_types[type];
+}
+
 /** @brief Get information about memory regions.*/
 static void detect_memory(void) noexcept
 {
     multiboot_entry_t *mmmt;
     usize i = 0;
+
+    printk(KERN_INFO "%s\n", "BIOS-provided physical RAM map:");
 
     while (i < pmm.mboot->mmap_length) {
         mmmt = reinterpret_cast<multiboot_entry_t*>(pmm.mboot->mmap_addr + i);
@@ -56,6 +80,10 @@ static void detect_memory(void) noexcept
 
         pmm.mem_total += mmmt->len;
         i += sizeof(multiboot_entry_t);
+
+        printk(KERN_INFO "[mem %#08X-", mmmt->addr);
+        printk("%#08X] ", mmmt->addr + mmmt->len - 1);
+        printk("%s\n", get_mem_type(mmmt->type));
     }
 }
 
@@ -153,12 +181,8 @@ void init(const multiboot_t& mboot) noexcept
     kstd::memset(pmm.mem_map, 0, pmm.mem_map_size);
 
     // setting page frame numbers
-    for (usize i = 0; i < pmm.max_pages; i++) {
-        pmm.mem_map[i].cache = nullptr;
-        pmm.mem_map[i].slab  = nullptr;
-        pmm.mem_map[i].flags = 0;
+    for (usize i = 0; i < pmm.max_pages; i++)
         pmm.mem_map[i].pfn   = i;
-    }
 
     // mark all memory as used
     kstd::memset(bitmap_addr, 0xFF, bitmap_size);
@@ -182,6 +206,13 @@ void init(const multiboot_t& mboot) noexcept
     // be accessed, so it was set as used:
     reserve_page(0);    // containing GDT
     reserve_page(16);   // containing multiboot info structure
+
+    printk(KERN_INFO "total RAM: %u KB\n", pmm.mem_total >> 0xA);
+    printk(KERN_INFO "max pages: %u\n", pmm.max_pages);
+    printk(KERN_INFO "set bitmap at address: <%08p>\n", bitmap_addr);
+    printk(KERN_INFO "set bitmap size: %u bytes\n", bitmap_size);
+    printk(KERN_INFO "set mem map at address: <%08p>\n", pmm.mem_map);
+    printk(KERN_INFO "set mem map size: %u bytes\n", pmm.mem_map_size);
 }
 
 /**
@@ -288,28 +319,6 @@ page_t *get_page(phys_addr_t addr) noexcept
 {
     usize pfn = PHYS_PFN(addr);
     return &pmm.mem_map[pfn];
-}
-
-static const char *mem_types[5] = {
-    "available",        // available RAM to use
-    "reserved",         // reserved memory for kernel
-    "ACPI reclaimable", // memory that managed by ACPI
-    "NVS",              // non-volatile storage memory
-    "bad RAM"           // should not be used by the OS
-};
-
-/**
- * @brief Get the memory area type string representation.
- *
- * @param [in] type - given memory area type.
- * @return memory area type string representation.
- */
-static inline const char *get_mem_type(s32 type) noexcept
-{
-    if (type < 0 || type >= 5)
-        return "undefined";
-    else
-        return mem_types[type];
 }
 
 void display_memory(void) noexcept

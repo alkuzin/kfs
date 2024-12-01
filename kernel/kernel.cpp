@@ -55,6 +55,9 @@ static void kboot(u32 magic, const multiboot_t& mboot) noexcept
     if (magic != MULTIBOOT_BOOTLOADER_MAGIC)
         panic("invalid magic number: %#X\n", magic);
 
+    printk(KERN_INFO "Multiboot structure: <%08p>\n", &mboot);
+    printk(KERN_INFO "Multiboot magic number: %#08X\n", magic);
+
     arch::i686::gdt::init();
     printk(KERN_OK "%s\n", "initialized GDT");
 
