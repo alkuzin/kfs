@@ -100,7 +100,7 @@ asmlinkage void isr_handler(int_regs_t *regs) noexcept
 {
     // handle exceptions
     if(regs->int_no < 32)
-        panic(PANIC_DEBUG "%s\n", exception_msgs[regs->int_no]);
+        panic("%s\n", exception_msgs[regs->int_no]);
 }
 
 } // namespace irq

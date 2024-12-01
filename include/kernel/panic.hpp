@@ -35,8 +35,9 @@ namespace kernel {
 // kernel panic types:
 #define PANIC_FATAL      "<0>"  // fatal error  (stop kernel)
 #define PANIC_ERR        "<1>"  // simple error (don't stop kernel)
-#define PANIC_DEBUG      "<2>"  // like fatal error, but outputs memory dump
 #define PANIC_DEFAULT    "<9>"  // like PANIC_FATAL & PANIC_DEBUG
+
+#define panic(fmt, ...) _panic(__FILE__, __func__, __LINE__, fmt,  ##__VA_ARGS__)
 
 /**
  * @brief Print kernel internal error.
@@ -44,7 +45,7 @@ namespace kernel {
  * @param [in] fmt - given format string.
  * @param [in] ... - given variable number of arguments.
  */
-void panic(const char *fmt, ...) noexcept;
+void _panic(const char *file, const char *func, s32 line, const char *fmt, ...) noexcept;
 
 } // namespace kernel
 

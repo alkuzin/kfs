@@ -35,22 +35,11 @@ namespace arch {
 namespace i686 {
 
 enum class REG {
-    DS,
-    EDI,
-    ESI,
-    EBP,
-    ESP,
-    EBX,
-    EDX,
-    ECX,
-    EAX,
-    EIP,
-    CS,
-    EFLAGS,
-    SS,
-    CR0,
-    CR2,
-    CR3
+    EAX, EBX, ECX, EDX,
+    ESI, EDI, EBP, ESP,
+    EIP, EFLAGS,
+    DS, CS, SS,
+    CR0, CR2, CR3
 };
 
 /**
