@@ -83,6 +83,7 @@ static void kboot(u32 magic, const multiboot_t& mboot) noexcept
 
     shell::init();
     printk(KERN_OK "%s\n", "initialized kernel shell");
+    printk(KERN_INFO "%s\n", "initialized kernel shell");
     shell::process();
 }
 

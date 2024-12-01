@@ -19,6 +19,7 @@
 #include <kernel/kstd/cstring.hpp>
 #include <kernel/kstd/cctype.hpp>
 #include <kernel/printk.hpp>
+#include <kernel/ktime.hpp>
 
 
 namespace kernel {
@@ -32,6 +33,7 @@ inline const auto LOG_OK           {0};
 inline const auto LOG_ERR          {1};
 inline const auto LOG_DEBUG        {2};
 inline const auto LOG_EMERG        {3};
+inline const auto LOG_INFO         {4};
 inline const auto LOG_DEFAULT      {9};
 
 // kernel log types messages:
@@ -57,6 +59,9 @@ static s32 print_log(const char *fmt) noexcept
     if (type == LOG_DEFAULT)
         return 0;
 
+    static char timestamp[32] {};
+    ktime_t boot_time, cur_time, diff_time, sec, millisec;
+
     // print log type
     kstd::putchar('[');
     switch (type) {
@@ -74,6 +79,17 @@ static s32 print_log(const char *fmt) noexcept
 
     case LOG_EMERG:
         kstd::putk(LOG_EMERG_MSG, gfx::color::yellow);
+        break;
+
+    case LOG_INFO:
+        boot_time = ktime::get_boot_time();
+        cur_time  = ktime::clock();
+        diff_time = cur_time - boot_time;
+        sec       = (diff_time / 1000) % 60;
+        millisec  = diff_time % 1000;
+
+        kstd::snprintk(timestamp, sizeof(timestamp), "%u.%u", sec, millisec);
+        kstd::putk(timestamp, gfx::color::gray);
         break;
 
     default:
