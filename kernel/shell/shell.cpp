@@ -47,7 +47,7 @@ static inline void display_prompt(void) noexcept
 /** @brief Custom TAB key handler.*/
 static bool tab_handler(void) noexcept
 {
-    s32 len         = kstd::strlen(shell_buffer);
+    s32 len = kstd::strlen(shell_buffer);
     const char *command = get_suitable_cmd(shell_buffer, len);
 
     if (command) {

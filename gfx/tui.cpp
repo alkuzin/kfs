@@ -201,6 +201,8 @@ void window_t::show(void) noexcept
                 break;
         }
     }
+
+    destroy();
 }
 
 void window_t::add_button(const char *label, action_t on_click, void *arg, point_t begin) noexcept
