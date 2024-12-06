@@ -41,20 +41,20 @@ namespace shell {
 
 inline const u8 BUILTINS_COUNT {14};
 
-static void help(s32 argc, char **argv) noexcept;
-static void clear(s32 argc, char **argv) noexcept;
-static void uname(s32 argc, char **argv) noexcept;
-static void date(s32 argc, char **argv) noexcept;
-static void lscpu(s32 argc, char **argv) noexcept;
-static void lsmem(s32 argc, char **argv) noexcept;
-static void gdt(s32 argc, char **argv) noexcept;
-static void ticks(s32 argc, char **argv) noexcept;
-static void reboot(s32 argc, char **argv) noexcept;
-static void shutdown(s32 argc, char **argv) noexcept;
-static void tui(s32 argc, char **argv) noexcept;
-static void interrupt(s32 argc, char **argv) noexcept;
-static void uptime(s32 argc, char **argv) noexcept;
-static void dump(s32 argc, char **argv) noexcept;
+static void help(s32 argc, char **argv);
+static void clear(s32 argc, char **argv);
+static void uname(s32 argc, char **argv);
+static void date(s32 argc, char **argv);
+static void lscpu(s32 argc, char **argv);
+static void lsmem(s32 argc, char **argv);
+static void gdt(s32 argc, char **argv);
+static void ticks(s32 argc, char **argv);
+static void reboot(s32 argc, char **argv);
+static void shutdown(s32 argc, char **argv);
+static void tui(s32 argc, char **argv);
+static void interrupt(s32 argc, char **argv);
+static void uptime(s32 argc, char **argv);
+static void dump(s32 argc, char **argv);
 
 static builtin_t builtins[BUILTINS_COUNT] {
     {"help",  "show list of available commands", nullptr, 0, help},
@@ -73,7 +73,7 @@ static builtin_t builtins[BUILTINS_COUNT] {
     {"dump", "memory dump specific memmory address", nullptr, 0, dump},
 };
 
-void exec(const char *cmd) noexcept
+void exec(const char *cmd)
 {
     const char *target {nullptr};
     s32 len  {0};
@@ -97,7 +97,7 @@ void exec(const char *cmd) noexcept
     printk("sh: %s: command not found \n", cmd);
 }
 
-const char *get_suitable_cmd(const char *str, s32 len) noexcept
+const char *get_suitable_cmd(const char *str, s32 len)
 {
     // warning: for large number of shell commands it is better to use
     // algorithm based on the search tree (with search complexity O(log N))
@@ -115,7 +115,7 @@ const char *get_suitable_cmd(const char *str, s32 len) noexcept
 
 // Builtins -------------------------------------------------------------------
 
-static void help(s32 argc, char **argv) noexcept
+static void help(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -137,7 +137,7 @@ static void help(s32 argc, char **argv) noexcept
     }
 }
 
-static void clear(s32 argc, char **argv) noexcept
+static void clear(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -145,7 +145,7 @@ static void clear(s32 argc, char **argv) noexcept
     tty::clear();
 }
 
-static void uname(s32 argc, char **argv) noexcept
+static void uname(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -180,7 +180,7 @@ static void uname(s32 argc, char **argv) noexcept
     );
 }
 
-static void date(s32 argc, char **argv) noexcept
+static void date(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -188,7 +188,7 @@ static void date(s32 argc, char **argv) noexcept
     printk("%s\n", ktime::get_date());
 }
 
-static void lscpu(s32 argc, char **argv) noexcept
+static void lscpu(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -208,7 +208,7 @@ static void lscpu(s32 argc, char **argv) noexcept
     printk("CPU model:      %u\n", details.model);
 }
 
-static void lsmem(s32 argc, char **argv) noexcept
+static void lsmem(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -216,7 +216,7 @@ static void lsmem(s32 argc, char **argv) noexcept
     core::memory::display_memory();
 }
 
-static void gdt(s32 argc, char **argv) noexcept
+static void gdt(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -245,7 +245,7 @@ static void gdt(s32 argc, char **argv) noexcept
     #pragma GCC diagnostic pop
 }
 
-static void ticks(s32 argc, char **argv) noexcept
+static void ticks(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -253,7 +253,7 @@ static void ticks(s32 argc, char **argv) noexcept
     printk("PIT ticks: %u\n", driver::pit::get_ticks());
 }
 
-static void reboot(s32 argc, char **argv) noexcept
+static void reboot(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -263,7 +263,7 @@ static void reboot(s32 argc, char **argv) noexcept
     arch::i686::halt();              // halt CPU
 }
 
-static void shutdown(s32 argc, char **argv) noexcept
+static void shutdown(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -307,7 +307,7 @@ inline const s32 SCREEN_SHIFT {300};
  * @param [out] point - given point that holds projected x & y positions.
  * @param [in] angle - given rotation angle.
  */
-static void project(const vertice_t& vert, gfx::point_t& point, f32 angle) noexcept
+static void project(const vertice_t& vert, gfx::point_t& point, f32 angle)
 {
     f32 scale     = 200.0f; // scale factor for projection
     f32 z_offset  = 3.0f;   // distance from the viewer
@@ -331,7 +331,7 @@ static void project(const vertice_t& vert, gfx::point_t& point, f32 angle) noexc
  *
  * @param [in] angle - given cube rotation angle.
  */
-static void draw_cube(f32 angle, rgb_t color) noexcept
+static void draw_cube(f32 angle, rgb_t color)
 {
     gfx::point_t p1, p2;
     s32      v1, v2;
@@ -355,7 +355,7 @@ static void draw_cube(f32 angle, rgb_t color) noexcept
  * @param [in] color - given color.
  * @return next color relative to the given one.
  */
-static rgb_t get_next_color(rgb_t color) noexcept
+static rgb_t get_next_color(rgb_t color)
 {
     u8 r = (color >> 16) & 0xFF;
     u8 g = (color >> 8) & 0xFF;
@@ -385,7 +385,7 @@ static rgb_t get_next_color(rgb_t color) noexcept
  * @param [in] angle - given cube rotation angle.
  * @param [in] color - given cube color.
  */
-static void interation(f32 angle, rgb_t *color) noexcept
+static void interation(f32 angle, rgb_t *color)
 {
     using namespace driver;
     rgb_t new_color;
@@ -410,7 +410,7 @@ static void interation(f32 angle, rgb_t *color) noexcept
 }
 
 /** @brief Display rounding cube.*/
-static void round_cube(void) noexcept
+static void round_cube(void)
 {
     using namespace driver;
     f32 angle           = 0.0f;
@@ -458,7 +458,7 @@ static void round_cube(void) noexcept
 
 // --------------------------------------------------------------------------
 
-static void tui(s32 argc, char **argv) noexcept
+static void tui(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -500,7 +500,7 @@ static void tui(s32 argc, char **argv) noexcept
     window.show();
 }
 
-static void interrupt(s32 argc, char **argv) noexcept
+static void interrupt(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -508,7 +508,7 @@ static void interrupt(s32 argc, char **argv) noexcept
     asm volatile("int $0");
 }
 
-static void uptime(s32 argc, char **argv) noexcept
+static void uptime(s32 argc, char **argv)
 {
     IGNORE_UNUSED(argc);
     IGNORE_UNUSED(argv);
@@ -530,7 +530,7 @@ static void uptime(s32 argc, char **argv) noexcept
     printk("%u milliseconds\n", diff_time % 1000);
 }
 
-static void dump(s32 argc, char **argv) noexcept
+static void dump(s32 argc, char **argv)
 {
     if (argc == 1 || argc > 3) {
         printk("dump: %s\n", "incorrect number of arguments");

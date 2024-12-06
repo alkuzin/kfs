@@ -23,7 +23,7 @@
 namespace kernel {
 namespace kstd {
 
-void *memset(void *s, s32 c, usize n) noexcept
+void *memset(void *s, s32 c, usize n)
 {
     u8 *src = static_cast<u8*>(s);
     u8 cc   = static_cast<u8>(c);
@@ -34,7 +34,7 @@ void *memset(void *s, s32 c, usize n) noexcept
     return s;
 }
 
-void *memcpy(void *dest, const void *src, usize n) noexcept
+void *memcpy(void *dest, const void *src, usize n)
 {
     const u8 *csrc {nullptr};
     u8 *cdest {nullptr};
@@ -56,7 +56,7 @@ void *memcpy(void *dest, const void *src, usize n) noexcept
     return dest;
 }
 
-s32 strncmp(const char *s1, const char *s2, usize n) noexcept
+s32 strncmp(const char *s1, const char *s2, usize n)
 {
     usize i = 0;
 
@@ -69,7 +69,7 @@ s32 strncmp(const char *s1, const char *s2, usize n) noexcept
     return 0;
 }
 
-usize strncpy(char *dest, const char *src, usize size) noexcept
+usize strncpy(char *dest, const char *src, usize size)
 {
     usize i = 0;
 
@@ -82,7 +82,7 @@ usize strncpy(char *dest, const char *src, usize size) noexcept
     return i;
 }
 
-s32 strlen(const char *str) noexcept
+s32 strlen(const char *str)
 {
     s32 i = 0;
 
@@ -92,7 +92,7 @@ s32 strlen(const char *str) noexcept
     return i;
 }
 
-char *strdup(const char* str) noexcept
+char *strdup(const char* str)
 {
     if (!str)
         return nullptr;
@@ -113,7 +113,7 @@ char *strdup(const char* str) noexcept
     return new_str;
 }
 
-char *strtok(char *str, const char *delim) noexcept
+char *strtok(char *str, const char *delim)
 {
     static char *token = nullptr;
 
@@ -136,7 +136,7 @@ char *strtok(char *str, const char *delim) noexcept
     return start;
 }
 
-char *strpbrk(const char *str, const char *accept) noexcept
+char *strpbrk(const char *str, const char *accept)
 {
     const char *s, *a;
 

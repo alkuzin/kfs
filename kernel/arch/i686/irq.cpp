@@ -67,18 +67,18 @@ inline const char *exception_msgs[]
 // handlers that are designed to respond to hardware interrupts
 static handler_t routines[16] = {nullptr};
 
-void request(s32 irq, handler_t handler) noexcept
+void request(s32 irq, handler_t handler)
 {
     routines[irq] = handler;
     sti();
 }
 
-void free(s32 irq) noexcept
+void free(s32 irq)
 {
     routines[irq] = 0;
 }
 
-asmlinkage void irq_handler(int_regs_t *regs) noexcept
+asmlinkage void irq_handler(int_regs_t *regs)
 {
     // IRQ handler processes the interrupt by calling the appropriate
     // handler function based on the interrupt number
@@ -96,7 +96,7 @@ asmlinkage void irq_handler(int_regs_t *regs) noexcept
     outb(pic::MASTER_PIC_CMD, pic::END_OF_INTERRUPT);
 }
 
-asmlinkage void isr_handler(int_regs_t *regs) noexcept
+asmlinkage void isr_handler(int_regs_t *regs)
 {
     // handle exceptions
     if(regs->int_no < 32)

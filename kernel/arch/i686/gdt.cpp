@@ -52,7 +52,7 @@ ptr_t   *gdt_ptr = reinterpret_cast<ptr_t*>(GDT_BASE);
  * @param [in] access - given segment access byte.
  * @param [in] flags - given segment flags.
  */
-constexpr void set_entry(u32 eno, u32 base, u32 limit, u8 access, u8 flags) noexcept
+constexpr void set_entry(u32 eno, u32 base, u32 limit, u8 access, u8 flags)
 {
     GDT[eno].base_low  = (base & 0xFFFF);           // get first 2 bytes
     GDT[eno].base_mid  = ((base >> 0x10) & 0xFF);   // get third byte
@@ -71,7 +71,7 @@ constexpr void set_entry(u32 eno, u32 base, u32 limit, u8 access, u8 flags) noex
  */
 asmlinkage void gdt_flush(u32 ptr);
 
-void init(void) noexcept
+void init(void)
 {
     // set GDT entries:
     set_entry(0, 0, 0, 0, 0); // (null descriptor) should always contain no data

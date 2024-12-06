@@ -39,7 +39,7 @@ inline usize      slab_pos = 0;        // current free slab position
 inline slab_list_t slabs;               // allocated slabs list
 
 
-void init(void) noexcept
+void init(void)
 {
     void *pages = alloc_pages(GFP::KERNEL, SLAB_PAGES_ORDER)->addr();
 
@@ -93,7 +93,7 @@ void init(void) noexcept
     }
 }
 
-void cache_t::create(const char *name, usize size, u8 flags) noexcept
+void cache_t::create(const char *name, usize size, u8 flags)
 {
     list          = {nullptr, nullptr, 0};
     freelist      = {nullptr, nullptr, 0};
@@ -104,7 +104,7 @@ void cache_t::create(const char *name, usize size, u8 flags) noexcept
     kstd::strncpy(this->name, name, CACHE_NAMELEN);
 }
 
-void *cache_t::alloc(u8 flags) noexcept
+void *cache_t::alloc(u8 flags)
 {
     IGNORE_UNUSED(flags);
 
@@ -128,7 +128,7 @@ void *cache_t::alloc(u8 flags) noexcept
     return ptr;
 }
 
-void cache_t::alloc_slab(void) noexcept
+void cache_t::alloc_slab(void)
 {
     bool is_allocated = false;
     slab_t *slab;
@@ -186,7 +186,7 @@ void cache_t::alloc_slab(void) noexcept
         panic("%s\n", "error to allocate new slab for cache");
 }
 
-void cache_t::free_slab(slab_t *slab) noexcept
+void cache_t::free_slab(slab_t *slab)
 {
     slab->free = reinterpret_cast<u8*>(slab->free) - objsize;
 
@@ -220,7 +220,7 @@ void cache_t::free_slab(slab_t *slab) noexcept
     }
 }
 
-void cache_t::free(void *objp) noexcept
+void cache_t::free(void *objp)
 {
     auto page_number = PHYS_PFN(phys_addr_t(objp));
     auto page_addr   = PFN_PHYS(page_number);
@@ -252,7 +252,7 @@ void cache_t::free(void *objp) noexcept
  *
  * @param [in] size - given size of memory block to allocate.
  */
-constexpr inline s32 get_cache_index(usize size) noexcept
+constexpr inline s32 get_cache_index(usize size)
 {
     auto rounded = roundup_pow_of_two(size);
     auto index   = 0;
@@ -265,7 +265,7 @@ constexpr inline s32 get_cache_index(usize size) noexcept
     return index;
 }
 
-void *kmalloc(usize size, gfp_t flags) noexcept
+void *kmalloc(usize size, gfp_t flags)
 {
     // handle incorrect size
     if (size > 2_KB) {
@@ -288,7 +288,7 @@ void *kmalloc(usize size, gfp_t flags) noexcept
     return kmem::caches[index].alloc(flags);
 }
 
-void kfree(const void *objp) noexcept
+void kfree(const void *objp)
 {
     // handle nullptr
     if (!objp)
@@ -298,7 +298,7 @@ void kfree(const void *objp) noexcept
     page->cache->free_slab(page->slab);
 }
 
-usize ksize(const void *objp) noexcept
+usize ksize(const void *objp)
 {
     // handle nullptr
     if (!objp)

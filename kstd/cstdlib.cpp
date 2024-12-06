@@ -25,7 +25,7 @@ namespace kernel {
 namespace kstd {
 
 
-char **split(const char *str, const char *delim, int *count) noexcept
+char **split(const char *str, const char *delim, int *count)
 {
     if (!str || !delim || !count)
         return nullptr;
@@ -86,7 +86,7 @@ char **split(const char *str, const char *delim, int *count) noexcept
 }
 
 
-void free_split(char **result) noexcept
+void free_split(char **result)
 {
     for (int i = 0; result[i]; i++)
         kfree(result[i]);
@@ -94,7 +94,7 @@ void free_split(char **result) noexcept
     kfree(result);
 }
 
-u32 stoh(const char *str) noexcept
+u32 stoh(const char *str)
 {
     if (!str)
         panic(PANIC_ERR "%s\n", "empty string");

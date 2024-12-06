@@ -42,7 +42,7 @@ namespace kstd {
  * @param [in] fmt - given format string.
  * @param [in] args - given variable list of arguments.
  */
-void snprintk(char *buf, usize size, const char *fmt, ...) noexcept;
+void snprintk(char *buf, usize size, const char *fmt, ...);
 
 /**
  * @brief Formats and prints data to buffer.
@@ -52,14 +52,14 @@ void snprintk(char *buf, usize size, const char *fmt, ...) noexcept;
  * @param [in] fmt - given format string.
  * @param [in] args - given variable list of arguments.
  */
-void vsnprintk(char *buf, usize size, const char *fmt, va_list args) noexcept;
+void vsnprintk(char *buf, usize size, const char *fmt, va_list args);
 
 /**
  * @brief Print character to screen.
  *
  * @param [in] c - given character to print.
  */
-inline void putchar(char c) noexcept
+inline void putchar(char c)
 {
     tty::putc(c, tty::terminal.fg, tty::terminal.bg);
 }
@@ -71,7 +71,7 @@ inline void putchar(char c) noexcept
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-inline void putk(const char *str, rgb_t fg = tty::terminal.fg, rgb_t bg = tty::terminal.bg) noexcept
+inline void putk(const char *str, rgb_t fg = tty::terminal.fg, rgb_t bg = tty::terminal.bg)
 {
     u32 i = 0;
 

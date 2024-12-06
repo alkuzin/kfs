@@ -48,7 +48,7 @@ inline const auto LOG_DEBUG_MSG   {"DEBUG"};
  * @param [in] fmt - given format string.
  * @return buffer shift.
  */
-static s32 print_log(const char *fmt) noexcept
+static s32 print_log(const char *fmt)
 {
     auto type = LOG_DEFAULT;
 
@@ -102,7 +102,7 @@ static s32 print_log(const char *fmt) noexcept
     return 3;
 }
 
-void printk(const char *fmt, ...) noexcept
+void printk(const char *fmt, ...)
 {
     va_list args;
 
@@ -118,7 +118,7 @@ void printk(const char *fmt, ...) noexcept
         buffer[i] = 0;
 }
 
-void cprintk(rgb_t fg, rgb_t bg, const char *fmt, ...) noexcept
+void cprintk(rgb_t fg, rgb_t bg, const char *fmt, ...)
 {
     va_list args;
 

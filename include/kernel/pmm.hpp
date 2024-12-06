@@ -42,7 +42,7 @@ namespace memory {
  *
  * @param [in] mboot - given multiboot information structure.
  */
-void init(const multiboot_t& mboot) noexcept;
+void init(const multiboot_t& mboot);
 
 /**
  * @brief Allocate memory pages.
@@ -52,7 +52,7 @@ void init(const multiboot_t& mboot) noexcept;
  * @return allocated page pointer - in case of success.
  * @return nullptr - in case of errors.
  */
-page_t *alloc_pages(gfp_t mask, u32 order) noexcept;
+page_t *alloc_pages(gfp_t mask, u32 order);
 
 /**
  * @brief Get the zeroed page.
@@ -61,7 +61,7 @@ page_t *alloc_pages(gfp_t mask, u32 order) noexcept;
  * @return allocated zeroed page pointer - in case of success.
  * @return nullptr - in case of errors.
  */
-page_t *get_zeroed_page(gfp_t mask) noexcept;
+page_t *get_zeroed_page(gfp_t mask);
 
 /**
  * @brief Free allocated pages.
@@ -69,7 +69,7 @@ page_t *get_zeroed_page(gfp_t mask) noexcept;
  * @param [in] addr - given first page address.
  * @param [in] order - given power of two (freeing 2^order pages).
  */
-void free_pages(phys_addr_t addr, u32 order) noexcept;
+void free_pages(phys_addr_t addr, u32 order);
 
 /**
  * @brief Get the page struct.
@@ -77,10 +77,10 @@ void free_pages(phys_addr_t addr, u32 order) noexcept;
  * @param [in] addr - given memory address.
  * @return page struct.
  */
-page_t *get_page(phys_addr_t addr) noexcept;
+page_t *get_page(phys_addr_t addr);
 
 /** @brief Display memory usage.*/
-void display_memory(void) noexcept;
+void display_memory(void);
 
 } // namespace memory
 } // namespace core

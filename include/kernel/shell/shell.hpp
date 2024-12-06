@@ -34,10 +34,10 @@ namespace kernel {
 namespace shell {
 
 /** @brief Initialize kernel shell.*/
-void init(void) noexcept;
+void init(void);
 
 /** @brief Process user input.*/
-void process(void) noexcept;
+void process(void);
 
 } // namespace shell
 } // namespace kernel

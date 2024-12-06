@@ -36,7 +36,7 @@ namespace memory {
  * @param [in] attr - given attribute to set.
  */
 template <typename T>
-constexpr inline void set_attribute(u32 *entry, T attr) noexcept
+constexpr inline void set_attribute(u32 *entry, T attr)
 {
     set_bit<u32>(*entry, s32(attr));
 }
@@ -48,7 +48,7 @@ constexpr inline void set_attribute(u32 *entry, T attr) noexcept
  * @param [in] attr - given attribute to clear.
  */
 template <typename T>
-constexpr inline void clear_attribute(u32 *entry, T attr) noexcept
+constexpr inline void clear_attribute(u32 *entry, T attr)
 {
     clear_bit<u32>(*entry, s32(attr));
 }
@@ -60,7 +60,7 @@ constexpr inline void clear_attribute(u32 *entry, T attr) noexcept
  * @param [in] attr - given attribute to get.
  */
 template <typename T>
-constexpr inline bool get_attribute(u32& entry, T attr) noexcept
+constexpr inline bool get_attribute(u32& entry, T attr)
 {
     return test_bit<u32>(entry, s32(attr));
 }
@@ -71,7 +71,7 @@ constexpr inline bool get_attribute(u32& entry, T attr) noexcept
  * @param [in] vaddr - given virtual address.
  * @return page directory index.
  */
-constexpr inline u32 pd_index(virt_addr_t vaddr) noexcept
+constexpr inline u32 pd_index(virt_addr_t vaddr)
 {
     return ((vaddr >> 22) & 0x3ff);
 }
@@ -82,7 +82,7 @@ constexpr inline u32 pd_index(virt_addr_t vaddr) noexcept
  * @param [in] vaddr - given virtual address.
  * @return page table index.
  */
-constexpr inline u32 pt_index(virt_addr_t vaddr) noexcept
+constexpr inline u32 pt_index(virt_addr_t vaddr)
 {
     return ((vaddr >> 12) & 0x3ff);
 }
@@ -93,7 +93,7 @@ constexpr inline u32 pt_index(virt_addr_t vaddr) noexcept
  * @param [out] entry - given entry to set.
  * @param [in] addr - given frame/page table address.
  */
-constexpr inline void set_frame(u32 *entry, phys_addr_t addr) noexcept
+constexpr inline void set_frame(u32 *entry, phys_addr_t addr)
 {
     *entry = ((*entry & ~0x7FFFF000) | addr);
 }
@@ -106,7 +106,7 @@ static page_dir_t *cur_page_dir {nullptr};
  *
  * @param [in] pd - given new page directory to set.
  */
-static void set_page_directory(const page_dir_t *pd) noexcept
+static void set_page_directory(const page_dir_t *pd)
 {
     if (!pd)
         panic("incorrect page directory: <%08p>\n", pd);
@@ -117,7 +117,7 @@ static void set_page_directory(const page_dir_t *pd) noexcept
 
 namespace vmm {
 
-void init(void) noexcept
+void init(void)
 {
     using namespace arch::i686;
 

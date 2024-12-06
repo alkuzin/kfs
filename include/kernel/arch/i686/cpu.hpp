@@ -82,7 +82,7 @@ struct details_t {
  * @param [in] leaf - given category of CPU information to gather.
  * @param [out] info - given CPU registers struct.
  */
-inline void cpuid(u32 leaf, info_t& info) noexcept
+inline void cpuid(u32 leaf, info_t& info)
 {
     asm volatile(
         "cpuid"
@@ -96,7 +96,7 @@ inline void cpuid(u32 leaf, info_t& info) noexcept
  *
  * @param [out] details - given CPU detail info struct to fill.
  */
-void get_details(details_t& details) noexcept;
+void get_details(details_t& details);
 
 /**
  * @brief Get CPU type string representation.
@@ -104,14 +104,14 @@ void get_details(details_t& details) noexcept;
  * @param [in] type - given CPU type.
  * @return CPU type string representation.
  */
-const char *type_to_str(TYPE type) noexcept;
+const char *type_to_str(TYPE type);
 
 /**
  * @brief Get the CPU operating mode(s).
  *
  * @return string representation of CPU operating mode(s).
  */
-const char *get_op_modes(void) noexcept;
+const char *get_op_modes(void);
 
 } // namespace cpu
 } // namespace i686

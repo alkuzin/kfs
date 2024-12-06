@@ -40,21 +40,21 @@ inline const u32 MILLISEC_PER_SEC   {1000};
 inline const u32 MILLISEC_PER_TICK  {MILLISEC_PER_SEC / FREQUENCY};
 
 /** @brief Initialize Programmable Interval Timer (PIT).*/
-void init(void) noexcept;
+void init(void);
 
 /**
  * @brief Get the current number of timer ticks.
  *
  * @return number of timer ticks.
  */
-u32 get_ticks(void) noexcept;
+u32 get_ticks(void);
 
 /**
  * @brief Time delay in ms.
  *
  * @param [in] msec - given number of milliseconds to delay.
  */
-void delay(u32 msec) noexcept;
+void delay(u32 msec);
 
 } // namespace pit
 } // namespace driver

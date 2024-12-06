@@ -35,7 +35,7 @@ namespace arch {
 namespace i686 {
 
 /** @brief Halt CPU.*/
-inline void halt(void) noexcept
+inline void halt(void)
 {
     for (;;) asm volatile("hlt");
 }
@@ -45,7 +45,7 @@ inline void halt(void) noexcept
  *
  * @return current privilege level.
  */
-inline u8 ring(void) noexcept
+inline u8 ring(void)
 {
     return get_register(REG::CS) & 0x3;
 }
@@ -55,7 +55,7 @@ inline u8 ring(void) noexcept
  *
  * @return mode in bits.
  */
-inline u32 mode(void) noexcept
+inline u32 mode(void)
 {
     u16 cs = static_cast<u16>(get_register(REG::CS));
 
@@ -68,13 +68,13 @@ inline u32 mode(void) noexcept
 }
 
 /** @brief Enable interrupts.*/
-inline void sti(void) noexcept
+inline void sti(void)
 {
     asm volatile("sti");
 }
 
 /** @brief Disable interrupts.*/
-inline void cli(void) noexcept
+inline void cli(void)
 {
     asm volatile("cli");
 }
@@ -84,7 +84,7 @@ inline void cli(void) noexcept
  *
  * @param [in] pd - given page directory physical address.
  */
-inline void enable_paging(phys_addr_t pd) noexcept
+inline void enable_paging(phys_addr_t pd)
 {
     // update page directory
     asm volatile("mov %%eax, %%cr3" : : "a"(pd));

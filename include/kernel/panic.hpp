@@ -45,7 +45,7 @@ namespace kernel {
  * @param [in] fmt - given format string.
  * @param [in] ... - given variable number of arguments.
  */
-void _panic(const char *file, const char *func, s32 line, const char *fmt, ...) noexcept;
+void _panic(const char *file, const char *func, s32 line, const char *fmt, ...);
 
 } // namespace kernel
 

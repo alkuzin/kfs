@@ -26,17 +26,17 @@ namespace gfx {
 
 using namespace driver;
 
-point_t point_t::operator+(const s32 val) const noexcept
+point_t point_t::operator+(const s32 val) const
 {
     return {x + val, y + val};
 }
 
-point_t point_t::operator-(const s32 val) const noexcept
+point_t point_t::operator-(const s32 val) const
 {
     return {x - val, y - val};
 }
 
-void draw_line(point_t p1, point_t p2, rgb_t color) noexcept
+void draw_line(point_t p1, point_t p2, rgb_t color)
 {
     s32 dx, dy, sx, sy, err, e2;
 
@@ -66,7 +66,7 @@ void draw_line(point_t p1, point_t p2, rgb_t color) noexcept
     }
 }
 
-void fill_rectangle(point_t p, s32 width, s32 height, rgb_t color) noexcept
+void fill_rectangle(point_t p, s32 width, s32 height, rgb_t color)
 {
     for (s32 i = p.x; i < p.x + width; i++) {
         for (s32 j = p.y; j < p.y + height; j++)
@@ -74,7 +74,7 @@ void fill_rectangle(point_t p, s32 width, s32 height, rgb_t color) noexcept
     }
 }
 
-void draw_rectangle(point_t p, s32 width, s32 height, rgb_t color) noexcept
+void draw_rectangle(point_t p, s32 width, s32 height, rgb_t color)
 {
     point_t b = {p.x + width, p.y};
     point_t c = {p.x, p.y + height};

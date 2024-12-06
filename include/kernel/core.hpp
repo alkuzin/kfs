@@ -34,7 +34,7 @@ namespace kernel {
 namespace core {
 
 /** @brief Halt CPU.*/
-inline void khalt(void) noexcept
+inline void khalt(void)
 {
     for (;;) arch::i686::halt();
 }

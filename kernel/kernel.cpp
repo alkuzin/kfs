@@ -42,7 +42,7 @@ namespace core {
  * @param [in] magic - given magic number.
  * @param [in] mboot - given multiboot information structure.
  */
-static void kboot(u32 magic, const multiboot_t& mboot) noexcept
+static void kboot(u32 magic, const multiboot_t& mboot)
 {
     using namespace driver;
 
@@ -90,7 +90,7 @@ static void kboot(u32 magic, const multiboot_t& mboot) noexcept
     shell::process();
 }
 
-asmlinkage void kmain(u32 magic, const multiboot_t& mboot) noexcept
+asmlinkage void kmain(u32 magic, const multiboot_t& mboot)
 {
     kboot(magic, mboot);
     khalt();

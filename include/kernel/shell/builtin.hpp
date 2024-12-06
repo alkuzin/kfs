@@ -48,7 +48,7 @@ struct builtin_t {
  *
  * @param [in] cmd - given command to execute.
  */
-void exec(const char *cmd) noexcept;
+void exec(const char *cmd);
 
 /**
  * @brief Get the first suitable shell command.
@@ -58,7 +58,7 @@ void exec(const char *cmd) noexcept;
  * @return first suitable shell command - in case of success.
  * @return nullptr - otherwise.
  */
-const char *get_suitable_cmd(const char *str, s32 len) noexcept;
+const char *get_suitable_cmd(const char *str, s32 len);
 
 } // namespace shell
 } // namespace kernel

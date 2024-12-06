@@ -24,7 +24,7 @@ namespace arch {
 namespace i686 {
 
 // TODO: add debug function that prints all registers
-u32 get_register(REG reg) noexcept
+u32 get_register(REG reg)
 {
     u32 value = 0;
 
@@ -100,7 +100,7 @@ u32 get_register(REG reg) noexcept
     return value;
 }
 
-void set_register(REG reg, u32 value) noexcept
+void set_register(REG reg, u32 value)
 {
     switch (reg) {
     case REG::ESP:

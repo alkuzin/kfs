@@ -65,7 +65,7 @@ struct cache_t
 
 private:
     /** @brief Allocate a single slab.*/
-    void alloc_slab(void) noexcept;
+    void alloc_slab(void);
 
 public:
     /**
@@ -75,7 +75,7 @@ public:
      * @param [in] size - given size of cache objects.
      * @param [in] flags - given allocation flags.
      */
-    void create(const char *name, usize size, u8 flags) noexcept;
+    void create(const char *name, usize size, u8 flags);
 
     /**
      * @brief Allocate a single object from the cache.
@@ -83,25 +83,25 @@ public:
      * @param [in] flags - given allocation flags.
      * @return allocated object pointer.
      */
-    void *alloc(u8 flags) noexcept;
+    void *alloc(u8 flags);
 
     /**
      * @brief Free a single slab.
      *
      * @param [in] slab - given slab to free.
      */
-    void free_slab(slab_t *slab) noexcept;
+    void free_slab(slab_t *slab);
 
     /**
      * @brief Free cache object.
      *
      * @param [in] objp - given object to free.
      */
-    void free(void *objp) noexcept;
+    void free(void *objp);
 };
 
 /** @brief Initialize SLAB allocator.*/
-void init(void) noexcept;
+void init(void);
 
 } // namespace kmem
 
@@ -113,14 +113,14 @@ void init(void) noexcept;
  * @return pointer to the allocated memory in case of success.
  * @return nullptr in case of failure.
  */
-void *kmalloc(usize size, gfp_t flags) noexcept;
+void *kmalloc(usize size, gfp_t flags);
 
 /**
  * @brief Free pointer allocated by kmalloc().
  *
  * @param [in] objp - given object to free.
  */
-void kfree(const void *objp) noexcept;
+void kfree(const void *objp);
 
 /**
  * @brief Get actual allocation size of associated object.
@@ -128,7 +128,7 @@ void kfree(const void *objp) noexcept;
  * @param [in] objp - given object pointer.
  * @return size in bytes.
  */
-usize ksize(const void *objp) noexcept;
+usize ksize(const void *objp);
 
 } // namespace kernel
 

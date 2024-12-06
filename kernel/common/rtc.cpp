@@ -50,7 +50,7 @@ using namespace arch::i686;
  *
  * @param [in] regs - given CPU state.
  */
-static void clock_handler(irq::int_regs_t *regs) noexcept
+static void clock_handler(irq::int_regs_t *regs)
 {
     // Turn on the periodic interrupt with the default 1024 Hz rate
     IGNORE_UNUSED(regs);
@@ -63,7 +63,7 @@ static void clock_handler(irq::int_regs_t *regs) noexcept
     sti();                                  // enable interrupts
 }
 
-void init(void) noexcept
+void init(void)
 {
     cli();                                  // disable interrupts
     outb(RTC_PORT_INDEX, RTC_REGISTER_A);   // disable non-maskable-interrupt
@@ -79,7 +79,7 @@ void init(void) noexcept
  * @param [in] bcd - given value in BCD format.
  * @return human-readable format.
  */
-static inline s32 from_bcd(u8 bcd) noexcept
+static inline s32 from_bcd(u8 bcd)
 {
     return ((bcd & 0xF0) >> 1) + ((bcd & 0xF0) >> 3) + (bcd & 0xf);
 }
@@ -90,14 +90,14 @@ static inline s32 from_bcd(u8 bcd) noexcept
  * @param [in] reg - given RTC register.
  * @return RTC date value human-readable format.
  */
-static inline u8 get_register(REG reg) noexcept
+static inline u8 get_register(REG reg)
 {
     outb(RTC_PORT_INDEX, static_cast<u32>(reg));
     return static_cast<u8>(from_bcd(inb(RTC_PORT_DATA)));
 }
 
 /** @brief Set RTC time structure.*/
-void read_time(rtc_time_t& tm) noexcept
+void read_time(rtc_time_t& tm)
 {
     tm.sec  = get_register(REG::SEC);
     tm.min  = get_register(REG::MIN);

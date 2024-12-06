@@ -35,7 +35,7 @@ namespace tui {
 using namespace driver;
 
 
-void frame_t::update(void) noexcept
+void frame_t::update(void)
 {
     // save previous terminal state
     prev_x_pos  = tty::terminal.x_pos;
@@ -52,7 +52,7 @@ void frame_t::update(void) noexcept
     tty::terminal.begin_y_pos = tty::terminal.y_pos;
 }
 
-void frame_t::reset(void) noexcept
+void frame_t::reset(void)
 {
     // return to previous terminal state
     tty::terminal.x_pos        = prev_x_pos;
@@ -65,7 +65,7 @@ void frame_t::reset(void) noexcept
 
 inline const u8 FRAME_PADDING {25};
 
-void frame_t::init(point_t begin) noexcept
+void frame_t::init(point_t begin)
 {
     this->begin = begin;
     fg          = color::black;
@@ -84,7 +84,7 @@ void frame_t::init(point_t begin) noexcept
     last        = buttons;
 }
 
-void window_t::init(const frame_t& fr, const char *title) noexcept
+void window_t::init(const frame_t& fr, const char *title)
 {
     frame = fr;
 
@@ -95,7 +95,7 @@ void window_t::init(const frame_t& fr, const char *title) noexcept
     frame.update();
 }
 
-static void display_button(button_t *btn) noexcept
+static void display_button(button_t *btn)
 {
     tty::terminal.x_pos = btn->begin.x;
     tty::terminal.y_pos = btn->begin.y;
@@ -106,7 +106,7 @@ static void display_button(button_t *btn) noexcept
     cprintk(btn->fg, btn->bg, "%s", btn->label);
 }
 
-void window_t::show(void) noexcept
+void window_t::show(void)
 {
     // display window shadow
     auto shadow_margin = 10;
@@ -205,7 +205,7 @@ void window_t::show(void) noexcept
     destroy();
 }
 
-void window_t::add_button(const char *label, action_t on_click, void *arg, point_t begin) noexcept
+void window_t::add_button(const char *label, action_t on_click, void *arg, point_t begin)
 {
     void *ptr = kmalloc(sizeof(button_t), GFP::KERNEL | GFP::ZERO);
 
@@ -239,7 +239,7 @@ void window_t::add_button(const char *label, action_t on_click, void *arg, point
     }
 }
 
-void window_t::add_content(const char *content) noexcept
+void window_t::add_content(const char *content)
 {
     if (!content)
         content = "window content";
@@ -247,7 +247,7 @@ void window_t::add_content(const char *content) noexcept
     kstd::strncpy(this->content, content, WINDOW_CONTENT_SIZE);
 }
 
-void window_t::destroy(void) noexcept
+void window_t::destroy(void)
 {
     frame.reset();
 

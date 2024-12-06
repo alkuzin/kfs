@@ -44,14 +44,14 @@ struct rtc_time_t {
 };
 
 /** @brief Initialize real-time clock.*/
-void init(void) noexcept;
+void init(void);
 
 /**
  * @brief Read current time.
  *
  * @param [out] tm - given structure to store current time info.
  */
-void read_time(rtc_time_t& tm) noexcept;
+void read_time(rtc_time_t& tm);
 
 } // namespace rtc
 } // namespace kernel

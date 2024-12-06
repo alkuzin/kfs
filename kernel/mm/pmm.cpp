@@ -56,7 +56,7 @@ static const char *mem_types[5] = {
  * @param [in] type - given memory area type.
  * @return memory area type string representation.
  */
-static inline const char *get_mem_type(s32 type) noexcept
+static inline const char *get_mem_type(s32 type)
 {
     if (type < 0 || type >= 5)
         return "undefined";
@@ -65,7 +65,7 @@ static inline const char *get_mem_type(s32 type) noexcept
 }
 
 /** @brief Get information about memory regions.*/
-static void detect_memory(void) noexcept
+static void detect_memory(void)
 {
     multiboot_entry_t *mmmt;
     usize i = 0;
@@ -93,7 +93,7 @@ static void detect_memory(void) noexcept
  * @param [in] addr - given base address of the region.
  * @param [in] size - given size of the region in bytes.
  */
-static void mark_as_free(phys_addr_t addr, usize size) noexcept
+static void mark_as_free(phys_addr_t addr, usize size)
 {
     usize pos = PHYS_PFN(addr);
     usize n   = size >> PAGE_SHIFT;
@@ -112,7 +112,7 @@ static void mark_as_free(phys_addr_t addr, usize size) noexcept
  * @param [in] addr - given base address of the region.
  * @param [in] size - given size of the region in bytes.
  */
-static void mark_as_used(phys_addr_t addr, usize size) noexcept
+static void mark_as_used(phys_addr_t addr, usize size)
 {
     usize pos = PHYS_PFN(addr);
     usize n   = size >> PAGE_SHIFT;
@@ -127,7 +127,7 @@ static void mark_as_used(phys_addr_t addr, usize size) noexcept
 
 
 /** @brief Free all available memory regions.*/
-static void free_available_memory(void) noexcept
+static void free_available_memory(void)
 {
     multiboot_entry_t *mmmt;
     usize i = 0;
@@ -147,14 +147,14 @@ static void free_available_memory(void) noexcept
  *
  * @param [in] n - given page number.
  */
-static inline void reserve_page(usize n) noexcept
+static inline void reserve_page(usize n)
 {
     pmm.bitmap.set(n);
     pmm.mem_map[n].pfn = PG::RESERVED;
     pmm.used_pages++;
 }
 
-void init(const multiboot_t& mboot) noexcept
+void init(const multiboot_t& mboot)
 {
     // check that multiboot memory map is set correctly
     if ((mboot.flags & (1 << 6)) == 0)
@@ -223,7 +223,7 @@ void init(const multiboot_t& mboot) noexcept
  * @return page position in bitmap - in case of success.
  * @return 0 - in case of error.
  */
-static usize get_free_pages(gfp_t mask, u32 order) noexcept
+static usize get_free_pages(gfp_t mask, u32 order)
 {
     usize pos, k;
 
@@ -264,7 +264,7 @@ static usize get_free_pages(gfp_t mask, u32 order) noexcept
     return 0;
 }
 
-page_t *alloc_pages(gfp_t mask, u32 order) noexcept
+page_t *alloc_pages(gfp_t mask, u32 order)
 {
     u32 n = 1 << order; // allocate 2^order pages
 
@@ -292,13 +292,13 @@ page_t *alloc_pages(gfp_t mask, u32 order) noexcept
     return &pmm.mem_map[start_pos];
 }
 
-page_t *get_zeroed_page(gfp_t mask) noexcept
+page_t *get_zeroed_page(gfp_t mask)
 {
     page_t *page = alloc_pages(mask | GFP::ZERO, 0);
     return page;
 }
 
-void free_pages(phys_addr_t addr, u32 order) noexcept
+void free_pages(phys_addr_t addr, u32 order)
 {
     usize pos = PFN_PHYS(addr);
 
@@ -315,13 +315,13 @@ void free_pages(phys_addr_t addr, u32 order) noexcept
     pmm.used_pages -= n;
 }
 
-page_t *get_page(phys_addr_t addr) noexcept
+page_t *get_page(phys_addr_t addr)
 {
     usize pfn = PHYS_PFN(addr);
     return &pmm.mem_map[pfn];
 }
 
-void display_memory(void) noexcept
+void display_memory(void)
 {
     multiboot_entry_t *mmmt {nullptr};
     usize i = 0;

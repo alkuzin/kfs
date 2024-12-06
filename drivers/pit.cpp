@@ -40,13 +40,13 @@ static volatile u32 ticks {0};
  *
  * @param [in] regs - given CPU state.
  */
-static void timer_handler(irq::int_regs_t *regs) noexcept
+static void timer_handler(irq::int_regs_t *regs)
 {
     IGNORE_UNUSED(regs);
     ticks += 1;
 }
 
-void init(void) noexcept
+void init(void)
 {
     constexpr u32 divisor = PIT_FREQUENCY / FREQUENCY;
 
@@ -57,18 +57,18 @@ void init(void) noexcept
     outb(PIT_DATA_PORT_0, divisor >> 8);
 }
 
-u32 get_ticks(void) noexcept
+u32 get_ticks(void)
 {
     return ticks;
 }
 
-void delay(u32 msec) noexcept
+void delay(u32 msec)
 {
     u32 target_ticks = get_ticks() + (msec / MILLISEC_PER_TICK);
 
     // waiting until the target tick count is reached
     while (get_ticks() < target_ticks)
-        __asm__ volatile ("nop");   // no operation
+        asm volatile ("nop");   // no operation
 }
 
 } // namespace pit

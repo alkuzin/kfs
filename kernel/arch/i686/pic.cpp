@@ -25,7 +25,7 @@ namespace arch {
 namespace i686 {
 namespace pic {
 
-void init(void) noexcept
+void init(void)
 {
     // send the initialization command to both the master and slave PICs
     outb(MASTER_PIC_CMD, PIC_INIT_CMD);

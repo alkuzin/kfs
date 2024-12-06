@@ -26,49 +26,50 @@ namespace vesa {
 
 static fb_t framebuffer {};
 
-void init(const multiboot_t& mboot) noexcept
+void init(const multiboot_t& mboot)
 {
-	framebuffer.addr   = reinterpret_cast<u32*>(mboot.framebuffer_addr);
-	framebuffer.pitch  = mboot.framebuffer_pitch;
-	framebuffer.width  = mboot.framebuffer_width;
-	framebuffer.height = mboot.framebuffer_height;
-	framebuffer.bpp    = mboot.framebuffer_bpp;
+    // TODO: add framebuffer.ptr, addr should contain u32
+    framebuffer.addr   = reinterpret_cast<u32*>(mboot.framebuffer_addr);
+    framebuffer.pitch  = mboot.framebuffer_pitch;
+    framebuffer.width  = mboot.framebuffer_width;
+    framebuffer.height = mboot.framebuffer_height;
+    framebuffer.bpp    = mboot.framebuffer_bpp;
 }
 
-fb_t get_framebuffer(void) noexcept
+fb_t get_framebuffer(void)
 {
-	return framebuffer;
+    return framebuffer;
 }
 
-void draw_pixel(u32 x, u32 y, rgb_t color) noexcept
+void draw_pixel(u32 x, u32 y, rgb_t color)
 {
-	if (x < framebuffer.width && y < framebuffer.height)
-		framebuffer.addr[y * framebuffer.width + x] = color;
+    if (x < framebuffer.width && y < framebuffer.height)
+        framebuffer.addr[y * framebuffer.width + x] = color;
 }
 
-void fill_screen(rgb_t color) noexcept
+void fill_screen(rgb_t color)
 {
-	for (u32 y = 0; y < framebuffer.height; y++) {
-		for (u32 x = 0; x < framebuffer.width; x++)
-			draw_pixel(x, y, color);
-	}
+    for (u32 y = 0; y < framebuffer.height; y++) {
+        for (u32 x = 0; x < framebuffer.width; x++)
+            draw_pixel(x, y, color);
+    }
 }
 
-void draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on) noexcept
+void draw_char(u8 c, s32 x, s32 y, rgb_t fg, rgb_t bg, bool is_bg_on)
 {
-	static constexpr u8 mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
-	s32 cx, cy;
+    static constexpr u8 mask[8] = { 128, 64, 32, 16, 8, 4, 2, 1 };
+    s32 cx, cy;
 
-	u8 *glyph = static_cast<u8*>(gfx::font) + s32(c) * 16;
+    u8 *glyph = static_cast<u8*>(gfx::font) + s32(c) * 16;
 
-	for (cy = 0; cy < FONT_CHAR_HEIGHT; cy++) {
-		for (cx = 0; cx < FONT_CHAR_WIDTH; cx++) {
-			if (glyph[cy] & mask[cx])
-				draw_pixel(x + cx, y + cy, fg);
-			else if (is_bg_on)
-				draw_pixel(x + cx, y + cy, bg);
-		}
-	}
+    for (cy = 0; cy < FONT_CHAR_HEIGHT; cy++) {
+        for (cx = 0; cx < FONT_CHAR_WIDTH; cx++) {
+            if (glyph[cy] & mask[cx])
+                draw_pixel(x + cx, y + cy, fg);
+            else if (is_bg_on)
+                draw_pixel(x + cx, y + cy, bg);
+        }
+    }
 }
 
 } // namespace vesa

@@ -34,10 +34,10 @@ namespace kernel {
 namespace core {
 namespace memory {
 
-inline const usize     PAGE_SIZE   {4_KB};
-inline const bool       PAGE_FREE   {0};
-inline const bool       PAGE_USED   {1};
-inline const u8    PAGE_SHIFT  {0xC};
+inline const usize  PAGE_SIZE   {4_KB};
+inline const bool   PAGE_FREE   {0};
+inline const bool   PAGE_USED   {1};
+inline const u8     PAGE_SHIFT  {0xC};
 
 // page flags enumeration
 enum PG : u8 {
@@ -51,7 +51,7 @@ enum PG : u8 {
  * @param [in] pfn - given page frame number.
  * @return physical address.
  */
-constexpr inline phys_addr_t PFN_PHYS(usize pfn) noexcept
+constexpr inline phys_addr_t PFN_PHYS(usize pfn)
 {
     return static_cast<phys_addr_t>(pfn << PAGE_SHIFT);
 }
@@ -62,7 +62,7 @@ constexpr inline phys_addr_t PFN_PHYS(usize pfn) noexcept
  * @param [in] addr - given page physical address.
  * @return page frame number.
  */
-constexpr inline usize PHYS_PFN(phys_addr_t addr) noexcept
+constexpr inline usize PHYS_PFN(phys_addr_t addr)
 {
     return addr >> PAGE_SHIFT;
 }
@@ -79,10 +79,10 @@ struct page_t
      *
      * @return page memory address.
      */
-    inline void *addr(void) const noexcept;
+    inline void *addr(void) const;
 };
 
-inline void *page_t::addr(void) const noexcept
+inline void *page_t::addr(void) const
 {
     return reinterpret_cast<void*>(PFN_PHYS(pfn));
 }

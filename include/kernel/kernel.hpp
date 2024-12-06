@@ -41,7 +41,7 @@ namespace kernel {
  * @param [in] n - given number.
  * @return closest power of 2.
  */
-constexpr inline usize roundup_pow_of_two(usize n) noexcept
+constexpr inline usize roundup_pow_of_two(usize n)
 {
     if (n == 0)
         return 1;
@@ -62,7 +62,7 @@ constexpr inline usize roundup_pow_of_two(usize n) noexcept
  * @param [in] ring - given current privilege level.
  * @return current space.
  */
-inline const char *current_space(u32 ring) noexcept
+inline const char *current_space(u32 ring)
 {
     if (ring == 0)
         return "kernel space";

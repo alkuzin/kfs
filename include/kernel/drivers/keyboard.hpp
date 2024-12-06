@@ -57,21 +57,21 @@ enum class KEY {
 };
 
 /** @brief Initialize keyboard.*/
-void init(void) noexcept;
+void init(void);
 
 /**
  * @brief Keyboard get character on key press.
  *
  * @return Character read from the keyboard.
  */
-KEY getch(void) noexcept;
+KEY getch(void);
 
 /**
  * @brief Keyboard get character on key press.
  *
  * @return Character read from the keyboard.
  */
-u8 getchar(void) noexcept;
+u8 getchar(void);
 
 /**
  * @brief Get the line from user.
@@ -79,7 +79,7 @@ u8 getchar(void) noexcept;
  * @param [out] buffer - given buffer to store input.
  * @param [out] size - given size of buffer.
  */
-void get_line(char *buffer, usize size) noexcept;
+void get_line(char *buffer, usize size);
 
 using key_handler = bool(*)(void);
 
@@ -88,7 +88,7 @@ using key_handler = bool(*)(void);
  *
  * @param [in] handler - given TAB handler to set.
  */
-void set_tab_handler(key_handler handler) noexcept;
+void set_tab_handler(key_handler handler);
 
 /**
  * @brief Set the CTRL+KEY combination handler.
@@ -96,21 +96,21 @@ void set_tab_handler(key_handler handler) noexcept;
  * @param [in] key - given second key.
  * @param [in] handler - given CTRL+key handler to set.
  */
-void set_ctrl_handler(KEY key, key_handler handler) noexcept;
+void set_ctrl_handler(KEY key, key_handler handler);
 
 /**
  * @brief Set the get_line() position.
  *
  * @param [in] p - given new position to set.
  */
-void set_pos(u32 p) noexcept;
+void set_pos(u32 p);
 
 /**
  * @brief Get the get_line() position.
  *
  * @return get_line() position.
  */
-u32 get_pos(void) noexcept;
+u32 get_pos(void);
 
 } // namespace keyboard
 } // namespace driver

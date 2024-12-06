@@ -52,7 +52,7 @@ inline const u8 ALL_INTERRUPTS_ENABLED     {0x00};
 inline const u8 END_OF_INTERRUPT           {0x20};
 
 /** @brief Initialize Programmable Interrupt Controller (PIC).*/
-void init(void) noexcept;
+void init(void);
 
 } // namespace pic
 } // namespace i686

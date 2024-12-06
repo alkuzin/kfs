@@ -47,7 +47,7 @@ namespace kernel {
  * @param [in] fmt - given format string.
  * @param [in] ... - given variable number of arguments.
  */
-void printk(const char *fmt, ...) noexcept;
+void printk(const char *fmt, ...);
 
 /**
  * @brief Formats and prints colored data.
@@ -57,7 +57,7 @@ void printk(const char *fmt, ...) noexcept;
  * @param [in] fmt - given format string.
  * @param [in] ... - given variable number of arguments.
  */
-void cprintk(rgb_t fg, rgb_t bg, const char *fmt, ...) noexcept;
+void cprintk(rgb_t fg, rgb_t bg, const char *fmt, ...);
 
 } // namespace kernel
 

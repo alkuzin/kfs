@@ -52,7 +52,7 @@ const auto NAN {(0.0f / 0.0f)};
  * @param [in] x - given value.
  * @return natural logarithm of x.
  */
-constexpr f64 log(f64 x) noexcept
+constexpr f64 log(f64 x)
 {
     if(x <= 0)
         return NAN;
@@ -84,7 +84,7 @@ constexpr f64 log(f64 x) noexcept
  * @param [in] x - given value.
  * @return base-2 logarithm of @a x.
  */
-constexpr inline f64 log2(f64 x) noexcept
+constexpr inline f64 log2(f64 x)
 {
     return log(x) / log(2.0);
 }
@@ -97,7 +97,7 @@ constexpr inline f64 log2(f64 x) noexcept
  * @param [in] x - given value to ceil.
  * @return ceil value of @a x.
  */
-constexpr inline f64 ceil(f64 x) noexcept
+constexpr inline f64 ceil(f64 x)
 {
     s32 int_part = static_cast<s32>(x);
 
@@ -118,7 +118,7 @@ constexpr inline f64 ceil(f64 x) noexcept
  * @return the absolute value of the given value.
  */
 template <typename T>
-constexpr inline T abs(T x) noexcept
+constexpr inline T abs(T x)
 {
     return ((x) < 0 ? -(x) : (x));
 }
@@ -131,7 +131,7 @@ constexpr inline T abs(T x) noexcept
  * @param [in] x - given value.
  * @return sine of @a x.
  */
-constexpr f64 sin(f64 x) noexcept
+constexpr f64 sin(f64 x)
 {
     f64 cur  = x;
     f64 acc  = 1;
@@ -156,7 +156,7 @@ constexpr f64 sin(f64 x) noexcept
  * @param [in] x - given value.
  * @return cosine of @a x.
  */
-constexpr inline f64 cos(f64 x) noexcept
+constexpr inline f64 cos(f64 x)
 {
     return sin(x + M_PI_2);
 }

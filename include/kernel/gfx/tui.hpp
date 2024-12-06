@@ -71,13 +71,13 @@ struct frame_t {
      *
      * @param [in] begin - given frame begin point.
      */
-    void init(point_t begin = {300, 200}) noexcept;
+    void init(point_t begin = {300, 200});
 
     /** @brief Update terminal state.*/
-    void update(void) noexcept;
+    void update(void);
 
     /** @brief Reset terminal state.*/
-    void reset(void) noexcept;
+    void reset(void);
 };
 
 inline const u8 WINDOW_TITLE_SIZE      {32};
@@ -94,10 +94,10 @@ struct window_t {
      * @param [in] fr - given frame to connect to the window.
      * @param [in] title - given window title.
      */
-    void init(const frame_t& fr, const char *title) noexcept;
+    void init(const frame_t& fr, const char *title);
 
     /** @brief Display window on the screen.*/
-    void show(void) noexcept;
+    void show(void);
 
     /**
      * @brief Add button to the window frame.
@@ -106,17 +106,17 @@ struct window_t {
      * @param [in] on_click - given function to execute on button click.
      * @param [in] begin - given button begin point.
      */
-    void add_button(const char *label, action_t on_click, void *arg, point_t begin = {0, 0}) noexcept;
+    void add_button(const char *label, action_t on_click, void *arg, point_t begin = {0, 0});
 
     /**
      * @brief Add string content to window.
      *
      * @param [in] content - given string content.
      */
-    void add_content(const char *content) noexcept;
+    void add_content(const char *content);
 
     /** @brief Destroy window.*/
-    void destroy(void) noexcept;
+    void destroy(void);
 };
 
 } // namespace tui

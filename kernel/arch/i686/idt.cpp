@@ -44,7 +44,7 @@ ptr_t   idt_ptr;
  * @param [in] selector - given point to a valid code segment in GDT.
  * @param [in] flags - given gate type & other control bits.
  */
-void set_gate(u8 num, u32 offset, u16 selector, u8 flags) noexcept
+void set_gate(u8 num, u32 offset, u16 selector, u8 flags)
 {
     IDT[num].offset_low  = (offset & 0xFFFF);
     IDT[num].selector    = selector;
@@ -59,13 +59,13 @@ void set_gate(u8 num, u32 offset, u16 selector, u8 flags) noexcept
  * @param [in] num - given IDT number.
  * @param [in] offset - given entry point of the interrupt function.
  */
-inline void set_int_function(u8 num, u32 offset) noexcept
+inline void set_int_function(u8 num, u32 offset)
 {
     set_gate(num, offset, gdt::KERNEL_CODE_SEGMENT, INTERRUPT_GATE);
 }
 
 /** @brief Set IDT gates.*/
-void set_gates(void) noexcept
+void set_gates(void)
 {
     // set gates for ISR functions for hardware interrupts 0-31
     set_int_function(0,  phys_addr_t(isr0));
@@ -131,7 +131,7 @@ void set_gates(void) noexcept
  */
 asmlinkage void idt_flush(phys_addr_t ptr);
 
-void init(void) noexcept
+void init(void)
 {
     // set pointer structure to IDT
     idt_ptr.size   = sizeof(IDT) - 1;

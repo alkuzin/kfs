@@ -34,7 +34,7 @@ static info_t cpu_info {};
  *
  * @param [out] details - given CPU detail info struct to fill.
  */
-static void handle_leaf0(details_t& details) noexcept
+static void handle_leaf0(details_t& details)
 {
     cpuid(0, cpu_info);
 
@@ -51,7 +51,7 @@ static void handle_leaf0(details_t& details) noexcept
  *
  * @param [out] details - given CPU detail info struct to fill.
  */
-static void handle_leaf1(details_t& details) noexcept
+static void handle_leaf1(details_t& details)
 {
     cpuid(1, cpu_info);
 
@@ -83,7 +83,7 @@ static void handle_leaf1(details_t& details) noexcept
  *
  * @param [out] details - given CPU detail info struct to fill.
  */
-static void set_brand(details_t& details) noexcept
+static void set_brand(details_t& details)
 {
     // get first part of model name
     cpuid(0x80000002, cpu_info);
@@ -98,14 +98,14 @@ static void set_brand(details_t& details) noexcept
     kstd::memcpy(&details.brand + 32, &cpu_info, sizeof(cpu_info));
 }
 
-void get_details(details_t& details) noexcept
+void get_details(details_t& details)
 {
     handle_leaf0(details);
     handle_leaf1(details);
     set_brand(details);
 }
 
-const char *get_op_modes(void) noexcept
+const char *get_op_modes(void)
 {
     // check for 64-bit support
     cpuid(0x80000001, cpu_info);
@@ -116,7 +116,7 @@ const char *get_op_modes(void) noexcept
         return "32-bit";
 }
 
-const char *type_to_str(TYPE type) noexcept
+const char *type_to_str(TYPE type)
 {
     switch (type) {
     case TYPE::OEM:

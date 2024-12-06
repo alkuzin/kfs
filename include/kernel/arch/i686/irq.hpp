@@ -73,28 +73,28 @@ using handler_t = void (*)(int_regs_t*);
  * @param [in] irq - given IRQ number.
  * @param [in] handler - given pointer to IRQ handler function.
  */
-void request(s32 irq, irq::handler_t handler) noexcept;
+void request(s32 irq, irq::handler_t handler);
 
 /**
  * @brief Uninstall handler for IRQ.
  *
  * @param [in] irq - given IRQ number.
  */
-void free(s32 irq) noexcept;
+void free(s32 irq);
 
 /**
  * @brief ISR handler function.
  *
  * @param [in] regs - given pointer to interrupt register state.
  */
-asmlinkage void isr_handler(int_regs_t *regs) noexcept;
+asmlinkage void isr_handler(int_regs_t *regs);
 
 /**
  * @brief IRQ handler function.
  *
  * @param [in] regs - given pointer to interrupt register state.
  */
-asmlinkage void irq_handler(int_regs_t *regs) noexcept;
+asmlinkage void irq_handler(int_regs_t *regs);
 
 } // namespace irq
 

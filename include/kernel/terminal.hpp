@@ -47,11 +47,11 @@ struct terminal_t {
     s32     height;         // output height
 
     /** @brief Initialize terminal.*/
-    void init(void) noexcept;
+    void init(void);
 };
 
 /** @brief Clear screen.*/
-void clear(void) noexcept;
+void clear(void);
 
 /**
  * @brief Print colored character on screen.
@@ -60,7 +60,7 @@ void clear(void) noexcept;
  * @param [in] fg - given foreground color.
  * @param [in] bg - given background color.
  */
-void putc(char c, rgb_t fg, rgb_t bg) noexcept;
+void putc(char c, rgb_t fg, rgb_t bg);
 
 extern terminal_t terminal;
 

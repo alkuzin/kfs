@@ -83,7 +83,7 @@ struct page_table_t
 namespace vmm {
 
 /** Initialize virtual memory manager.*/
-void init(void) noexcept;
+void init(void);
 
 } // namespace vmm
 } // namespace memory

@@ -45,7 +45,7 @@ namespace kstd {
  * @param [in] n - given number of buffer bytes to fill.
  * @return filled buffer pointer.
  */
-void *memset(void *s, s32 c, usize n) noexcept;
+void *memset(void *s, s32 c, usize n);
 
 /**
  * @brief Copies n bytes from memory area src to memory area dest.
@@ -55,7 +55,7 @@ void *memset(void *s, s32 c, usize n) noexcept;
  * @param [in] n - given number of bytes to copy.
  * @return destination buffer pointer.
  */
-void *memcpy(void *dest, const void *src, usize n) noexcept;
+void *memcpy(void *dest, const void *src, usize n);
 
 /**
  * @brief Compares the two strings s1 and s2.
@@ -67,7 +67,7 @@ void *memcpy(void *dest, const void *src, usize n) noexcept;
  * @return a negative value if s1 is less than s2;
  * @return a positive value if s1 is greater than s2.
  */
-s32 strncmp(const char *s1, const char *s2, usize n) noexcept;
+s32 strncmp(const char *s1, const char *s2, usize n);
 
 /**
  * @brief Copy a string with truncation.
@@ -77,7 +77,7 @@ s32 strncmp(const char *s1, const char *s2, usize n) noexcept;
  * @param [in] size - given size to copy.
  * @return number of copied string characters.
  */
-usize strncpy(char *dest, const char *src, usize size) noexcept;
+usize strncpy(char *dest, const char *src, usize size);
 
 /**
  * @brief Get string length.
@@ -85,7 +85,7 @@ usize strncpy(char *dest, const char *src, usize size) noexcept;
  * @param [in] str - given null terminated string.
  * @return str length.
  */
-s32 strlen(const char *str) noexcept;
+s32 strlen(const char *str);
 
 /**
  * @brief Get string duplicate.
@@ -94,7 +94,7 @@ s32 strlen(const char *str) noexcept;
  * @return pointer to a duplicate string in case of success.
  * @return nullptr in case of failure.
  */
-char *strdup(const char* str) noexcept;
+char *strdup(const char* str);
 
 /**
  * @brief Breaks a string into a sequence of zero or more nonempty tokens.
@@ -108,7 +108,7 @@ char *strdup(const char* str) noexcept;
  * @return pointer to the next token.
  * @return nullptr if there are no more tokens.
  */
-char *strtok(char *str, const char *delim) noexcept;
+char *strtok(char *str, const char *delim);
 
 /**
  * @brief Search a string for any of a set of bytes.
@@ -118,7 +118,7 @@ char *strtok(char *str, const char *delim) noexcept;
  * @return pointer to the byte in s that matches one of the bytes in accept.
  * @return nullptr if no such byte is found.
  */
-char *strpbrk(const char *str, const char *accept) noexcept;
+char *strpbrk(const char *str, const char *accept);
 
 } // namespace kstd
 } // namespace kernel

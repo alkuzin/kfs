@@ -53,7 +53,7 @@ struct ptr_t
 } __attribute__((packed));
 
 /** @brief Initialize Interrupt Descriptor Table.*/
-void init(void) noexcept;
+void init(void);
 
 } // namespace idt
 } // namespace i686

@@ -48,7 +48,7 @@ enum class REG {
  * @param [in] reg - given register name.
  * @return register value.
  */
-u32 get_register(REG reg) noexcept;
+u32 get_register(REG reg);
 
 /**
  * @brief Set the specific register.
@@ -56,7 +56,7 @@ u32 get_register(REG reg) noexcept;
  * @param [in] reg - given register name.
  * @param [in] value - given register value to set.
  */
-void set_register(REG reg, u32 value) noexcept;
+void set_register(REG reg, u32 value);
 
 } // namespace i686
 } // namespace arch

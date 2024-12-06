@@ -36,7 +36,7 @@ static s32 x_pos {0};
 static s32 y_pos {0};
 
 /** @brief Display kernel shell prompt.*/
-static inline void display_prompt(void) noexcept
+static inline void display_prompt(void)
 {
     kstd::putchar('$');
     kstd::putchar(' ');
@@ -45,7 +45,7 @@ static inline void display_prompt(void) noexcept
 }
 
 /** @brief Custom TAB key handler.*/
-static bool tab_handler(void) noexcept
+static bool tab_handler(void)
 {
     s32 len = kstd::strlen(shell_buffer);
     const char *command = get_suitable_cmd(shell_buffer, len);
@@ -76,7 +76,7 @@ static bool tab_handler(void) noexcept
     return false;
 }
 
-static bool clear_input(void) noexcept
+static bool clear_input(void)
 {
     s32 len = kstd::strlen(shell_buffer);
 
@@ -93,7 +93,7 @@ static bool clear_input(void) noexcept
     return true;
 }
 
-void init(void) noexcept
+void init(void)
 {
     kstd::memset(shell_buffer, 0, SHELL_BUFFER_SIZE);
 
@@ -108,7 +108,7 @@ void init(void) noexcept
     keyboard::set_ctrl_handler(keyboard::KEY::L, clear_screen);
 }
 
-void process(void) noexcept
+void process(void)
 {
     for (;;) {
         display_prompt();

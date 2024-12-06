@@ -82,7 +82,7 @@ struct tm {
  * @param [in] ptm - given POSIX time structure.
  * @return seconds since Epoch.
  */
-ktime_t mktime(const tm& ptm) noexcept;
+ktime_t mktime(const tm& ptm);
 
 /**
  * @brief Converts seconds since the Epoch to a struct tm representation.
@@ -90,38 +90,38 @@ ktime_t mktime(const tm& ptm) noexcept;
  * @param [in] timer - given number of seconds since the Epoch to convert.
  * @param [out] result - given time struct tm to fill.
  */
-void gmtime(ktime_t timer, tm& result) noexcept;
+void gmtime(ktime_t timer, tm& result);
 
 /**
  * @brief Get current date string representation.
  *
  * @return current date.
  */
-char *get_date(void) noexcept;
+char *get_date(void);
 
 /**
  * @brief Set the UTC offset.
  *
  * @param [in] offset - given UTC offset.
  */
-void set_utc(UTC offset) noexcept;
+void set_utc(UTC offset);
 
 /**
  * @brief Get the UTC offset.
  *
  * @return UTC offset.
  */
-s32 get_utc(void) noexcept;
+s32 get_utc(void);
 
 /**
  * @brief Get number of milliseconds since boot.
  *
  * @return number of milliseconds since boot.
  */
-ktime_t clock(void) noexcept;
+ktime_t clock(void);
 
-void set_boot_time(void) noexcept;
-ktime_t get_boot_time(void) noexcept;
+void set_boot_time(void);
+ktime_t get_boot_time(void);
 
 } // namespace ktime
 } // namespace kernel

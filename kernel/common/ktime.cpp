@@ -63,7 +63,7 @@ static ktime_t boot_time {0};
  * @param [in] offset - given UTC offset.
  * @return UTC offset string representation.
  */
-static const char *get_utc_name(UTC offset) noexcept
+static const char *get_utc_name(UTC offset)
 {
     auto index = static_cast<s32>(offset) + 12;
 
@@ -79,7 +79,7 @@ static const char *get_utc_name(UTC offset) noexcept
  * @param [in] rtm - given real-time clock time structure.
  * @param [out] ptm - given POSIX time structure.
  */
-static void rtc_to_posix(const rtc::rtc_time_t& rtm, tm& ptm) noexcept
+static void rtc_to_posix(const rtc::rtc_time_t& rtm, tm& ptm)
 {
     // adjusting the hour: if the highest bit is set, it's PM
     if (rtm.hour & 0x80)
@@ -110,7 +110,7 @@ static void rtc_to_posix(const rtc::rtc_time_t& rtm, tm& ptm) noexcept
 
 inline const char *date_fmt {"%s %s %d %02d:%02d:%02d %s %d"};
 
-char *get_date(void) noexcept
+char *get_date(void)
 {
     rtc::rtc_time_t rtm;
     tm t;
@@ -135,7 +135,7 @@ char *get_date(void) noexcept
  * @return true - if year is leap.
  * @return false - otherwise.
  */
-static inline bool is_leap_year(s32 year) noexcept
+static inline bool is_leap_year(s32 year)
 {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
@@ -147,7 +147,7 @@ static inline bool is_leap_year(s32 year) noexcept
  * @param [in] month - given month.
  * @return number of days in a month.
  */
-static s32 days_in_month(s32 year, s32 month) noexcept
+static s32 days_in_month(s32 year, s32 month)
 {
     // handle February
     if (month == 1)
@@ -167,12 +167,12 @@ static s32 days_in_month(s32 year, s32 month) noexcept
  * @param [in] year - given year.
  * @return number of days.
  */
-static inline s32 days_in_year(s32 year) noexcept
+static inline s32 days_in_year(s32 year)
 {
     return is_leap_year(year) ? DAYS_PER_LEAP_YEAR : DAYS_PER_YEAR;
 }
 
-ktime_t mktime(const tm& ptm) noexcept
+ktime_t mktime(const tm& ptm)
 {
     if (ptm.tm_year < 70)
         panic("%s\n", "year must be >= 1970");
@@ -207,7 +207,7 @@ ktime_t mktime(const tm& ptm) noexcept
     return total_seconds;
 }
 
-void gmtime(ktime_t timer, tm& result) noexcept
+void gmtime(ktime_t timer, tm& result)
 {
     u32 seconds          = timer;
     s32 total_days        = seconds / SECONDS_PER_DAY;
@@ -265,27 +265,27 @@ void gmtime(ktime_t timer, tm& result) noexcept
     result.tm_wday = (day_of_week + 4) % 7;
 }
 
-void set_utc(UTC offset) noexcept
+void set_utc(UTC offset)
 {
     utc = static_cast<s32>(offset);
 }
 
-s32 get_utc(void) noexcept
+s32 get_utc(void)
 {
     return utc;
 }
 
-ktime_t clock(void) noexcept
+ktime_t clock(void)
 {
     return driver::pit::get_ticks() * driver::pit::MILLISEC_PER_TICK;
 }
 
-void set_boot_time(void) noexcept
+void set_boot_time(void)
 {
     boot_time = clock();
 }
 
-ktime_t get_boot_time(void) noexcept
+ktime_t get_boot_time(void)
 {
     return boot_time;
 }

@@ -38,7 +38,7 @@ namespace kstd {
  * @return whether c is a printable character (including space) or not.
  */
 template <typename T>
-constexpr inline bool isprint(T c) noexcept
+constexpr inline bool isprint(T c)
 {
     return ((c == ' ') || ((c > 32) && (c < 127)));
 }
@@ -50,7 +50,7 @@ constexpr inline bool isprint(T c) noexcept
  * @return whether c is an uppercase character or not.
  */
 template <typename T>
-constexpr inline bool isupper(T c) noexcept
+constexpr inline bool isupper(T c)
 {
     return ((c >= 'A') && (c <= 'Z'));
 }
@@ -62,7 +62,7 @@ constexpr inline bool isupper(T c) noexcept
  * @return whether c is a digit or not.
  */
 template <typename T>
-constexpr inline bool isdigit(T c) noexcept
+constexpr inline bool isdigit(T c)
 {
     return ((c >= '0') && (c <= '9'));
 }
@@ -81,7 +81,7 @@ constexpr inline bool isspace(T ch)
  * @return whether c is an alphabetic character or not.
  */
 template <typename T>
-constexpr inline bool isalpha(T c) noexcept
+constexpr inline bool isalpha(T c)
 {
     return (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')));
 }
@@ -93,7 +93,7 @@ constexpr inline bool isalpha(T c) noexcept
  * @return whether c is an alphanumeric character or not.
  */
 template <typename T>
-constexpr inline bool isalnum(T c) noexcept
+constexpr inline bool isalnum(T c)
 {
     return (isalpha(c) || isdigit(c));
 }
@@ -105,7 +105,7 @@ constexpr inline bool isalnum(T c) noexcept
  * @return whether c is a lowercase character or not.
  */
 template <typename T>
-constexpr inline bool islower(T c) noexcept
+constexpr inline bool islower(T c)
 {
     return ((c >= 'a') && (c <= 'z'));
 }
@@ -117,7 +117,7 @@ constexpr inline bool islower(T c) noexcept
  * @return uppercase c character.
  */
 template <typename T>
-constexpr inline char toupper(T c) noexcept
+constexpr inline char toupper(T c)
 {
     return (islower(c) ? (c - ('a' - 'A')) : c);
 }

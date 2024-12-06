@@ -59,19 +59,19 @@ using pid_t = s32;
 using ktime_t = u32;
 
 /** @brief KB literal.*/
-constexpr inline usize operator"" _KB(usize n) noexcept
+constexpr inline usize operator"" _KB(usize n)
 {
     return n << 10;
 }
 
 /** @brief MB literal.*/
-constexpr inline usize operator"" _MB(usize n) noexcept
+constexpr inline usize operator"" _MB(usize n)
 {
     return n << 20;
 }
 
 /** @brief GB literal.*/
-constexpr inline usize operator"" _GB(usize n) noexcept
+constexpr inline usize operator"" _GB(usize n)
 {
     return n << 30;
 }

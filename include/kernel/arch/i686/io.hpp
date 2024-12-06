@@ -40,7 +40,7 @@ namespace i686 {
  * @param [in] port - given port from which the data will be read.
  * @return the byte of data read from the port.
  */
-inline u8 inb(u16 port) noexcept
+inline u8 inb(u16 port)
 {
     u8 rv = 0;
     asm volatile("inb %1, %0" : "=a" (rv) : "dN" (port));
@@ -53,7 +53,7 @@ inline u8 inb(u16 port) noexcept
  * @param [in] port -given port to which the data will be written.
  * @param [in] data - given data byte to be written to the port.
  */
-inline void outb(u16 port, u8 data) noexcept
+inline void outb(u16 port, u8 data)
 {
     asm volatile("outb %1, %0" : : "dN" (port), "a" (data));
 }
@@ -64,7 +64,7 @@ inline void outb(u16 port, u8 data) noexcept
  * @param [in] port -given port to which the data will be written.
  * @param [in] data - given data byte to be written to the port.
  */
-inline void outw(u16 port, u16 data) noexcept
+inline void outw(u16 port, u16 data)
 {
     asm volatile("outw %0, %1" : : "a"(data), "Nd"(port));
 }

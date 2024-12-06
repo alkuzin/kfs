@@ -43,7 +43,7 @@ inline const auto P_ERR         {1};   // simple error (don't stop kernel)
 inline const auto P_DEFAULT     {9};   // fatal error (stop kernel)
 
 
-void _panic(const char *file, const char *func, s32 line, const char *fmt, ...) noexcept
+void _panic(const char *file, const char *func, s32 line, const char *fmt, ...)
 {
     bool stop_cpu = true;
     auto type  = P_DEFAULT;

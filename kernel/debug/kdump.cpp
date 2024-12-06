@@ -42,7 +42,7 @@ inline const auto PTR_COLOR         {gfx::color::green};
 inline const auto BG_COLOR          {tty::terminal.bg};
 
 
-void kdump(phys_addr_t addr, usize size) noexcept
+void kdump(phys_addr_t addr, usize size)
 {
     char    line[BYTES_PER_LINE + 1];
     u8 bytes[BYTES_PER_LINE];

@@ -55,47 +55,47 @@ private:
      * @return true if flag = 1.
      * @return false if flag = 0.
      */
-    inline bool get_flag(u8 pos) const noexcept;
+    inline bool get_flag(u8 pos) const;
 
     /**
      * @brief Set the flag bit.
      *
      * @param [in] pos - given bit position.
      */
-    inline void set_flag(u8 pos) noexcept;
+    inline void set_flag(u8 pos);
 
     /**
      * @brief Handle vsnprintk argument.
      *
      * @param [in] type - given type of argument to print.
      */
-    void handle_argument(char type) noexcept;
+    void handle_argument(char type);
 
     /**
      * @brief Handle vsnprintk flag.
      *
      * @param [in] flag - given flag of argument to print.
      */
-    void handle_flag(char flag) noexcept;
+    void handle_flag(char flag);
 
     /** @brief Append string argument to buffer.*/
-    void append_string(void) noexcept;
+    void append_string(void);
 
     /** @brief Append pointer argument to buffer.*/
-    void append_pointer(void) noexcept;
+    void append_pointer(void);
 
     /** @brief Append integer argument to buffer.*/
-    void append_integer(void) noexcept;
+    void append_integer(void);
 
     /** @brief Append unsigned integer argument to buffer.*/
-    void append_uinteger(void) noexcept;
+    void append_uinteger(void);
 
     /**
      * @brief Append hexadecimal argument to buffer.
      *
      * @param [in] is_upper - given flag to choice what type of digits to use.
      */
-    void append_hex(bool is_upper) noexcept;
+    void append_hex(bool is_upper);
 
 public:
     /**
@@ -105,24 +105,24 @@ public:
      * @param [in] size - given buffer size.
      * @param [in] args - given variable number of arguments.
      */
-    void init(char *buf, usize size, va_list args) noexcept;
+    void init(char *buf, usize size, va_list args);
 
     /**
      * @brief Append character to buffer.
      *
      * @param [in] ch - given character to append.
      */
-    void append(char ch) noexcept;
+    void append(char ch);
 
     /**
      * @brief Parse format string.
      *
      * @param fmt - given format string to parse.
      */
-    void parse(const char *fmt) noexcept;
+    void parse(const char *fmt);
 };
 
-void handler_t::init(char *buf, usize size, va_list args) noexcept
+void handler_t::init(char *buf, usize size, va_list args)
 {
     va_copy(this->args, args);
     buffer 		= buf;
@@ -132,23 +132,23 @@ void handler_t::init(char *buf, usize size, va_list args) noexcept
     num			= 0;
 }
 
-void handler_t::append(char ch) noexcept
+void handler_t::append(char ch)
 {
     buffer[pos] = ch;
     pos++;
 }
 
-inline bool handler_t::get_flag(u8 pos) const noexcept
+inline bool handler_t::get_flag(u8 pos) const
 {
     return (flags >> pos) & 0x1;
 }
 
-inline void handler_t::set_flag(u8 pos) noexcept
+inline void handler_t::set_flag(u8 pos)
 {
     flags |= (1 << pos);
 }
 
-void handler_t::append_string(void) noexcept
+void handler_t::append_string(void)
 {
     char *str = static_cast<char*>(va_arg(args, char*));
     auto i    = 0;
@@ -166,7 +166,7 @@ void handler_t::append_string(void) noexcept
  * @param [in] is_upper - given flag to choice what type of digits to use.
  * @return hex representation of digit.
  */
-inline char dtoh(s32 v, bool is_upper = false) noexcept
+inline char dtoh(s32 v, bool is_upper = false)
 {
     char a = (is_upper) ? 'A' : 'a';
 
@@ -176,7 +176,7 @@ inline char dtoh(s32 v, bool is_upper = false) noexcept
         return static_cast<char>(a + v - 10);
 }
 
-void handler_t::append_pointer(void) noexcept
+void handler_t::append_pointer(void)
 {
     void *raw = reinterpret_cast<void*>(va_arg(args, u32));
 
@@ -221,7 +221,7 @@ void handler_t::append_pointer(void) noexcept
  * @param [in] n - given number.
  * @return length of int string representation of @a n.
  */
-usize itoa_len(s32 n) noexcept
+usize itoa_len(s32 n)
 {
     usize len = 0;
 
@@ -241,7 +241,7 @@ usize itoa_len(s32 n) noexcept
     return len;
 }
 
-void handler_t::append_integer(void) noexcept
+void handler_t::append_integer(void)
 {
     s32 n        = va_arg(args, s32);
     usize i      = itoa_len(n);
@@ -278,7 +278,7 @@ void handler_t::append_integer(void) noexcept
  * @param [in] n - given number.
  * @return length of unsigned int string representation of @a n.
  */
-usize utoa_len(u32 n) noexcept
+usize utoa_len(u32 n)
 {
     usize len = 0;
 
@@ -293,7 +293,7 @@ usize utoa_len(u32 n) noexcept
     return len;
 }
 
-void handler_t::append_uinteger(void) noexcept
+void handler_t::append_uinteger(void)
 {
     u32 n        = va_arg(args, u32);
     usize i      = utoa_len(n);
@@ -319,7 +319,7 @@ void handler_t::append_uinteger(void) noexcept
     }
 }
 
-void handler_t::append_hex(bool is_upper) noexcept
+void handler_t::append_hex(bool is_upper)
 {
     u32 n = va_arg(args, u32);
     s32 i = (sizeof(n) << 3) - 4;
@@ -348,7 +348,7 @@ void handler_t::append_hex(bool is_upper) noexcept
     }
 }
 
-void handler_t::handle_flag(char flag) noexcept
+void handler_t::handle_flag(char flag)
 {
     switch (flag) {
     // handle output prefix
@@ -367,7 +367,7 @@ void handler_t::handle_flag(char flag) noexcept
     }
 }
 
-void handler_t::handle_argument(char type) noexcept
+void handler_t::handle_argument(char type)
 {
     switch (type) {
     // handle character
@@ -411,7 +411,7 @@ void handler_t::handle_argument(char type) noexcept
     }
 }
 
-void handler_t::parse(const char *fmt) noexcept
+void handler_t::parse(const char *fmt)
 {
     usize i = 0;
     char ch = 0;
@@ -448,7 +448,7 @@ void handler_t::parse(const char *fmt) noexcept
 
 static handler_t handler {};
 
-void snprintk(char *buf, usize size, const char *fmt, ...) noexcept
+void snprintk(char *buf, usize size, const char *fmt, ...)
 {
     va_list args;
 
@@ -457,7 +457,7 @@ void snprintk(char *buf, usize size, const char *fmt, ...) noexcept
     va_end(args);
 }
 
-void vsnprintk(char *buf, usize size, const char *fmt, va_list args) noexcept
+void vsnprintk(char *buf, usize size, const char *fmt, va_list args)
 {
     handler.init(buf, size, args);
     handler.parse(fmt);

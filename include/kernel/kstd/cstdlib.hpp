@@ -43,14 +43,14 @@ namespace kstd {
  * @param [out] count - given number of splitted parts.
  * @return splitted string.
  */
-char **split(const char *str, const char *delim, int *count) noexcept;
+char **split(const char *str, const char *delim, int *count);
 
 /**
  * @brief Free memory allocated for split().
  *
  * @param [in] result - given splitted string to free.
  */
-void free_split(char **result) noexcept;
+void free_split(char **result);
 
 /**
  * @brief Convert string to unsigned number.
@@ -59,7 +59,7 @@ void free_split(char **result) noexcept;
  * @return unsigned number representation of string.
  */
 template <typename T>
-T stou(const char *str) noexcept
+T stou(const char *str)
 {
     s32 index = 0;
     T result      = 0;
@@ -102,7 +102,7 @@ T stou(const char *str) noexcept
  * @param [in] str - given string to convert.
  * @return hex representation of string.
  */
-u32 stoh(const char *str) noexcept;
+u32 stoh(const char *str);
 
 } // namespace kstd
 } // namespace kernel

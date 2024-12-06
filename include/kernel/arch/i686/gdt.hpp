@@ -65,7 +65,7 @@ struct ptr_t
 } __attribute__((packed));
 
 /** @brief Initialize Global Descriptor Table.*/
-void init(void) noexcept;
+void init(void);
 
 } // namespace gdt
 } // namespace i686

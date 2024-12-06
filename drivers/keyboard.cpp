@@ -101,14 +101,14 @@ static bool is_caps      = false;
 static bool is_caps_lock = false;
 static bool is_ctrl      = false;
 
-KEY getch(void) noexcept
+KEY getch(void)
 {
     auto key  = static_cast<KEY>(scan_code);
     scan_code = 0;
     return key;
 }
 
-void set_ctrl_handler(KEY key, key_handler handler) noexcept
+void set_ctrl_handler(KEY key, key_handler handler)
 {
     auto pos = static_cast<s32>(key);
     ctrl_handler[pos] = handler;
@@ -119,7 +119,7 @@ void set_ctrl_handler(KEY key, key_handler handler) noexcept
  *
  * @param [in] key - given key to handle.
  */
-static void handle_ctrl(s32 key) noexcept
+static void handle_ctrl(s32 key)
 {
     auto pos = static_cast<s32>(key);
     if (pos <= 0 || pos >= 128)
@@ -135,7 +135,7 @@ static void handle_ctrl(s32 key) noexcept
     is_ctrl = false;
 }
 
-u8 getchar(void) noexcept
+u8 getchar(void)
 {
     while((inb(0x64) & 0x01) == 0)
         continue;
@@ -179,24 +179,24 @@ u8 getchar(void) noexcept
 
 static key_handler tab_handler {nullptr};
 
-void set_tab_handler(key_handler handler) noexcept
+void set_tab_handler(key_handler handler)
 {
     tab_handler = handler;
 }
 
 static u32 pos {0};
 
-u32 get_pos(void) noexcept
+u32 get_pos(void)
 {
     return pos;
 }
 
-void set_pos(u32 p) noexcept
+void set_pos(u32 p)
 {
     pos = p;
 }
 
-void get_line(char *buffer, usize size) noexcept
+void get_line(char *buffer, usize size)
 {
     pos      = 0;
     char ch  = 0;
@@ -248,7 +248,7 @@ void get_line(char *buffer, usize size) noexcept
     tab_handler = nullptr;
 }
 
-void keyboard_handler(irq::int_regs_t *regs) noexcept
+void keyboard_handler(irq::int_regs_t *regs)
 {
     IGNORE_UNUSED(regs);
 
@@ -256,7 +256,7 @@ void keyboard_handler(irq::int_regs_t *regs) noexcept
     press     = inb(0x60) & 0x80; // is key is pressed down or released
 }
 
-void init(void) noexcept
+void init(void)
 {
     irq::request(IRQ::KEYBOARD, &keyboard_handler);
 }

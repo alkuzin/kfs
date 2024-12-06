@@ -29,7 +29,7 @@ namespace tty {
 using namespace driver::vesa;
 
 
-void terminal_t::init(void) noexcept
+void terminal_t::init(void)
 {
     fb          = get_framebuffer();
     fg          = gfx::color::white;
@@ -49,7 +49,7 @@ void terminal_t::init(void) noexcept
 }
 
 /** @brief Scroll screen.*/
-static void scroll(void) noexcept
+static void scroll(void)
 {
     u32 size         = terminal.fb.height * terminal.fb.pitch;
     u32 *framebuffer = terminal.fb.addr;
@@ -64,14 +64,14 @@ static void scroll(void) noexcept
     kstd::memset(&framebuffer[pos], 0, size - pos);
 }
 
-void clear(void) noexcept
+void clear(void)
 {
     terminal.x_pos = terminal.begin_x_pos;
     terminal.y_pos = terminal.begin_y_pos;
     fill_screen(terminal.bg);
 }
 
-void putc(char c, rgb_t fg, rgb_t bg) noexcept
+void putc(char c, rgb_t fg, rgb_t bg)
 {
     if(terminal.x_pos >= terminal.begin_x_pos + s32(terminal.width)) {
         terminal.x_pos = terminal.begin_x_pos;
