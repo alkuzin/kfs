@@ -29,6 +29,8 @@ set(CMAKE_CXX_STANDARD 23)          # Using C++23 standard
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # Enforcing the standard
 set(CMAKE_CXX_EXTENSIONS OFF)       # Disabling compiler-specific extensions
 
+# Disable dependency file generation
+set(CMAKE_CXX_USE_DEPENDENCY_FILE FALSE)
 
 # Setting cross-compiler & cross-assembler
 set(USER_HOME_DIR       $ENV{HOME})
@@ -186,10 +188,16 @@ set_source_files_properties(
 # Link the additional object files
 target_link_libraries(kernel PRIVATE ${ASM_OBJECTS})
 
-# Set the linker to ld & link with custom linker script
-set_target_properties(${NAME} PROPERTIES LINK_FLAGS "${LDFLAGS} -T ${LINKER_SCRIPT}")
-set(CMAKE_CXX_LINK_EXECUTABLE "${LINKER} <LINK_FLAGS> -T${BOOT_DIR}/linker.ld -o <TARGET> <OBJECTS> ")
+set(CMAKE_CXX_USE_DEPENDENCY_FILE FALSE)
+
+# Set the linker flags directly for the kernel target
 target_link_options(kernel PRIVATE ${LDFLAGS})
+
+# Set the linker to ld & link with custom linker script
+set(CMAKE_CXX_LINK_EXECUTABLE "${LINKER} <LINK_FLAGS> -T${BOOT_DIR}/linker.ld -o <TARGET> <OBJECTS> ")
+
+# Prevent extra linker flags
+set(CMAKE_LINK_DEPENDS_USE_LINKER FALSE)
 
 # Set project variables
 set(NAME "kernel")
