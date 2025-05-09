@@ -9,6 +9,29 @@ Monolithic Unix-like kernel from scratch.
 
 List of changes [here](CHANGELOG.md).
 
+## Build
+
+First, clone this repository:
+
+```shell
+git clone https://github.com/alkuzin/kfs.git
+```
+
+Then change current working directory to `kfs/build/`
+```shell
+cd kfs/build/
+```
+
+Finaly, build project:
+```shell
+cmake CMakeLists.txt && make all
+```
+
+To run OS in QEMU write this command:
+```shell
+make init
+```
+
 ## License
 
 Monolithic Unix-like kernel from scratch.
